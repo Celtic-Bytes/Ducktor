@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Ducktor">
+  <title>Ducktor</title>
+  <circle cx="128" cy="150" r="88" fill="#FFD23F" stroke="#E0A400" stroke-width="5"/>
+  <ellipse cx="86" cy="176" rx="14" ry="9" fill="#FF9EAA" opacity="0.55"/>
+  <ellipse cx="170" cy="176" rx="14" ry="9" fill="#FF9EAA" opacity="0.55"/>
+  <circle cx="100" cy="140" r="16" fill="#FFFFFF"/>
+  <circle cx="156" cy="140" r="16" fill="#FFFFFF"/>
+  <circle cx="103" cy="143" r="9" fill="#1F2937"/>
+  <circle cx="153" cy="143" r="9" fill="#1F2937"/>
+  <circle cx="106" cy="139" r="3" fill="#FFFFFF"/>
+  <circle cx="156" cy="139" r="3" fill="#FFFFFF"/>
+  <path d="M86 178 Q128 154 170 178 Q160 200 128 202 Q96 200 86 178 Z" fill="#FF8C1A" stroke="#D96E00" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M96 186 Q128 196 160 186" fill="none" stroke="#D96E00" stroke-width="3" stroke-linecap="round"/>
+  <path d="M78 66 L178 66 L178 96 Q128 114 78 96 Z" fill="#111827"/>
+  <path d="M128 24 L224 56 L128 88 L32 56 Z" fill="#1F2937" stroke="#111827" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M128 56 L200 66 L200 104" fill="none" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="128" cy="56" r="6" fill="#F59E0B"/>
+  <rect x="193" y="100" width="14" height="24" rx="4" fill="#F59E0B"/>
+</svg>

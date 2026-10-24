@@ -1,0 +1,435 @@
+{
+  "version": 1,
+  "models": [
+    {
+      "id": "index-translate-2b-q4km",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "Index-Translate 2B · Q4_K_M",
+      "recommended": true,
+      "released": "2026-09-30",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/bilibili/Index-Translate/blob/main/LICENSE",
+      "homepage": "https://huggingface.co/IndexTeam/Index-Translate-2B",
+      "description": {
+        "en": "Translation model released in September 2026. Its authors report better results than Hy-MT2-1.8B; Ducktor still has to confirm this for Spanish and English on 8 GB computers.",
+        "es": "Modelo de traducción publicado en septiembre de 2026. Sus autores publican mejores resultados que Hy-MT2-1.8B; Ducktor aún debe confirmarlo en español e inglés con equipos de 8 GB."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ca",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "options": {
+        "promptLanguage": "zh",
+        "noThink": true,
+        "sampling": "greedy",
+        "contextSize": 4096
+      },
+      "files": [
+        {
+          "name": "Index-Translate-2B.Q4_K_M.gguf",
+          "url": "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF/resolve/3a0eca6ce931d88d00614d427ab3ed8ff0743902/Index-Translate-2B.Q4_K_M.gguf",
+          "size": 1312164352,
+          "sha256": "044b313d29342bd3b2c77cbb64023ca0d209bd9b3247763f9d162767ef2d746a"
+        }
+      ]
+    },
+    {
+      "id": "index-translate-2b-q6k",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "Index-Translate 2B · Q6_K",
+      "released": "2026-09-30",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/bilibili/Index-Translate/blob/main/LICENSE",
+      "homepage": "https://huggingface.co/IndexTeam/Index-Translate-2B",
+      "description": {
+        "en": "The same model with less compression: it may translate slightly more faithfully, but it uses more memory and is slower.",
+        "es": "El mismo modelo con menos compresión: puede traducir con algo más de fidelidad, pero usa más memoria y es más lento."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ca",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "options": {
+        "promptLanguage": "zh",
+        "noThink": true,
+        "sampling": "greedy",
+        "contextSize": 4096
+      },
+      "files": [
+        {
+          "name": "Index-Translate-2B.Q6_K.gguf",
+          "url": "https://huggingface.co/IndexTeam/Index-Translate-2B-GGUF/resolve/3a0eca6ce931d88d00614d427ab3ed8ff0743902/Index-Translate-2B.Q6_K.gguf",
+          "size": 1606323712,
+          "sha256": "3ec6fa4e5a5efa25620f17ecfce8daec1ec8fb35a53c82b419a6707581a505b9"
+        }
+      ]
+    },
+    {
+      "id": "hy-mt2-1.8b-q4km",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "Hy-MT2 1.8B · Q4_K_M",
+      "experimental": true,
+      "released": "2026-05-21",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/Tencent-Hunyuan/Hy-MT2/blob/main/LICENSE.txt",
+      "homepage": "https://huggingface.co/tencent/Hy-MT2-1.8B",
+      "description": {
+        "en": "Tencent translation model released in May 2026, smaller than Index-Translate. Pending validation of its prompt format with Ducktor's llama.cpp version.",
+        "es": "Modelo de traducción de Tencent publicado en mayo de 2026, más pequeño que Index-Translate. Pendiente de validar su formato de instrucciones con la versión de llama.cpp de Ducktor."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "options": {
+        "promptLanguage": "en",
+        "noThink": false,
+        "sampling": "hymt2",
+        "contextSize": 4096
+      },
+      "files": [
+        {
+          "name": "Hy-MT2-1.8B-Q4_K_M.gguf",
+          "url": "https://huggingface.co/tencent/Hy-MT2-1.8B-GGUF/resolve/a0c709d9fac510f2c807aa3af52872340dc37a4a/Hy-MT2-1.8B-Q4_K_M.gguf",
+          "size": 1133080448,
+          "sha256": "dc5f44fcf1fa496ee7ad725982c0c8c553a4de00259b53af84c4b89fb0c06699"
+        }
+      ]
+    },
+    {
+      "id": "whisper-base",
+      "capability": "speech-to-text",
+      "engine": "whisper",
+      "name": "Whisper base",
+      "recommended": true,
+      "released": "2022-09-21",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "homepage": "https://github.com/ggml-org/whisper.cpp",
+      "description": {
+        "en": "Small multilingual model that runs well on modest CPUs. It is not the newest option; it is the lightweight reference until newer engines are integrated.",
+        "es": "Modelo multilingüe pequeño que funciona bien en procesadores modestos. No es la opción más reciente: es la referencia ligera hasta integrar motores más nuevos."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ca",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "files": [
+        {
+          "name": "ggml-base.bin",
+          "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-base.bin",
+          "size": 147951465,
+          "sha256": "60ed5bc3dd14eea856493d334349b405782ddcaf0028d4b5df4088345fba2efe"
+        }
+      ]
+    },
+    {
+      "id": "whisper-small-q5_1",
+      "capability": "speech-to-text",
+      "engine": "whisper",
+      "name": "Whisper small · Q5_1",
+      "released": "2022-09-21",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/openai/whisper/blob/main/LICENSE",
+      "homepage": "https://github.com/ggml-org/whisper.cpp",
+      "description": {
+        "en": "More accurate than base, especially with accents or noise, but slower on modest CPUs.",
+        "es": "Más preciso que base, sobre todo con acentos o ruido, pero más lento en procesadores modestos."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ca",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "files": [
+        {
+          "name": "ggml-small-q5_1.bin",
+          "url": "https://huggingface.co/ggerganov/whisper.cpp/resolve/5359861c739e955e79d9a303bcbc70fb988958b1/ggml-small-q5_1.bin",
+          "size": 190085487,
+          "sha256": "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb"
+        }
+      ]
+    },
+    {
+      "id": "parakeet-tdt-0.6b-v3",
+      "capability": "speech-to-text",
+      "engine": "nemo-speech",
+      "name": "NVIDIA Parakeet TDT 0.6B v3",
+      "released": "2025-08-14",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "homepage": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "description": {
+        "en": "Recognizes 25 European languages, including Spanish and English, with automatic language detection.",
+        "es": "Reconoce 25 idiomas europeos, incluidos español e inglés, con detección automática del idioma."
+      },
+      "unavailableReason": {
+        "en": "Requires integrating NVIDIA NeMo-Speech.cpp; not available in this version yet.",
+        "es": "Requiere integrar NVIDIA NeMo-Speech.cpp; aún no está disponible en esta versión."
+      }
+    },
+    {
+      "id": "qwen3-asr-0.6b",
+      "capability": "speech-to-text",
+      "engine": "qwen3-asr",
+      "name": "Qwen3-ASR 0.6B",
+      "released": "2026-01",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+      "homepage": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+      "description": {
+        "en": "2026 model covering 30 languages and 22 Chinese dialects, with language identification.",
+        "es": "Modelo de 2026 con 30 idiomas y 22 dialectos chinos, con identificación del idioma."
+      },
+      "unavailableReason": {
+        "en": "Its official runtime uses Python and PyTorch; a native CPU engine still has to be validated.",
+        "es": "Su motor oficial usa Python y PyTorch; falta validar un motor nativo para CPU."
+      }
+    },
+    {
+      "id": "moonshine-streaming",
+      "capability": "speech-to-text",
+      "engine": "moonshine",
+      "name": "Moonshine Streaming (ES/EN)",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/moonshine-ai/moonshine/blob/main/LICENSE",
+      "homepage": "https://github.com/moonshine-ai/moonshine",
+      "description": {
+        "en": "Very light models with one model per language.",
+        "es": "Modelos muy ligeros, con un modelo por idioma."
+      },
+      "unavailableReason": {
+        "en": "Requires integrating the Moonshine runtime and solving automatic language detection.",
+        "es": "Requiere integrar el motor de Moonshine y resolver la detección automática del idioma."
+      }
+    },
+    {
+      "id": "piper-en-us-ljspeech-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Piper · LJSpeech (English, US)",
+      "voiceLanguage": "en",
+      "recommended": true,
+      "license": "MIT · LJ Speech: public domain",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/piper1-gpl",
+      "description": {
+        "en": "Female US English voice trained from scratch on the public domain LJ Speech dataset.",
+        "es": "Voz femenina de inglés de EE. UU. entrenada desde cero con LJ Speech, de dominio público."
+      },
+      "files": [
+        {
+          "name": "en_US-ljspeech-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx",
+          "size": 63531379,
+          "sha256": "6f52a751e2349abe7a76735eb09dc1875298c77ea2342ffd2fef79ff81b87f22"
+        },
+        {
+          "name": "en_US-ljspeech-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/en_US-ljspeech-medium.onnx.json",
+          "size": 4972,
+          "sha256": "141d612cc0a95ed7efc1ca936b845c2364967f2e9217c5dbfcf69fc4d6c65860"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/MODEL_CARD",
+          "size": 517,
+          "sha256": "fbee1529c89d36b3fe76d7e9f3f832dce17f44900a52d76a9bda735654766b4d"
+        }
+      ]
+    },
+    {
+      "id": "piper-es-es-sharvard-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Piper · Sharvard (Español, España)",
+      "voiceLanguage": "es",
+      "experimental": true,
+      "license": "MIT · Sharvard: CC-BY-3.0",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/main/es/es_ES/sharvard/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/piper1-gpl",
+      "description": {
+        "en": "Spanish (Spain) voice with two speakers. It was fine-tuned from the English lessac voice, whose license is still under review, so it is not bundled.",
+        "es": "Voz de español de España con dos hablantes. Se ajustó a partir de la voz inglesa lessac, cuya licencia sigue en revisión, por eso no viene incluida."
+      },
+      "files": [
+        {
+          "name": "es_ES-sharvard-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx",
+          "size": 76733615,
+          "sha256": "40febfb1679c69a4505ff311dc136e121e3419a13a290ef264fdf43ddedd0fb1"
+        },
+        {
+          "name": "es_ES-sharvard-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/sharvard/medium/es_ES-sharvard-medium.onnx.json",
+          "size": 4903,
+          "sha256": "7438c9b699c72b0c3388dae1b68d3f364dc66a2150fe554a1c11f03372957b2c"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/sharvard/medium/MODEL_CARD",
+          "size": 392,
+          "sha256": "37655314d08fe8a0900abc628d3bcbee48ffbdd8fad9306b89525a0ada20fefc"
+        }
+      ]
+    },
+    {
+      "id": "kokoro-82m",
+      "capability": "text-to-speech",
+      "engine": "kokoro",
+      "name": "Kokoro 82M",
+      "released": "2025-01-27",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://huggingface.co/hexgrad/Kokoro-82M",
+      "homepage": "https://huggingface.co/hexgrad/Kokoro-82M",
+      "languages": ["es", "en", "fr", "it", "pt", "hi", "ja", "zh"],
+      "description": {
+        "en": "Small multilingual voice model with several Spanish and English voices.",
+        "es": "Modelo de voz multilingüe pequeño, con varias voces en español e inglés."
+      },
+      "unavailableReason": {
+        "en": "Requires integrating an ONNX engine for Kokoro and comparing it with Piper.",
+        "es": "Requiere integrar un motor ONNX para Kokoro y compararlo con Piper."
+      }
+    },
+    {
+      "id": "ming-3.0-tts-0.5b",
+      "capability": "text-to-speech",
+      "engine": "ming-tts",
+      "name": "Ming-3.0-TTS 0.5B",
+      "released": "2026-10",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/inclusionAI/Ming-3.0-tts/blob/main/LICENSE",
+      "homepage": "https://huggingface.co/inclusionAI/Ming-3.0-tts-0.5B",
+      "languages": ["es", "en", "de", "fr", "ko", "ja", "zh"],
+      "description": {
+        "en": "Very recent expressive voice model with Spanish and English.",
+        "es": "Modelo de voz expresivo muy reciente, con español e inglés."
+      },
+      "unavailableReason": {
+        "en": "Its official runtime uses Python and was tested on GPUs; CPU viability is still unknown.",
+        "es": "Su motor oficial usa Python y se probó en GPU; aún se desconoce si es viable en CPU."
+      }
+    },
+    {
+      "id": "qwen3-tts-0.6b",
+      "capability": "text-to-speech",
+      "engine": "qwen3-tts",
+      "name": "Qwen3-TTS 0.6B",
+      "released": "2026-01-22",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
+      "homepage": "https://github.com/QwenLM/Qwen3-TTS",
+      "languages": ["es", "en", "de", "fr", "it", "pt", "ru", "ko", "ja", "zh"],
+      "description": {
+        "en": "Expressive voice model covering 10 languages. Its preset voices are not native Spanish speakers.",
+        "es": "Modelo de voz expresivo con 10 idiomas. Sus voces predefinidas no son hablantes nativos de español."
+      },
+      "unavailableReason": {
+        "en": "Its official runtime uses Python and PyTorch; a native CPU engine still has to be validated.",
+        "es": "Su motor oficial usa Python y PyTorch; falta validar un motor nativo para CPU."
+      }
+    }
+  ]
+}

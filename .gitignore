@@ -1,0 +1,8 @@
+/build/
+/out/
+CMakeUserPresets.json
+*.gguf
+*.onnx
+*.part
+.vs/
+.qtcreator/

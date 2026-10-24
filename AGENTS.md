@@ -1,0 +1,33 @@
+# Ducktor agent guide
+
+Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overview: [README.md](README.md). Repository docs, code, comments and UI source strings are in English; chat with the maintainer is in Spanish.
+
+## Build and test
+
+- Presets in [CMakePresets.json](CMakePresets.json); Ninja is required. `ui-only` skips the inference engines and is the fastest way to build the app and run `ctest`.
+- Engines are separate CMake projects added via `ExternalProject` in [cmake/Engines.cmake](cmake/Engines.cmake): llama.cpp and whisper.cpp both vendor ggml, so never `add_subdirectory` them into the same project.
+- Pinned versions: llama.cpp `v0.7.0`, whisper.cpp `v1.9.5`, piper1-gpl `v1.8.0`. Before using a C API, check the header at that tag, not `master`.
+- If the machine has no compiler/Qt, say so plainly; never claim something compiled or tests passed without running them.
+
+## Architecture rules
+
+- The GUI never links inference libraries. Each engine is a helper process (`engines/<name>/main.cpp`) spawned by [EngineProcess](src/engines/EngineProcess.cpp), so a crash or OOM only kills that helper.
+- Helper protocol: header line `FIELD ... <payloadBytes>\n` followed by the raw payload. Writer: [engines/common/protocol.hpp](engines/common/protocol.hpp); reader: [FrameParser](src/engines/FrameParser.cpp). Change both sides together and keep fields free of spaces; user text always goes in the payload, never in arguments.
+- [AppController](src/core/AppController.cpp) runs one heavy task at a time (`state` string) and ignores frames whose request id is stale. Cancelling kills the helper.
+- QML talks to C++ only through the singletons `App`, `Models` and `Settings` registered in [src/main.cpp](src/main.cpp) (`import Ducktor.Core`).
+
+## Models and privacy
+
+- [resources/models.json](resources/models.json) is the only source of downloadable models: `https://huggingface.co` URLs pinned to a commit revision, plus exact `size` and `sha256`. Verify these against the Hugging Face API instead of guessing. The parser in [ModelCatalog](src/models/ModelCatalog.cpp) rejects anything else.
+- Engines without a native integration are listed with `unavailableReason` and no files; do not offer them as downloadable.
+- Check each model's and voice's license separately (weights, dataset, fine-tune base). Restrictive or unreviewed licenses must not be bundled or marked recommended.
+- No telemetry, history or logging of user text/audio. Helper stderr is discarded unless `DUCKTOR_DEBUG_ENGINES` is set.
+
+## Limits
+
+- Input limits live in [AppSettings](src/core/AppSettings.h): users may lower them but never exceed the hard maxima (5000 chars, 120 s) until measured on 8 GB CPU-only machines.
+- Enforce limits before data is inserted or sent (see [LimitedTextArea.qml](qml/LimitedTextArea.qml)) and again in the helper. Never truncate silently; report it to the user.
+
+## Translations
+
+- Wrap UI strings in `qsTr()`/`tr()` and add the Spanish entry to [i18n/ducktor_es.ts](i18n/ducktor_es.ts). The context is the QML file basename or the C++ class name.

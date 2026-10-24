@@ -1,0 +1,5 @@
+qt_add_executable(tst_core tst_core.cpp)
+target_include_directories(tst_core PRIVATE ${CMAKE_SOURCE_DIR}/engines/common)
+target_compile_definitions(tst_core PRIVATE DUCKTOR_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
+target_link_libraries(tst_core PRIVATE ducktor_core Qt6::Test)
+add_test(NAME tst_core COMMAND tst_core)

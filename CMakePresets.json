@@ -1,0 +1,51 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "dev",
+      "displayName": "Development (optimized for this machine)",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "DUCKTOR_NATIVE_CPU": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Distributable release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "DUCKTOR_NATIVE_CPU": "OFF",
+        "DUCKTOR_BUILD_TESTS": "OFF"
+      }
+    },
+    {
+      "name": "ui-only",
+      "displayName": "Interface and tests without inference engines",
+      "inherits": "dev",
+      "cacheVariables": {
+        "DUCKTOR_BUILD_ENGINES": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "dev", "configurePreset": "dev" },
+    { "name": "release", "configurePreset": "release" },
+    { "name": "ui-only", "configurePreset": "ui-only" }
+  ],
+  "testPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev",
+      "output": { "outputOnFailure": true }
+    },
+    {
+      "name": "ui-only",
+      "configurePreset": "ui-only",
+      "output": { "outputOnFailure": true }
+    }
+  ]
+}
