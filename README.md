@@ -1,5 +1,9 @@
 # Ducktor
 
+<p align="center">
+  <img src="resources/icons/ducktor.svg" alt="Ducktor logo" width="256" height="256">
+</p>
+
 > Still in alfa. works perfectly in Linux, still need to check in other OS. Packages not yet released.
 
 **Ducktor is an offline, free, open source, privacy first, desktop translator**
