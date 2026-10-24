@@ -2,6 +2,7 @@
 
 #include "ModelCatalog.h"
 
+#include <QAbstractItemModel>
 #include <QElapsedTimer>
 #include <QFile>
 #include <QObject>
@@ -12,7 +13,6 @@
 
 class AppSettings;
 class ModelListModel;
-class QAbstractItemModel;
 class QCryptographicHash;
 class QNetworkAccessManager;
 class QNetworkReply;

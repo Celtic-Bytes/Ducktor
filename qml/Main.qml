@@ -38,7 +38,7 @@ ApplicationWindow {
             }
             Label {
                 visible: stack.depth > 1
-                text: qsTr("Settings")
+                text: stack.currentItem ? stack.currentItem.title : ""
                 opacity: 0.7
             }
             Item { Layout.fillWidth: true }
@@ -46,6 +46,11 @@ ApplicationWindow {
                 visible: stack.depth === 1
                 text: qsTr("Settings")
                 onClicked: stack.push(settingsComponent)
+            }
+            ToolButton {
+                visible: stack.depth === 1
+                text: qsTr("About")
+                onClicked: stack.push(aboutComponent)
             }
         }
     }
@@ -59,6 +64,11 @@ ApplicationWindow {
     Component {
         id: settingsComponent
         SettingsPage {}
+    }
+
+    Component {
+        id: aboutComponent
+        AboutPage {}
     }
 
     Connections {

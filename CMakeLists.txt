@@ -31,7 +31,7 @@ target_compile_definitions(ducktor PRIVATE DUCKTOR_VERSION="${PROJECT_VERSION}")
 target_link_libraries(ducktor PRIVATE ducktor_core Qt6::Quick Qt6::QuickControls2 Qt6::Svg)
 set_target_properties(ducktor PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME Ducktor
-    MACOSX_BUNDLE_GUI_IDENTIFIER io.github.ducktor.Ducktor
+    MACOSX_BUNDLE_GUI_IDENTIFIER com.celticbytes.Ducktor
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
 
 qt_add_qml_module(ducktor
@@ -43,13 +43,22 @@ qt_add_qml_module(ducktor
         qml/LimitedTextArea.qml
         qml/SettingsPage.qml
         qml/ModelSection.qml
-        qml/ModelCard.qml)
+        qml/ModelCard.qml
+        qml/AboutPage.qml)
 
 qt_add_resources(ducktor ducktor_assets
     PREFIX /
     FILES
         resources/models.json
         resources/icons/ducktor.svg)
+
+# The repository documents are the single source shown in the About page.
+qt_add_resources(ducktor ducktor_docs
+    PREFIX /docs
+    FILES
+        LICENSE
+        PRIVACY.md
+        THIRD_PARTY_NOTICES.md)
 
 if(Qt6LinguistTools_FOUND)
     qt_add_translations(ducktor TS_FILES i18n/ducktor_es.ts)

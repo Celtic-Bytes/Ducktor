@@ -16,6 +16,8 @@ if(APPLE)
     set_target_properties(ducktor-speak PROPERTIES BUILD_RPATH "@loader_path")
 elseif(UNIX)
     set_target_properties(ducktor-speak PROPERTIES BUILD_RPATH "$ORIGIN")
+    # DT_RPATH (unlike RUNPATH) also lets libpiper find ONNX Runtime next to the helper.
+    target_link_options(ducktor-speak PRIVATE "LINKER:--disable-new-dtags")
 endif()
 
 # libpiper, ONNX Runtime and the espeak-ng data must sit next to the helper at runtime.

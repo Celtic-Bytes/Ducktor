@@ -75,8 +75,8 @@ Page {
                 valueRole: "code"
                 enabled: !App.busy
                 Accessible.name: qsTr("Source language")
-                onModelChanged: page.sourceCode = page.syncCombo(sourceBox, page.sourceCode)
-                Component.onCompleted: page.sourceCode = page.syncCombo(sourceBox, page.sourceCode)
+                onModelChanged: Qt.callLater(() => page.sourceCode = page.syncCombo(sourceBox, page.sourceCode))
+                Component.onCompleted: Qt.callLater(() => page.sourceCode = page.syncCombo(sourceBox, page.sourceCode))
                 onActivated: page.sourceCode = currentValue
             }
             Button {
@@ -95,8 +95,8 @@ Page {
                 valueRole: "code"
                 enabled: !App.busy
                 Accessible.name: qsTr("Target language")
-                onModelChanged: page.targetCode = page.syncCombo(targetBox, page.targetCode)
-                Component.onCompleted: page.targetCode = page.syncCombo(targetBox, page.targetCode)
+                onModelChanged: Qt.callLater(() => page.targetCode = page.syncCombo(targetBox, page.targetCode))
+                Component.onCompleted: Qt.callLater(() => page.targetCode = page.syncCombo(targetBox, page.targetCode))
                 onActivated: page.targetCode = currentValue
             }
         }

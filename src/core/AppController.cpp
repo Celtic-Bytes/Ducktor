@@ -10,7 +10,9 @@
 #include "models/ModelManager.h"
 
 #include <QClipboard>
+#include <QFile>
 #include <QGuiApplication>
+#include <QHash>
 #include <QThread>
 #include <QtEndian>
 
@@ -108,6 +110,18 @@ QString AppController::clipboardText() const
 void AppController::copyToClipboard(const QString& text) const
 {
     QGuiApplication::clipboard()->setText(text);
+}
+
+QString AppController::document(const QString& name) const
+{
+    static const QHash<QString, QString> files{{QStringLiteral("privacy"), QStringLiteral("PRIVACY.md")},
+                                              {QStringLiteral("license"), QStringLiteral("LICENSE")},
+                                              {QStringLiteral("notices"), QStringLiteral("THIRD_PARTY_NOTICES.md")}};
+    const QString file = files.value(name);
+    if (file.isEmpty())
+        return {};
+    QFile resource(QStringLiteral(":/docs/") + file);
+    return resource.open(QIODevice::ReadOnly) ? QString::fromUtf8(resource.readAll()) : QString();
 }
 
 void AppController::clearTranslation()

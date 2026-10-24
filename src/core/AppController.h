@@ -51,6 +51,8 @@ public:
     Q_INVOKABLE QString languageName(const QString& code) const;
     Q_INVOKABLE QString clipboardText() const;
     Q_INVOKABLE void copyToClipboard(const QString& text) const;
+    // Bundled legal document by key: "privacy", "license" or "notices".
+    Q_INVOKABLE QString document(const QString& name) const;
     Q_INVOKABLE void setVoiceInput(bool voiceInput) { m_voiceInput = voiceInput; }
     Q_INVOKABLE void clearTranslation();
     // Length checks use UTF-16 code units, the same unit as QML's text.length.

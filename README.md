@@ -133,6 +133,14 @@ The `release` preset already produces optimized binaries that run on other CPUs 
 
 To make a portable build, place an empty `portable.txt` file next to the executable: settings and models will be stored in a `data` folder beside it.
 
-## Licenses
+## Privacy
 
-The proposed license for Ducktor is GPL-3.0-or-later, compatible with libpiper (GPL-3.0); it is pending confirmation. Each model has its own license, shown in Settings before downloading it.
+Ducktor has no accounts, telemetry or history, and your text and voice never leave your computer. It only connects to the internet when you download a model. Details: [PRIVACY.md](PRIVACY.md).
+
+## License
+
+Copyright (C) 2026 celticbytes.
+
+Ducktor is free software: you can redistribute it and/or modify it under the terms of the [GNU General Public License](LICENSE), version 3 or (at your option) any later version. It is distributed in the hope that it will be useful, but **without any warranty**; machine translations and transcriptions can contain errors, so check them before relying on them for important matters.
+
+Third-party components and their licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Each AI model has its own license, shown in Settings before downloading it.

@@ -63,6 +63,18 @@
     <name>Main</name>
     <message><source>Back</source><translation>Volver</translation></message>
     <message><source>Settings</source><translation>Configuración</translation></message>
+    <message><source>About</source><translation>Acerca de</translation></message>
+</context>
+<context>
+    <name>AboutPage</name>
+    <message><source>About Ducktor</source><translation>Acerca de Ducktor</translation></message>
+    <message><source>About</source><translation>Acerca de</translation></message>
+    <message><source>Privacy</source><translation>Privacidad</translation></message>
+    <message><source>License</source><translation>Licencia</translation></message>
+    <message><source>Third-party software</source><translation>Software de terceros</translation></message>
+    <message><source>Version %1</source><translation>Versión %1</translation></message>
+    <message><source>Offline translator for text and voice. Your text and recordings never leave this computer.</source><translation>Traductor sin conexión para texto y voz. Tus textos y grabaciones nunca salen de este equipo.</translation></message>
+    <message><source>Free software under the GNU General Public License, version 3 or later. It comes with no warranty: machine translations and transcriptions can contain errors.</source><translation>Software libre bajo la Licencia Pública General de GNU, versión 3 o posterior. Se ofrece sin garantía: las traducciones y transcripciones automáticas pueden contener errores.</translation></message>
 </context>
 <context>
     <name>LimitedTextArea</name>
@@ -95,6 +107,8 @@
 </context>
 <context>
     <name>SettingsPage</name>
+    <message><source>Settings</source><translation>Configuración</translation></message>
+    <message><source>Read the privacy policy</source><translation>Leer la política de privacidad</translation></message>
     <message><source>Translation</source><translation>Traducción</translation></message>
     <message><source>Speech recognition</source><translation>Reconocimiento de voz</translation></message>
     <message><source>Voices</source><translation>Voces</translation></message>

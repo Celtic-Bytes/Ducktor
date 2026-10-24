@@ -4,6 +4,10 @@ import QtQuick.Layouts
 import Ducktor.Core
 
 Page {
+    id: settingsPage
+
+    title: qsTr("Settings")
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 16
@@ -114,6 +118,10 @@ Page {
                                 wrapMode: Text.WrapAnywhere
                                 opacity: 0.75
                                 text: qsTr("Models folder: %1").arg(Models.modelsDirectory)
+                            }
+                            Button {
+                                text: qsTr("Read the privacy policy")
+                                onClicked: settingsPage.StackView.view.push(Qt.createComponent("Ducktor", "AboutPage"), { initialTab: 1 })
                             }
                         }
                     }

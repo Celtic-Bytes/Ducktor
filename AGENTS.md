@@ -22,6 +22,7 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 - Engines without a native integration are listed with `unavailableReason` and no files; do not offer them as downloadable.
 - Check each model's and voice's license separately (weights, dataset, fine-tune base). Restrictive or unreviewed licenses must not be bundled or marked recommended.
 - No telemetry, history or logging of user text/audio. Helper stderr is discarded unless `DUCKTOR_DEBUG_ENGINES` is set.
+- Ducktor is GPL-3.0-or-later. Update [PRIVACY.md](PRIVACY.md) when data handling or network use changes, and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) when dependencies change. Never add an EULA or terms that restrict GPL rights.
 
 ## Limits
 

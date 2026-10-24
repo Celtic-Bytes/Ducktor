@@ -15,10 +15,11 @@
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
-    QGuiApplication::setOrganizationName(QStringLiteral("Ducktor"));
+    QGuiApplication::setOrganizationName(QStringLiteral("celticbytes"));
+    QGuiApplication::setOrganizationDomain(QStringLiteral("celticbytes.com"));
     QGuiApplication::setApplicationName(QStringLiteral("Ducktor"));
     QGuiApplication::setApplicationVersion(QStringLiteral(DUCKTOR_VERSION));
-    QGuiApplication::setDesktopFileName(QStringLiteral("io.github.ducktor.Ducktor"));
+    QGuiApplication::setDesktopFileName(QStringLiteral("com.celticbytes.Ducktor"));
     QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/resources/icons/ducktor.svg")));
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
 
