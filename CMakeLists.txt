@@ -69,7 +69,7 @@ qt_add_resources(ducktor ducktor_assets
         resources/icons/stop.svg
         resources/icons/swap.svg
         resources/icons/volume.svg
-        resources/flags/en.svg
+        resources/flags/gb.svg
         resources/flags/es.svg
         resources/flags/fr.svg
         resources/flags/it.svg

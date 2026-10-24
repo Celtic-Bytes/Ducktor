@@ -10,6 +10,9 @@ Ducktor is licensed under the [GNU General Public License v3.0 or later](LICENSE
 | [Piper (libpiper)](https://github.com/OHF-Voice/piper1-gpl)     | Speech synthesis engine          | [GPL-3.0](https://github.com/OHF-Voice/piper1-gpl/blob/main/COPYING)                                                           |
 | [eSpeak NG](https://github.com/espeak-ng/espeak-ng)             | Pronunciation data for Piper     | [GPL-3.0-or-later](https://github.com/espeak-ng/espeak-ng/blob/master/COPYING)                                                 |
 | [ONNX Runtime](https://github.com/microsoft/onnxruntime)        | Neural network runtime for Piper | [MIT](https://github.com/microsoft/onnxruntime/blob/main/LICENSE)                                                              |
+| [flag-icons](https://github.com/lipis/flag-icons) `v7.6.0`      | Flags in the language menu       | [MIT](resources/flags/LICENSE)                                                                                                 |
+
+The flag files in [resources/flags](resources/flags) are unmodified copies of `flags/4x3/{gb,es,fr,it,de}.svg` from flag-icons [`v7.6.0`](https://github.com/lipis/flag-icons/tree/v7.6.0/flags/4x3) (commit `7264def86ef4772ab40af4d6fcc78890e301ca6b`), Copyright (c) 2013 Panayiotis Lipiridis. English uses the United Kingdom flag.
 
 ## AI models
 

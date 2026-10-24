@@ -168,6 +168,116 @@
       ]
     },
     {
+      "id": "index-translate-9b-q4km",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "Index-Translate 9B · Q4_K_M",
+      "released": "2026-09-28",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/bilibili/Index-Translate/blob/main/LICENSE",
+      "homepage": "https://huggingface.co/IndexTeam/Index-Translate-9B",
+      "description": {
+        "en": "High-quality version of Index-Translate: its authors report clearly better results than the 2B model and Hy-MT2-7B. It is much slower and needs about 7 GB of free memory; 16 GB computers are recommended.",
+        "es": "Versión de alta calidad de Index-Translate: sus autores publican resultados claramente mejores que el modelo 2B y que Hy-MT2-7B. Es mucho más lento y necesita unos 7 GB de memoria libre; se recomiendan equipos de 16 GB.",
+        "fr": "Version haute qualité d'Index-Translate : ses auteurs annoncent des résultats nettement meilleurs que le modèle 2B et Hy-MT2-7B. Il est beaucoup plus lent et demande environ 7 Go de mémoire libre ; des ordinateurs de 16 Go sont recommandés.",
+        "it": "Versione di alta qualità di Index-Translate: i suoi autori riportano risultati nettamente migliori del modello 2B e di Hy-MT2-7B. È molto più lento e richiede circa 7 GB di memoria libera; si consigliano computer da 16 GB.",
+        "de": "Hochwertige Version von Index-Translate: Ihre Autoren berichten deutlich bessere Ergebnisse als das 2B-Modell und Hy-MT2-7B. Sie ist viel langsamer und braucht etwa 7 GB freien Speicher; empfohlen werden Rechner mit 16 GB."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "ca",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "options": {
+        "promptLanguage": "zh",
+        "noThink": true,
+        "sampling": "greedy",
+        "contextSize": 4096
+      },
+      "files": [
+        {
+          "name": "Index-Translate-9B.Q4_K_M.gguf",
+          "url": "https://huggingface.co/IndexTeam/Index-Translate-9B-GGUF/resolve/645939fbab839a656f1bc39975a872bc8ad749f8/Index-Translate-9B.Q4_K_M.gguf",
+          "size": 5780090304,
+          "sha256": "9cc6758b0007f4cbf42ea3400768cbff91ae74ef8d640e467158348426d33713"
+        }
+      ]
+    },
+    {
+      "id": "hy-mt2-7b-q4km",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "Hy-MT2 7B · Q4_K_M",
+      "experimental": true,
+      "released": "2026-05-21",
+      "license": "Apache-2.0",
+      "licenseUrl": "https://github.com/Tencent-Hunyuan/Hy-MT2/blob/main/LICENSE.txt",
+      "homepage": "https://huggingface.co/tencent/Hy-MT2-7B",
+      "description": {
+        "en": "Larger version of Hy-MT2 with better quality than the 1.8B model. It is slower and needs about 6 GB of free memory; 16 GB computers are recommended. Its prompt format is still pending validation, like the 1.8B model.",
+        "es": "Versión más grande de Hy-MT2, con más calidad que el modelo 1.8B. Es más lento y necesita unos 6 GB de memoria libre; se recomiendan equipos de 16 GB. Su formato de instrucciones sigue pendiente de validar, igual que el del modelo 1.8B.",
+        "fr": "Version plus grande de Hy-MT2, de meilleure qualité que le modèle 1.8B. Il est plus lent et demande environ 6 Go de mémoire libre ; des ordinateurs de 16 Go sont recommandés. Son format d'instructions doit encore être validé, comme celui du modèle 1.8B.",
+        "it": "Versione più grande di Hy-MT2, di qualità superiore al modello 1.8B. È più lento e richiede circa 6 GB di memoria libera; si consigliano computer da 16 GB. Il suo formato di istruzioni deve ancora essere convalidato, come quello del modello 1.8B.",
+        "de": "Größere Version von Hy-MT2 mit besserer Qualität als das 1.8B-Modell. Sie ist langsamer und braucht etwa 6 GB freien Speicher; empfohlen werden Rechner mit 16 GB. Ihr Prompt-Format muss wie beim 1.8B-Modell noch geprüft werden."
+      },
+      "languages": [
+        "es",
+        "en",
+        "fr",
+        "de",
+        "it",
+        "pt",
+        "nl",
+        "pl",
+        "cs",
+        "ru",
+        "uk",
+        "tr",
+        "ar",
+        "he",
+        "hi",
+        "zh",
+        "ja",
+        "ko",
+        "vi",
+        "id",
+        "th"
+      ],
+      "options": {
+        "promptLanguage": "en",
+        "noThink": false,
+        "sampling": "hymt2",
+        "contextSize": 4096
+      },
+      "files": [
+        {
+          "name": "Hy-MT2-7B-Q4_K_M.gguf",
+          "url": "https://huggingface.co/tencent/Hy-MT2-7B-GGUF/resolve/ab8472660ac61fac25f1af43fac2599d52a8a775/Hy-MT2-7B-Q4_K_M.gguf",
+          "size": 4624648896,
+          "sha256": "9f96256500f3fc1ab4d64336b58f52a949a95ad7516b0c229476eef782f9f77b"
+        }
+      ]
+    },
+    {
       "id": "whisper-base",
       "capability": "speech-to-text",
       "engine": "whisper",

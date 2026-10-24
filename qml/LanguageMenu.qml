@@ -7,8 +7,9 @@ import Ducktor.Core
 ComboBox {
     id: box
 
+    // Flags from flag-icons (MIT), see THIRD_PARTY_NOTICES.md.
     function flag(code) {
-        return "qrc:/resources/flags/" + code + ".svg"
+        return "qrc:/resources/flags/" + (code === "en" ? "gb" : code) + ".svg"
     }
 
     model: Settings.uiLanguageOptions
@@ -29,9 +30,9 @@ ComboBox {
         Item { Layout.preferredWidth: 2 }
         Image {
             source: box.currentValue ? box.flag(box.currentValue) : ""
-            sourceSize: Qt.size(42, 28)
-            Layout.preferredWidth: 21
-            Layout.preferredHeight: 14
+            sourceSize: Qt.size(40, 30)
+            Layout.preferredWidth: 20
+            Layout.preferredHeight: 15
             fillMode: Image.PreserveAspectCrop
             Accessible.ignored: true
         }
@@ -58,9 +59,9 @@ ComboBox {
 
             Image {
                 source: box.flag(entry.modelData.code)
-                sourceSize: Qt.size(42, 28)
-                Layout.preferredWidth: 21
-                Layout.preferredHeight: 14
+                sourceSize: Qt.size(40, 30)
+                Layout.preferredWidth: 20
+                Layout.preferredHeight: 15
                 fillMode: Image.PreserveAspectCrop
                 Accessible.ignored: true
             }
