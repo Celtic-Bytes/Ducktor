@@ -1,0 +1,18 @@
+{
+  "models": [
+    {
+      "id": "tiny-model",
+      "capability": "speech-to-text",
+      "engine": "whisper",
+      "name": "Tiny",
+      "files": [
+        {
+          "name": "tiny.bin",
+          "url": "https://huggingface.co/x/y/resolve/abc/tiny.bin",
+          "size": 5,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    }
+  ]
+}

@@ -19,12 +19,15 @@ namespace {
 
 const QByteArray kHelloSha = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824";
 
+QByteArray readTestData(const char* name)
+{
+    QFile file(QStringLiteral(DUCKTOR_SOURCE_DIR "/tests/data/") + QLatin1String(name));
+    return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+}
+
 QByteArray tinyCatalog()
 {
-    return QByteArrayLiteral(R"({"models": [{
-        "id": "tiny-model", "capability": "speech-to-text", "engine": "whisper", "name": "Tiny",
-        "files": [{"name": "tiny.bin", "url": "https://huggingface.co/x/y/resolve/abc/tiny.bin",
-                   "size": 5, "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"}]}]})");
+    return readTestData("tiny_catalog.json");
 }
 
 bool writeFile(const QString& path, const QByteArray& data)
@@ -134,17 +137,8 @@ private slots:
 
     void catalogRejectsUnsafeEntries()
     {
-        const QByteArray json = QByteArrayLiteral(R"({"models": [
-            {"id": "a1", "capability": "translation", "engine": "llama", "name": "A",
-             "files": [{"name": "../evil.gguf", "url": "https://huggingface.co/a", "size": 1, "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"}]},
-            {"id": "b1", "capability": "translation", "engine": "llama", "name": "B",
-             "files": [{"name": "b.gguf", "url": "http://huggingface.co/b", "size": 1, "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"}]},
-            {"id": "c1", "capability": "translation", "engine": "llama", "name": "C",
-             "files": [{"name": "c.gguf", "url": "https://example.com/c", "size": 1, "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"}]},
-            {"id": "d1", "capability": "translation", "engine": "llama", "name": "D",
-             "files": [{"name": "d.gguf", "url": "https://huggingface.co/d", "size": 1, "sha256": "xyz"}]},
-            {"id": "../e", "capability": "translation", "engine": "llama", "name": "E", "files": []}
-        ]})");
+        const QByteArray json = readTestData("unsafe_catalog.json");
+        QVERIFY(!json.isEmpty());
         QStringList warnings;
         QVERIFY(ModelCatalog::parse(json, &warnings).isEmpty());
         QCOMPARE(warnings.size(), 5);

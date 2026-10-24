@@ -62,7 +62,16 @@ Build commands on Windows must run in the **x64 Native Tools Command Prompt for 
 
 2. Install Qt with the [Qt Online Installer](https://doc.qt.io/qt-6/get-and-install-qt.html), selecting **Desktop gcc 64-bit** and **Additional Libraries → Qt Multimedia** for Qt 6.9 or later. The default path looks like `~/Qt/6.9.3/gcc_64`.
 
-   Your distribution's Qt packages also work if `apt policy qt6-base-dev` shows version 6.9 or later. In that case, install `qt6-base-dev qt6-declarative-dev qt6-multimedia-dev qt6-svg-dev qt6-tools-dev` instead and skip `CMAKE_PREFIX_PATH` below.
+   Your distribution's Qt packages also work if `apt policy qt6-base-dev` shows version 6.9 or later (PikaOS ships a recent enough Qt). In that case, install these packages instead and skip `CMAKE_PREFIX_PATH` below:
+
+   ```bash
+   sudo apt install qt6-base-dev qt6-declarative-dev qt6-multimedia-dev qt6-svg-dev qt6-tools-dev \
+       qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts \
+       qml6-module-qtquick-dialogs qml6-module-qtquick-window qml6-module-qtquick-templates \
+       qml6-module-qtqml-workerscript
+   ```
+
+   The `qml6-module-*` packages are needed to start the app; without them Ducktor exits with a message such as `module "QtQuick.Controls" is not installed`.
 
 ## Run in development mode
 
@@ -86,6 +95,7 @@ set PATH=C:\Qt\6.9.3\msvc2022_64\bin;%PATH%
 What to expect:
 
 - The first configuration downloads llama.cpp, whisper.cpp and Piper, and the first build compiles them. It can take a long time; later builds are much faster.
+- With your distribution's Qt, configuration may print many `The qml plugin '...' ... will not be linked` warnings. They are harmless: those plugins are loaded from the system when Ducktor starts.
 - Ducktor starts with no AI models. Open **Settings** and download at least one translation model; for voice input and output, also download a speech recognition model and a voice. The recommended set is about 1.5 GB.
 - To work only on the interface, use the `ui-only` preset instead of `dev`: it skips the engines, so it builds quickly, but translation and voice will report that a component is missing.
 - To see the engines' diagnostic output, set the environment variable `DUCKTOR_DEBUG_ENGINES=1` before starting Ducktor. Their output can include fragments of the processed text, so use it only for debugging.
@@ -112,6 +122,8 @@ What to expect:
      "testPresets": [{ "name": "my-dev", "configurePreset": "my-dev" }]
    }
    ```
+
+   With your distribution's Qt on Debian, Ubuntu or PikaOS, use `"Qt6_DIR": "/usr/lib/x86_64-linux-gnu/cmake/Qt6"` instead of `CMAKE_PREFIX_PATH`. Without one of them, VS Code shows the error `Could not find a package configuration file provided by "Qt6"`.
 
 3. In the CMake panel, select the `my-dev` configure preset, then use **Build**, **Run Tests** and **Launch** (or **Debug**) with the `ducktor` target.
 
