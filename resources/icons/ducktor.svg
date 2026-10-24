@@ -1,19 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Ducktor">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Ducktor">
   <title>Ducktor</title>
-  <circle cx="128" cy="150" r="88" fill="#FFD23F" stroke="#E0A400" stroke-width="5"/>
-  <ellipse cx="86" cy="176" rx="14" ry="9" fill="#FF9EAA" opacity="0.55"/>
-  <ellipse cx="170" cy="176" rx="14" ry="9" fill="#FF9EAA" opacity="0.55"/>
-  <circle cx="100" cy="140" r="16" fill="#FFFFFF"/>
-  <circle cx="156" cy="140" r="16" fill="#FFFFFF"/>
-  <circle cx="103" cy="143" r="9" fill="#1F2937"/>
-  <circle cx="153" cy="143" r="9" fill="#1F2937"/>
-  <circle cx="106" cy="139" r="3" fill="#FFFFFF"/>
-  <circle cx="156" cy="139" r="3" fill="#FFFFFF"/>
-  <path d="M86 178 Q128 154 170 178 Q160 200 128 202 Q96 200 86 178 Z" fill="#FF8C1A" stroke="#D96E00" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M96 186 Q128 196 160 186" fill="none" stroke="#D96E00" stroke-width="3" stroke-linecap="round"/>
-  <path d="M78 66 L178 66 L178 96 Q128 114 78 96 Z" fill="#111827"/>
-  <path d="M128 24 L224 56 L128 88 L32 56 Z" fill="#1F2937" stroke="#111827" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M128 56 L200 66 L200 104" fill="none" stroke="#F59E0B" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="128" cy="56" r="6" fill="#F59E0B"/>
-  <rect x="193" y="100" width="14" height="24" rx="4" fill="#F59E0B"/>
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE36E"/>
+      <stop offset="1" stop-color="#FFBE1A"/>
+    </linearGradient>
+    <linearGradient id="bill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFAA45"/>
+      <stop offset="1" stop-color="#F57C00"/>
+    </linearGradient>
+    <linearGradient id="board" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3B4A63"/>
+      <stop offset="1" stop-color="#1E293B"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Head -->
+  <ellipse cx="256" cy="306" rx="182" ry="168" fill="url(#head)" stroke="#3A2A12" stroke-width="14"/>
+  <path d="M120 250 Q150 180 230 160" fill="none" stroke="#FFF3B8" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Cheeks -->
+  <ellipse cx="146" cy="352" rx="28" ry="17" fill="#FF8A7A" opacity="0.55"/>
+  <ellipse cx="366" cy="352" rx="28" ry="17" fill="#FF8A7A" opacity="0.55"/>
+
+  <!-- Eyes -->
+  <ellipse cx="194" cy="276" rx="44" ry="52" fill="#FFFFFF" stroke="#3A2A12" stroke-width="10"/>
+  <ellipse cx="318" cy="276" rx="44" ry="52" fill="#FFFFFF" stroke="#3A2A12" stroke-width="10"/>
+  <circle cx="204" cy="286" r="25" fill="#2B1E0E"/>
+  <circle cx="308" cy="286" r="25" fill="#2B1E0E"/>
+  <circle cx="213" cy="274" r="9" fill="#FFFFFF"/>
+  <circle cx="317" cy="274" r="9" fill="#FFFFFF"/>
+
+  <!-- Bill: smiling lower part, then the upper part on top -->
+  <path d="M190 384 Q256 462 322 384 Q256 414 190 384 Z" fill="#D9600A" stroke="#3A2A12" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M158 352 C158 314 354 314 354 352 C354 392 304 406 256 406 C208 406 158 392 158 352 Z" fill="url(#bill)" stroke="#3A2A12" stroke-width="10" stroke-linejoin="round"/>
+  <ellipse cx="232" cy="344" rx="8" ry="5" fill="#B4550A"/>
+  <ellipse cx="280" cy="344" rx="8" ry="5" fill="#B4550A"/>
+  <path d="M196 336 Q256 322 316 336" fill="none" stroke="#FFD08A" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Graduation cap, slightly tilted -->
+  <g transform="rotate(-7 256 150)">
+    <path d="M150 150 L362 150 L362 210 Q256 246 150 210 Z" fill="#1E293B" stroke="#0F172A" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M256 54 L476 128 L256 202 L36 128 Z" fill="url(#board)" stroke="#0F172A" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M256 128 Q370 146 424 146 L424 236" fill="none" stroke="#F5B400" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="256" cy="128" r="13" fill="#F5B400" stroke="#B88400" stroke-width="4"/>
+    <path d="M410 230 L438 230 L446 282 L402 282 Z" fill="#F5B400" stroke="#B88400" stroke-width="5" stroke-linejoin="round"/>
+  </g>
 </svg>

@@ -38,7 +38,11 @@ set_target_properties(ducktor PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/packaging/macos/Info.plist.in)
 if(APPLE)
-    set_target_properties(ducktor PROPERTIES OUTPUT_NAME Ducktor)
+    set_target_properties(ducktor PROPERTIES OUTPUT_NAME Ducktor MACOSX_BUNDLE_ICON_FILE ducktor.icns)
+    set_source_files_properties(packaging/macos/ducktor.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    target_sources(ducktor PRIVATE packaging/macos/ducktor.icns)
+elseif(WIN32)
+    target_sources(ducktor PRIVATE packaging/windows/ducktor.rc)
 endif()
 
 set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)

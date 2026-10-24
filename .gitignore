@@ -2,6 +2,7 @@
 /out/
 /dist/
 /.flatpak-builder/
+node_modules/
 CMakeUserPresets.json
 *.gguf
 *.onnx

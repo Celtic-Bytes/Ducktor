@@ -20,7 +20,7 @@ Every package has a `licenses` folder (in `/usr/share/doc/ducktor` on Linux) wit
 
 The AppImage, the Windows ZIP and the macOS ZIP also contain a copy of the Qt libraries, linked dynamically so they can be replaced. Qt is distributed under the LGPL-3.0 ([LGPL-3.0-only.txt](packaging/licenses/LGPL-3.0-only.txt), from Qt `v6.10.0`), and its source code is available from [download.qt.io](https://download.qt.io/official_releases/qt/). On Windows and macOS, Qt Multimedia uses FFmpeg, distributed under the LGPL-2.1 or later ([LGPL-2.1-or-later.txt](packaging/licenses/LGPL-2.1-or-later.txt), from FFmpeg `n7.1`); its source code is available from [ffmpeg.org](https://ffmpeg.org/download.html). The Windows ZIP also includes the redistributable Microsoft Visual C++ runtime. The `.deb` and Flatpak packages use the Qt provided by the system or by the KDE runtime instead.
 
-The tools used only to build packages ([linuxdeploy](https://github.com/linuxdeploy/linuxdeploy), [linuxdeploy-plugin-qt](https://github.com/linuxdeploy/linuxdeploy-plugin-qt), `windeployqt`, `macdeployqt`) are not included in them.
+The tools used only to build packages ([linuxdeploy](https://github.com/linuxdeploy/linuxdeploy), [linuxdeploy-plugin-qt](https://github.com/linuxdeploy/linuxdeploy-plugin-qt), `windeployqt`, `macdeployqt`) and to generate the icons ([resvg-js](https://github.com/yisibl/resvg-js), MPL-2.0) are not included in them. The Ducktor logo and icons are original work licensed with Ducktor under the GPL-3.0-or-later.
 
 ## AI models
 

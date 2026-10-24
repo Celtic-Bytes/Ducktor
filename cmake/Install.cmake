@@ -54,6 +54,11 @@ if(UNIX AND NOT APPLE)
     install(FILES resources/icons/ducktor.svg
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps
         RENAME com.celticbytes.Ducktor.svg)
+    foreach(size IN ITEMS 16 24 32 48 64 128 256 512)
+        install(FILES packaging/icons/png/ducktor-${size}.png
+            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/${size}x${size}/apps
+            RENAME com.celticbytes.Ducktor.png)
+    endforeach()
 endif()
 
 # Windows and macOS packages carry their own Qt; Linux uses the system Qt, the AppImage tools or the Flatpak runtime.

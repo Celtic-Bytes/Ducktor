@@ -226,6 +226,16 @@ The ZIP contains `Ducktor.app` (with Qt copied by `macdeployqt`) and the license
 
 Any copy of Ducktor becomes portable if an empty `portable.txt` file sits next to the executable (next to `Ducktor.app` on macOS): settings and models are then stored in a `data` folder beside it.
 
+### Icons
+
+The logo is [resources/icons/ducktor.svg](resources/icons/ducktor.svg). The Linux PNG sizes, the Windows `.ico` and the macOS `.icns` are generated from it and committed to the repository. After changing the SVG, regenerate them with [Node.js](https://nodejs.org/):
+
+```bash
+cd packaging/icons
+npm ci
+npm run generate
+```
+
 ## Roadmap
 
 The _Settings_ page only lists models that Ducktor can run today. These newer engines are being evaluated and will appear there once they are integrated and tested on 8 GB CPU-only computers:
