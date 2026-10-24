@@ -1,1 +1,5 @@
-*.sh text eol=lf
+# Normalize every text file to LF in the repository and on checkout (Linux-first
+# project). text=auto keeps binary files untouched; eol=lf forces LF endings.
+# This also guards files like desktop entries, which must be LF: linuxdeploy's
+# parser keeps a trailing \r in the Icon= value and then no icon matches.
+* text=auto eol=lf

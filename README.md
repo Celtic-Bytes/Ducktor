@@ -70,12 +70,12 @@ Build commands on Windows must run in the **x64 Native Tools Command Prompt for 
 
 2. Install Qt with the [Qt Online Installer](https://doc.qt.io/qt-6/get-and-install-qt.html), selecting **Desktop gcc 64-bit** and **Additional Libraries → Qt Multimedia** for Qt 6.9 or later. The default path looks like `~/Qt/6.9.3/gcc_64`.
 
-   Your distribution's Qt packages also work if `apt policy qt6-base-dev` shows version 6.9 or later (PikaOS ships a recent enough Qt). In that case, install these packages instead and skip `CMAKE_PREFIX_PATH` below:
+   Your distribution's Qt packages also work if `apt policy qt6-base-dev` shows version 6.9 or later (PikaOS ships a recent enough Qt). In that case, install these packages instead and skip `CMAKE_PREFIX_PATH` below: 
 
    ```bash
    sudo apt install qt6-base-dev qt6-declarative-dev qt6-multimedia-dev qt6-svg-dev qt6-tools-dev \
        qml6-module-qtquick qml6-module-qtquick-controls qml6-module-qtquick-layouts \
-       qml6-module-qtquick-dialogs qml6-module-qtquick-window qml6-module-qtquick-templates \
+       qml6-module-qtquick-dialogs qml6-module-qtquick-window qt6-svg-plugins qml6-module-qtquick-templates \
        qml6-module-qtqml-workerscript
    ```
 
@@ -183,6 +183,7 @@ chmod +x dist/Ducktor-0.1.0-x86_64.AppImage
 
 - The script downloads two pinned versions of [linuxdeploy](https://github.com/linuxdeploy/linuxdeploy) and its [Qt plugin](https://github.com/linuxdeploy/linuxdeploy-plugin-qt) into `build/appimage-tools`, and checks their SHA-256 before running them.
 - With your distribution's Qt it also needs `qmake6` and `qmlimportscanner` (`sudo apt install qt6-base-dev-tools qt6-declarative-dev-tools`).
+- The Qt plugin requires the SVG icon engine (`qt6/plugins/iconengines/libqsvgicon.so`) to exist, because Ducktor links Qt6::Svg. On Debian and Ubuntu it is part of `libqt6svg6`; on PikaOS it is in a separate package: `sudo apt install qt6-svg-plugins`.
 - With the Qt Online Installer, pass your Qt path and its `qmake`: `QMAKE=~/Qt/6.9.3/gcc_64/bin/qmake bash packaging/linux/build-appimage.sh -DCMAKE_PREFIX_PATH=$HOME/Qt/6.9.3/gcc_64`.
 
 ### Flatpak
