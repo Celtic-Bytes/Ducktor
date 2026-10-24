@@ -1,6 +1,10 @@
 # Ducktor
 
-Offline desktop translator: text or voice input, local translation and read-aloud output. Linux is the primary platform; Windows and macOS are planned targets.
+> Still in alfa. works perfectly in Linux, still need to check in other OS. Packages not yet released.
+
+**Ducktor is an offline, free, open source, privacy first, desktop translator**
+
+Text or voice input, local translation and read-aloud output. Linux is the primary platform; Windows and macOS are planned targets.
 
 Status: first functional version of the code, **not yet built or validated on real machines**. Model figures come from their authors and have not yet been measured on 8 GB computers.
 
