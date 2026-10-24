@@ -48,9 +48,7 @@
       "output": { "outputOnFailure": true }
     }
   ],
-  "packagePresets": [
-    { "name": "release", "configurePreset": "release" }
-  ],
+  "packagePresets": [{ "name": "release", "configurePreset": "release" }],
   "workflowPresets": [
     {
       "name": "package",

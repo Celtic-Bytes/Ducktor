@@ -24,13 +24,13 @@ Ducktor is a free, open-source translator that works on your computer. It is des
 
 These files are stored in:
 
-| System        | Folder                                              |
-| ------------- | --------------------------------------------------- |
-| Windows       | `%LOCALAPPDATA%\celticbytes\Ducktor`                |
-| Linux         | `~/.local/share/celticbytes/Ducktor`                |
+| System        | Folder                                                        |
+| ------------- | ------------------------------------------------------------- |
+| Windows       | `%LOCALAPPDATA%\celticbytes\Ducktor`                          |
+| Linux         | `~/.local/share/celticbytes/Ducktor`                          |
 | Linux Flatpak | `~/.var/app/com.celticbytes.Ducktor/data/celticbytes/Ducktor` |
-| macOS         | `~/Library/Application Support/celticbytes/Ducktor` |
-| Portable copy | The `data` folder next to the executable            |
+| macOS         | `~/Library/Application Support/celticbytes/Ducktor`           |
+| Portable copy | The `data` folder next to the executable                      |
 
 The exact folder is shown in _Settings → General_. Deleting it removes all Ducktor data from your computer.
 

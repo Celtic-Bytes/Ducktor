@@ -136,13 +136,13 @@ On Windows, start VS Code from the _x64 Native Tools Command Prompt for VS 2022_
 
 Packages are created with the `release` preset, which builds engines that run on any CPU of the same architecture. All finished packages are written to the `dist` folder in the repository. None of them include AI models: users download them from _Settings_.
 
-| System  | Format                         | Command                                                                                 | Result                                    |
-| ------- | ------------------------------ | --------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Linux   | `.deb` (Debian, Ubuntu, PikaOS) | `cmake --workflow --preset package`                                                     | `dist/ducktor_<version>_amd64.deb`        |
-| Linux   | AppImage (portable)            | `bash packaging/linux/build-appimage.sh`                                                | `dist/Ducktor-<version>-x86_64.AppImage`  |
-| Linux   | Flatpak                        | see [Flatpak](#flatpak)                                                                 | `dist/Ducktor-<version>.flatpak`          |
-| Windows | Portable ZIP                   | `cmake --preset release -DCMAKE_PREFIX_PATH=C:/Qt/6.9.3/msvc2022_64`, build, `cpack`    | `dist/Ducktor-<version>-windows-x64.zip`  |
-| macOS   | `.app` inside a ZIP            | same as Windows, with your Qt path                                                      | `dist/Ducktor-<version>-macos-<arch>.zip` |
+| System  | Format                          | Command                                                                              | Result                                    |
+| ------- | ------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------- |
+| Linux   | `.deb` (Debian, Ubuntu, PikaOS) | `cmake --workflow --preset package`                                                  | `dist/ducktor_<version>_amd64.deb`        |
+| Linux   | AppImage (portable)             | `bash packaging/linux/build-appimage.sh`                                             | `dist/Ducktor-<version>-x86_64.AppImage`  |
+| Linux   | Flatpak                         | see [Flatpak](#flatpak)                                                              | `dist/Ducktor-<version>.flatpak`          |
+| Windows | Portable ZIP                    | `cmake --preset release -DCMAKE_PREFIX_PATH=C:/Qt/6.9.3/msvc2022_64`, build, `cpack` | `dist/Ducktor-<version>-windows-x64.zip`  |
+| macOS   | `.app` inside a ZIP             | same as Windows, with your Qt path                                                   | `dist/Ducktor-<version>-macos-<arch>.zip` |
 
 Rules that apply to every format:
 
