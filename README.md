@@ -95,6 +95,9 @@ set PATH=C:\Qt\6.9.3\msvc2022_64\bin;%PATH%
 What to expect:
 
 - The first configuration downloads llama.cpp, whisper.cpp and Piper, and the first build compiles them. It can take a long time; later builds are much faster.
+- Everything you need after building is in `build/<preset>/bin`: `ducktor` (the app), the `ducktor-*` engine helpers and `espeak-ng-data`. The rest of the `build` folder is intermediate files.
+- If an engine fails to build, you can still build and start the app alone with `cmake --build --preset dev --target ducktor`; the missing engine's features will report that a component is missing.
+- Keep the repository in a reasonably short path (for example `~/projects/Ducktor`): eSpeak NG, used by Piper, fails with very long build paths.
 - With your distribution's Qt, configuration may print many `The qml plugin '...' ... will not be linked` warnings. They are harmless: those plugins are loaded from the system when Ducktor starts.
 - Ducktor starts with no AI models. Open **Settings** and download at least one translation model; for voice input and output, also download a speech recognition model and a voice. The recommended set is about 1.5 GB.
 - To work only on the interface, use the `ui-only` preset instead of `dev`: it skips the engines, so it builds quickly, but translation and voice will report that a component is missing.

@@ -22,7 +22,6 @@ if(DUCKTOR_ENGINE_TRANSLATE)
         CMAKE_ARGS ${_engine_args}
         BUILD_ALWAYS ON
         INSTALL_COMMAND "")
-    add_dependencies(ducktor ducktor_engine_translate)
 endif()
 
 if(DUCKTOR_ENGINE_TRANSCRIBE)
@@ -32,16 +31,19 @@ if(DUCKTOR_ENGINE_TRANSCRIBE)
         CMAKE_ARGS ${_engine_args}
         BUILD_ALWAYS ON
         INSTALL_COMMAND "")
-    add_dependencies(ducktor ducktor_engine_transcribe)
 endif()
 
 if(DUCKTOR_ENGINE_SPEAK)
+    # Short paths: eSpeak NG truncates long file paths while compiling its phoneme data.
     ExternalProject_Add(ducktor_libpiper
         GIT_REPOSITORY https://github.com/OHF-Voice/piper1-gpl.git
         GIT_TAG v1.8.0
         GIT_SHALLOW TRUE
         SOURCE_SUBDIR libpiper
         UPDATE_DISCONNECTED TRUE
+        PREFIX ${CMAKE_BINARY_DIR}/pp
+        SOURCE_DIR ${CMAKE_BINARY_DIR}/pp/s
+        BINARY_DIR ${CMAKE_BINARY_DIR}/pp/b
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
@@ -55,5 +57,4 @@ if(DUCKTOR_ENGINE_SPEAK)
         DEPENDS ducktor_libpiper
         BUILD_ALWAYS ON
         INSTALL_COMMAND "")
-    add_dependencies(ducktor ducktor_engine_speak)
 endif()
