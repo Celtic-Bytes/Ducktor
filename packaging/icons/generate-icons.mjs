@@ -12,7 +12,9 @@ const svg = readFileSync(join(root, "resources", "icons", "ducktor.svg"));
 const cache = new Map();
 function png(size) {
   if (!cache.has(size)) {
-    const image = new Resvg(svg, { fitTo: { mode: "width", value: size } }).render();
+    const image = new Resvg(svg, {
+      fitTo: { mode: "width", value: size },
+    }).render();
     cache.set(size, image.asPng());
   }
   return cache.get(size);
@@ -22,7 +24,8 @@ function png(size) {
 const linuxSizes = [16, 24, 32, 48, 64, 128, 256, 512];
 const pngDir = join(here, "png");
 mkdirSync(pngDir, { recursive: true });
-for (const size of linuxSizes) writeFileSync(join(pngDir, `ducktor-${size}.png`), png(size));
+for (const size of linuxSizes)
+  writeFileSync(join(pngDir, `ducktor-${size}.png`), png(size));
 
 // Windows: ICO with PNG-compressed entries (supported since Windows Vista).
 function ico(sizes) {
@@ -44,7 +47,10 @@ function ico(sizes) {
   });
   return Buffer.concat([header, ...images]);
 }
-writeFileSync(join(root, "packaging", "windows", "ducktor.ico"), ico([16, 24, 32, 48, 64, 128, 256]));
+writeFileSync(
+  join(root, "packaging", "windows", "ducktor.ico"),
+  ico([16, 24, 32, 48, 64, 128, 256]),
+);
 
 // macOS: ICNS with PNG entries; the @2x types reuse the double-size image.
 function icns(entries) {
@@ -64,9 +70,20 @@ function icns(entries) {
 writeFileSync(
   join(root, "packaging", "macos", "ducktor.icns"),
   icns([
-    ["icp4", 16], ["icp5", 32], ["icp6", 64], ["ic07", 128], ["ic08", 256], ["ic09", 512], ["ic10", 1024],
-    ["ic11", 32], ["ic12", 64], ["ic13", 256], ["ic14", 512],
+    ["icp4", 16],
+    ["icp5", 32],
+    ["icp6", 64],
+    ["ic07", 128],
+    ["ic08", 256],
+    ["ic09", 512],
+    ["ic10", 1024],
+    ["ic11", 32],
+    ["ic12", 64],
+    ["ic13", 256],
+    ["ic14", 512],
   ]),
 );
 
-console.log("Icons written to packaging/icons/png, packaging/windows/ducktor.ico and packaging/macos/ducktor.icns");
+console.log(
+  "Icons written to packaging/icons/png, packaging/windows/ducktor.ico and packaging/macos/ducktor.icns",
+);
