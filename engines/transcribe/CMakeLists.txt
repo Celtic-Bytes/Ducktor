@@ -18,6 +18,10 @@ FetchContent_Declare(whisper
     GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(whisper)
 
+if(DUCKTOR_LICENSE_OUTPUT_DIR)
+    configure_file(${whisper_SOURCE_DIR}/LICENSE ${DUCKTOR_LICENSE_OUTPUT_DIR}/whisper.cpp-LICENSE COPYONLY)
+endif()
+
 add_executable(ducktor-transcribe main.cpp)
 target_include_directories(ducktor-transcribe PRIVATE ${DUCKTOR_COMMON_DIR})
 target_link_libraries(ducktor-transcribe PRIVATE whisper)

@@ -20,6 +20,10 @@ FetchContent_Declare(llama
     GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(llama)
 
+if(DUCKTOR_LICENSE_OUTPUT_DIR)
+    configure_file(${llama_SOURCE_DIR}/LICENSE ${DUCKTOR_LICENSE_OUTPUT_DIR}/llama.cpp-LICENSE COPYONLY)
+endif()
+
 add_executable(ducktor-translate main.cpp)
 target_include_directories(ducktor-translate PRIVATE ${DUCKTOR_COMMON_DIR})
 target_link_libraries(ducktor-translate PRIVATE llama)

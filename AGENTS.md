@@ -9,6 +9,13 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 - Pinned versions: llama.cpp `v0.7.0`, whisper.cpp `v1.9.5`, piper1-gpl `v1.8.0`. Before using a C API, check the header at that tag, not `master`.
 - If the machine has no compiler/Qt, say so plainly; never claim something compiled or tests passed without running them.
 
+## Packaging
+
+- Install layout lives in [cmake/Install.cmake](cmake/Install.cmake) and must match the search paths in [Paths.cpp](src/core/Paths.cpp) (Linux engines in `libexec/ducktor`, Windows next to `ducktor.exe`, macOS in `Ducktor.app/Contents/MacOS`).
+- CPack ([cmake/Packaging.cmake](cmake/Packaging.cmake)) makes the `.deb` and the Windows/macOS ZIPs; AppImage and Flatpak live in [packaging/](packaging). Output always goes to `dist/`.
+- When a dependency is added, copy its license text into `${DUCKTOR_LICENSE_OUTPUT_DIR}` from its own sources during the build, and list it in THIRD_PARTY_NOTICES.md.
+- Download tools only from pinned versions and verify their SHA-256, as in [build-appimage.sh](packaging/linux/build-appimage.sh).
+
 ## Architecture rules
 
 - The GUI never links inference libraries. Each engine is a helper process (`engines/<name>/main.cpp`) spawned by [EngineProcess](src/engines/EngineProcess.cpp), so a crash or OOM only kills that helper.

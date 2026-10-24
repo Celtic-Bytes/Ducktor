@@ -1,0 +1,2 @@
+While this file exists, Ducktor keeps its settings and models in the "data" folder next to ducktor.exe.
+Delete it to store them in your Windows user profile instead (%LOCALAPPDATA%\celticbytes\Ducktor).

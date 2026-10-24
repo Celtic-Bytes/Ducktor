@@ -47,5 +47,19 @@
       "configurePreset": "ui-only",
       "output": { "outputOnFailure": true }
     }
+  ],
+  "packagePresets": [
+    { "name": "release", "configurePreset": "release" }
+  ],
+  "workflowPresets": [
+    {
+      "name": "package",
+      "displayName": "Configure, build and package a release",
+      "steps": [
+        { "type": "configure", "name": "release" },
+        { "type": "build", "name": "release" },
+        { "type": "package", "name": "release" }
+      ]
+    }
   ]
 }

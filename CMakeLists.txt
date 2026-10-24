@@ -14,7 +14,9 @@ option(DUCKTOR_NATIVE_CPU "Optimize engines for this machine only (disable for d
 option(DUCKTOR_BUILD_TESTS "Build the test suite" ON)
 
 set(DUCKTOR_RUNTIME_DIR ${CMAKE_BINARY_DIR}/bin)
+set(DUCKTOR_LICENSE_DIR ${CMAKE_BINARY_DIR}/licenses)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${DUCKTOR_RUNTIME_DIR})
+file(MAKE_DIRECTORY ${DUCKTOR_LICENSE_DIR})
 
 set(_qt_components Core Gui Network Multimedia Qml Quick QuickControls2 Svg)
 if(DUCKTOR_BUILD_TESTS)
@@ -32,7 +34,12 @@ target_link_libraries(ducktor PRIVATE ducktor_core Qt6::Quick Qt6::QuickControls
 set_target_properties(ducktor PROPERTIES
     MACOSX_BUNDLE_BUNDLE_NAME Ducktor
     MACOSX_BUNDLE_GUI_IDENTIFIER com.celticbytes.Ducktor
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_INFO_PLIST ${CMAKE_SOURCE_DIR}/packaging/macos/Info.plist.in)
+if(APPLE)
+    set_target_properties(ducktor PROPERTIES OUTPUT_NAME Ducktor)
+endif()
 
 set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
@@ -89,6 +96,8 @@ if(Qt6LinguistTools_FOUND)
         i18n/ducktor_fr.ts
         i18n/ducktor_it.ts
         i18n/ducktor_de.ts)
+else()
+    message(WARNING "Qt LinguistTools not found: the interface will only be available in English.")
 endif()
 
 if(DUCKTOR_BUILD_ENGINES)
@@ -100,6 +109,5 @@ if(DUCKTOR_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-install(TARGETS ducktor
-    BUNDLE DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+include(cmake/Install.cmake)
+include(cmake/Packaging.cmake)

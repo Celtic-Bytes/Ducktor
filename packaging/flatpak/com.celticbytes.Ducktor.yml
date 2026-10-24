@@ -1,0 +1,35 @@
+# Local Flatpak build. The build downloads llama.cpp, whisper.cpp, Piper, eSpeak NG and ONNX Runtime,
+# so it needs network access while building; Flathub would require declaring those as sources instead.
+app-id: com.celticbytes.Ducktor
+runtime: org.kde.Platform
+runtime-version: '6.10'
+sdk: org.kde.Sdk
+command: ducktor
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Microphone and speakers.
+  - --socket=pulseaudio
+  # Model downloads from Hugging Face.
+  - --share=network
+modules:
+  - name: ducktor
+    buildsystem: cmake-ninja
+    builddir: true
+    build-options:
+      build-args:
+        - --share=network
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DDUCKTOR_NATIVE_CPU=OFF
+      - -DDUCKTOR_BUILD_TESTS=OFF
+    sources:
+      - type: dir
+        path: ../..
+        skip:
+          - build
+          - dist
+          - .flatpak-builder
+          - .git

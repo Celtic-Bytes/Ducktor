@@ -134,19 +134,97 @@ On Windows, start VS Code from the _x64 Native Tools Command Prompt for VS 2022_
 
 ## Packages
 
-**Package generation is not implemented yet.** There are currently no commands to create the planned distribution formats, and the build folder is not self-contained: `build/<preset>/bin` contains Ducktor and its engines, but not Qt or the AI models.
+Packages are created with the `release` preset, which builds engines that run on any CPU of the same architecture. All finished packages are written to the `dist` folder in the repository. None of them include AI models: users download them from _Settings_.
 
-Planned formats:
+| System  | Format                         | Command                                                                                 | Result                                    |
+| ------- | ------------------------------ | --------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Linux   | `.deb` (Debian, Ubuntu, PikaOS) | `cmake --workflow --preset package`                                                     | `dist/ducktor_<version>_amd64.deb`        |
+| Linux   | AppImage (portable)            | `bash packaging/linux/build-appimage.sh`                                                | `dist/Ducktor-<version>-x86_64.AppImage`  |
+| Linux   | Flatpak                        | see [Flatpak](#flatpak)                                                                 | `dist/Ducktor-<version>.flatpak`          |
+| Windows | Portable ZIP                   | `cmake --preset release -DCMAKE_PREFIX_PATH=C:/Qt/6.9.3/msvc2022_64`, build, `cpack`    | `dist/Ducktor-<version>-windows-x64.zip`  |
+| macOS   | `.app` inside a ZIP            | same as Windows, with your Qt path                                                      | `dist/Ducktor-<version>-macos-<arch>.zip` |
 
-| System  | Format                                  |
-| ------- | --------------------------------------- |
-| Linux   | `.deb`, Flatpak and AppImage (portable) |
-| Windows | Portable ZIP, no installer              |
-| macOS   | `.app` inside a ZIP                     |
+Rules that apply to every format:
 
-The `release` preset already produces optimized binaries that run on other CPUs (`cmake --preset release`), as the first step towards those packages. Packaging commands and output folders will be documented here once they exist.
+- Each system's packages must be built on that system: Linux packages on Linux, the ZIP for Windows on Windows and the one for macOS on a Mac.
+- A Linux package only runs on distributions at least as new as the one that built it. For packages meant for other people, build on the oldest distribution you want to support.
+- Every package includes [LICENSE](LICENSE), [PRIVACY.md](PRIVACY.md), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and a `licenses` folder with the license texts of the bundled components.
+- The version comes from `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt); the Linux release date and notes are in [packaging/linux/com.celticbytes.Ducktor.metainfo.xml](packaging/linux/com.celticbytes.Ducktor.metainfo.xml).
 
-To make a portable build, place an empty `portable.txt` file next to the executable: settings and models will be stored in a `data` folder beside it.
+### .deb
+
+Needs your distribution's Qt (see [What to install](#linux-debian-ubuntu-pikaos)) and the `dpkg-dev` package:
+
+```bash
+sudo apt install dpkg-dev
+cmake --workflow --preset package
+sudo apt install ./dist/ducktor_0.1.0_amd64.deb
+```
+
+The package installs Ducktor in `/usr/bin`, its engines in `/usr/libexec/ducktor` and adds it to the applications menu. Its dependencies are calculated automatically from the Qt packages installed on the build machine. To uninstall it: `sudo apt remove ducktor`.
+
+### AppImage
+
+A single file that runs without installing anything and carries its own copy of Qt:
+
+```bash
+bash packaging/linux/build-appimage.sh
+chmod +x dist/Ducktor-0.1.0-x86_64.AppImage
+./dist/Ducktor-0.1.0-x86_64.AppImage
+```
+
+- The script downloads two pinned versions of [linuxdeploy](https://github.com/linuxdeploy/linuxdeploy) and its [Qt plugin](https://github.com/linuxdeploy/linuxdeploy-plugin-qt) into `build/appimage-tools`, and checks their SHA-256 before running them.
+- With your distribution's Qt it also needs `qmake6` and `qmlimportscanner` (`sudo apt install qt6-base-dev-tools qt6-declarative-dev-tools`).
+- With the Qt Online Installer, pass your Qt path and its `qmake`: `QMAKE=~/Qt/6.9.3/gcc_64/bin/qmake bash packaging/linux/build-appimage.sh -DCMAKE_PREFIX_PATH=$HOME/Qt/6.9.3/gcc_64`.
+
+### Flatpak
+
+Builds against the KDE 6.10 runtime, which already contains Qt. Install the tools and the runtime once:
+
+```bash
+sudo apt install flatpak flatpak-builder
+flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install --user flathub org.kde.Platform//6.10 org.kde.Sdk//6.10
+```
+
+Then build, export a single file and install it:
+
+```bash
+flatpak-builder --user --force-clean --repo=build/flatpak-repo build/flatpak packaging/flatpak/com.celticbytes.Ducktor.yml
+flatpak build-bundle build/flatpak-repo dist/Ducktor-0.1.0.flatpak com.celticbytes.Ducktor
+flatpak install --user dist/Ducktor-0.1.0.flatpak
+flatpak run com.celticbytes.Ducktor
+```
+
+The manifest ([packaging/flatpak/com.celticbytes.Ducktor.yml](packaging/flatpak/com.celticbytes.Ducktor.yml)) allows network access during the build because the engines download their sources. That is fine for local builds; publishing on Flathub would require listing every source in the manifest instead.
+
+### Windows ZIP
+
+In the _x64 Native Tools Command Prompt for VS 2022_, with your Qt path:
+
+```bat
+cmake --preset release -DCMAKE_PREFIX_PATH=C:/Qt/6.9.3/msvc2022_64
+cmake --build --preset release
+cpack --preset release
+```
+
+The ZIP contains `ducktor.exe`, its engines, Qt (copied by `windeployqt`) and the Microsoft C++ runtime. Unzip it anywhere and run `ducktor.exe`. It includes a `portable.txt` file, so settings and models are stored in a `data` folder next to the program; delete that file to use your user profile instead. The program is not signed, so Windows SmartScreen may ask for confirmation the first time (_More info → Run anyway_).
+
+### macOS ZIP
+
+In Terminal, with Xcode Command Line Tools (`xcode-select --install`) and your Qt path:
+
+```bash
+cmake --preset release -DCMAKE_PREFIX_PATH=$HOME/Qt/6.9.3/macos
+cmake --build --preset release
+cpack --preset release
+```
+
+The ZIP contains `Ducktor.app` (with Qt copied by `macdeployqt`) and the license documents. The app has an ad hoc signature but is not notarized by Apple, so the first time you must right-click it and choose _Open_. macOS asks for microphone permission the first time you dictate.
+
+### Portable mode
+
+Any copy of Ducktor becomes portable if an empty `portable.txt` file sits next to the executable (next to `Ducktor.app` on macOS): settings and models are then stored in a `data` folder beside it.
 
 ## Roadmap
 

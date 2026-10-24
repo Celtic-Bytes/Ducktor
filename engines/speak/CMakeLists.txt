@@ -32,3 +32,26 @@ endforeach()
 add_custom_command(TARGET ducktor-speak POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PIPER_ROOT}/share/espeak-ng-data ${DUCKTOR_ENGINE_OUTPUT_DIR}/espeak-ng-data)
+
+# Licenses of libpiper and of the eSpeak NG and ONNX Runtime code shipped with it.
+if(DUCKTOR_LICENSE_OUTPUT_DIR)
+    set(_licenses
+        "${PIPER_SOURCE_DIR}/COPYING|piper-COPYING"
+        "${PIPER_BINARY_DIR}/espeak_ng/src/espeak_ng_external/COPYING|espeak-ng-COPYING")
+    file(GLOB _onnxruntime_dirs LIST_DIRECTORIES true ${PIPER_SOURCE_DIR}/libpiper/lib/onnxruntime-*)
+    foreach(dir IN LISTS _onnxruntime_dirs)
+        list(APPEND _licenses
+            "${dir}/LICENSE|onnxruntime-LICENSE"
+            "${dir}/ThirdPartyNotices.txt|onnxruntime-ThirdPartyNotices.txt")
+    endforeach()
+    foreach(entry IN LISTS _licenses)
+        string(REPLACE "|" ";" pair "${entry}")
+        list(GET pair 0 source)
+        list(GET pair 1 target)
+        if(EXISTS "${source}")
+            configure_file("${source}" "${DUCKTOR_LICENSE_OUTPUT_DIR}/${target}" COPYONLY)
+        else()
+            message(WARNING "License file not found: ${source}")
+        endif()
+    endforeach()
+endif()

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.celticbytes.Ducktor</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <name>Ducktor</name>
+  <summary>Offline translator for text and voice</summary>
+  <developer id="com.celticbytes">
+    <name>celticbytes</name>
+  </developer>
+  <description>
+    <p>
+      Ducktor translates text and speech on your own computer with local AI models.
+      You can write, paste or dictate, and listen to the translation.
+    </p>
+    <ul>
+      <li>No account, telemetry or history: your text and recordings never leave your computer.</li>
+      <li>It only connects to the internet when you download a model.</li>
+      <li>Interface in English, Spanish, French, Italian and German.</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">com.celticbytes.Ducktor.desktop</launchable>
+  <url type="homepage">https://celticbytes.com</url>
+  <categories>
+    <category>Office</category>
+    <category>Utility</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-10-24"/>
+  </releases>
+</component>
