@@ -70,9 +70,8 @@ void handleSpeak(piper_synthesizer* synth, const Options& options, const proto::
     piper_audio_chunk chunk{};
     while (complete) {
         const int status = piper_synthesize_next(synth, &chunk);
-        if (status == PIPER_DONE)
-            break;
-        if (status != PIPER_OK) {
+        // PIPER_DONE marks the final chunk, which still carries its samples.
+        if (status != PIPER_OK && status != PIPER_DONE) {
             sendError(id, "synth_failed");
             return;
         }
@@ -94,6 +93,8 @@ void handleSpeak(piper_synthesizer* synth, const Options& options, const proto::
                                   count * sizeof(int16_t));
             }
         }
+        if (status == PIPER_DONE)
+            break;
     }
     proto::writeFrame(stdout, {"DONE", id, complete ? "1" : "0"});
 }
