@@ -19,7 +19,8 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 ## Models and privacy
 
 - [resources/models.json](resources/models.json) is the only source of downloadable models: `https://huggingface.co` URLs pinned to a commit revision, plus exact `size` and `sha256`. Verify these against the Hugging Face API instead of guessing. The parser in [ModelCatalog](src/models/ModelCatalog.cpp) rejects anything else.
-- Engines without a native integration are listed with `unavailableReason` and no files; do not offer them as downloadable.
+- Only list models whose engine Ducktor can run; the parser ignores other engines. Track candidate engines in the README roadmap, not in the catalog.
+- Piper voices need `gender` (`female`/`male`) or `speakers` (`{"female": id, "male": id}`). libpiper `v1.8.0` only handles `espeak`, `text` and `pinyin` (with extra dictionaries) phonemes: check `phoneme_type` in the voice's `.onnx.json` before adding it.
 - Check each model's and voice's license separately (weights, dataset, fine-tune base). Restrictive or unreviewed licenses must not be bundled or marked recommended.
 - No telemetry, history or logging of user text/audio. Helper stderr is discarded unless `DUCKTOR_DEBUG_ENGINES` is set.
 - Ducktor is GPL-3.0-or-later. Update [PRIVACY.md](PRIVACY.md) when data handling or network use changes, and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) when dependencies change. Never add an EULA or terms that restrict GPL rights.
@@ -31,4 +32,5 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 
 ## Translations
 
-- Wrap UI strings in `qsTr()`/`tr()` and add the Spanish entry to [i18n/ducktor_es.ts](i18n/ducktor_es.ts). The context is the QML file basename or the C++ class name.
+- Wrap UI strings in `qsTr()`/`tr()` and add the entry to every file in [i18n/](i18n/) (`es`, `fr`, `it`, `de`; English is the source). The context is the QML file basename or the C++ class name. Catalog descriptions in `models.json` use the same language keys and fall back to `en`.
+- The interface language is the `Settings.uiLanguage` setting (default English) and switches live through `QQmlEngine::retranslate()` in [src/main.cpp](src/main.cpp).

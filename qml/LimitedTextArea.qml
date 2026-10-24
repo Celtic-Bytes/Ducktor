@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Ducktor
 import Ducktor.Core
 
 // Text input that refuses insertions beyond maxLength before they reach the document.
@@ -52,6 +53,8 @@ ScrollView {
         textFormat: TextEdit.PlainText
         selectByMouse: true
         persistentSelection: true
+        font.pixelSize: Theme.textSize
+        background: null
         Accessible.name: placeholderText
 
         Keys.onPressed: event => {

@@ -15,16 +15,55 @@ qint64 ModelInfo::totalSize() const
     return total;
 }
 
+QString ModelInfo::description() const
+{
+    return ModelCatalog::localized(descriptions);
+}
+
+const VoiceOption* ModelInfo::voice(const QString& gender) const
+{
+    for (const VoiceOption& option : voices) {
+        if (option.gender == gender)
+            return &option;
+    }
+    return nullptr;
+}
+
 namespace ModelCatalog {
 namespace {
 
-QString localized(const QJsonValue& value)
+constexpr int kMaxSpeakerId = 9999;
+
+QVariantMap texts(const QJsonValue& value)
 {
     if (value.isString())
-        return value.toString();
-    const QJsonObject object = value.toObject();
-    const QString preferred = object.value(Languages::uiIsSpanish() ? QStringLiteral("es") : QStringLiteral("en")).toString();
-    return preferred.isEmpty() ? object.value(QStringLiteral("en")).toString() : preferred;
+        return {{QStringLiteral("en"), value.toString()}};
+    return value.toObject().toVariantMap();
+}
+
+bool isGender(const QString& text)
+{
+    return text == QLatin1String("female") || text == QLatin1String("male");
+}
+
+// "gender" for single-speaker voices, or "speakers": {"female": id, "male": id} for multi-speaker ones.
+bool parseVoices(const QJsonObject& object, QList<VoiceOption>& voices)
+{
+    const QJsonValue gender = object.value(QStringLiteral("gender"));
+    if (!gender.isUndefined())
+        voices << VoiceOption{gender.toString(), 0};
+    const QJsonObject speakers = object.value(QStringLiteral("speakers")).toObject();
+    for (auto it = speakers.begin(); it != speakers.end(); ++it)
+        voices << VoiceOption{it.key(), it.value().toInt(-1)};
+    if (voices.isEmpty())
+        return false;
+    QStringList seen;
+    for (const VoiceOption& voice : voices) {
+        if (!isGender(voice.gender) || seen.contains(voice.gender) || voice.speaker < 0 || voice.speaker > kMaxSpeakerId)
+            return false;
+        seen << voice.gender;
+    }
+    return true;
 }
 
 bool isHex64(const QString& text)
@@ -34,6 +73,12 @@ bool isHex64(const QString& text)
 }
 
 } // namespace
+
+QString localized(const QVariantMap& texts)
+{
+    const QString preferred = texts.value(Languages::uiLanguage()).toString();
+    return preferred.isEmpty() ? texts.value(QStringLiteral("en")).toString() : preferred;
+}
 
 const QStringList& supportedEngines()
 {
@@ -84,12 +129,14 @@ QList<ModelInfo> parse(const QByteArray& json, QStringList* warnings)
         info.capability = object.value(QStringLiteral("capability")).toString();
         info.engine = object.value(QStringLiteral("engine")).toString();
         info.name = object.value(QStringLiteral("name")).toString();
-        info.description = localized(object.value(QStringLiteral("description")));
+        info.descriptions = texts(object.value(QStringLiteral("description")));
         info.license = object.value(QStringLiteral("license")).toString();
         info.licenseUrl = QUrl(object.value(QStringLiteral("licenseUrl")).toString());
         info.homepage = QUrl(object.value(QStringLiteral("homepage")).toString());
         info.released = object.value(QStringLiteral("released")).toString();
         info.voiceLanguage = object.value(QStringLiteral("voiceLanguage")).toString();
+        info.locale = object.value(QStringLiteral("locale")).toString();
+        info.quality = object.value(QStringLiteral("quality")).toString();
         info.recommended = object.value(QStringLiteral("recommended")).toBool();
         info.experimental = object.value(QStringLiteral("experimental")).toBool();
         info.options = object.value(QStringLiteral("options")).toObject().toVariantMap();
@@ -121,16 +168,18 @@ QList<ModelInfo> parse(const QByteArray& json, QStringList* warnings)
             warn(QStringLiteral("catalog: invalid files in '%1'").arg(info.id));
             continue;
         }
-
-        info.available = supportedEngines().contains(info.engine) && !info.files.isEmpty();
-        if (info.available && info.capability == Capability::TextToSpeech && !Languages::find(info.voiceLanguage)) {
-            warn(QStringLiteral("catalog: voice '%1' has no known language").arg(info.id));
+        if (!supportedEngines().contains(info.engine))
+            continue;
+        if (info.files.isEmpty()) {
+            warn(QStringLiteral("catalog: '%1' has no files").arg(info.id));
             continue;
         }
-        if (!info.available) {
-            info.files.clear();
-            info.unavailableReason = localized(object.value(QStringLiteral("unavailableReason")));
+        if (info.capability == Capability::TextToSpeech &&
+            (!Languages::find(info.voiceLanguage) || !parseVoices(object, info.voices))) {
+            warn(QStringLiteral("catalog: voice '%1' has no known language or gender").arg(info.id));
+            continue;
         }
+        info.available = true;
         seenIds << info.id;
         models << info;
     }

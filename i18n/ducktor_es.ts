@@ -66,6 +66,10 @@
     <message><source>About</source><translation>Acerca de</translation></message>
 </context>
 <context>
+    <name>LanguageMenu</name>
+    <message><source>Interface language</source><translation>Idioma de la interfaz</translation></message>
+</context>
+<context>
     <name>AboutPage</name>
     <message><source>About Ducktor</source><translation>Acerca de Ducktor</translation></message>
     <message><source>About</source><translation>Acerca de</translation></message>
@@ -115,7 +119,6 @@
     <message><source>General</source><translation>General</translation></message>
     <message><source>Models that translate text. Larger files usually translate better but need more memory and time.</source><translation>Modelos que traducen texto. Los archivos más grandes suelen traducir mejor, pero necesitan más memoria y tiempo.</translation></message>
     <message><source>Models that turn your voice into text. They detect the spoken language when the source language is set to automatic.</source><translation>Modelos que convierten tu voz en texto. Detectan el idioma hablado cuando el idioma de origen está en automático.</translation></message>
-    <message><source>Voices that read translations aloud. Each voice speaks one language; text translation works without them.</source><translation>Voces que leen las traducciones en voz alta. Cada voz habla un idioma; la traducción de texto funciona sin ellas.</translation></message>
     <message><source>Limits</source><translation>Límites</translation></message>
     <message><source>Maximum text length (characters)</source><translation>Longitud máxima del texto (caracteres)</translation></message>
     <message><source>Maximum recording length (seconds)</source><translation>Duración máxima de la grabación (segundos)</translation></message>
@@ -129,8 +132,10 @@
 <context>
     <name>ModelSection</name>
     <message><source>Model in use</source><translation>Modelo en uso</translation></message>
-    <message><source>Voice for %1</source><translation>Voz (%1)</translation></message>
     <message><source>None installed</source><translation>Ninguno instalado</translation></message>
+</context>
+<context>
+    <name>ImportRow</name>
     <message><source>Import file…</source><translation>Importar archivo…</translation></message>
     <message><source>Checking the file…</source><translation>Comprobando el archivo…</translation></message>
     <message><source>Use this to install a model file you already downloaded, without an internet connection.</source><translation>Sirve para instalar un archivo de modelo que ya hayas descargado, sin conexión a Internet.</translation></message>
@@ -148,7 +153,6 @@
     <message><source>License: %1</source><translation>Licencia: %1</translation></message>
     <message><source>Released: %1</source><translation>Publicado: %1</translation></message>
     <message><source>Model page</source><translation>Página del modelo</translation></message>
-    <message><source>Not integrated in Ducktor yet.</source><translation>Todavía no está integrado en Ducktor.</translation></message>
     <message><source>Checking partial download…</source><translation>Comprobando la descarga parcial…</translation></message>
     <message><source>Download (%1)</source><translation>Descargar (%1)</translation></message>
     <message><source>Cancel</source><translation>Cancelar</translation></message>
@@ -156,5 +160,28 @@
     <message><source>Delete</source><translation>Eliminar</translation></message>
     <message><source>Delete model</source><translation>Eliminar modelo</translation></message>
     <message><source>Delete %1 from this computer? You can download it again later.</source><translation>¿Eliminar %1 de este equipo? Podrás volver a descargarlo más adelante.</translation></message>
+</context>
+<context>
+    <name>VoiceSection</name>
+    <message><source>Not available</source><translation>No disponible</translation></message>
+    <message><source>high</source><translation>alta</translation></message>
+    <message><source>medium</source><translation>media</translation></message>
+    <message><source>low</source><translation>baja</translation></message>
+    <message><source>very low</source><translation>muy baja</translation></message>
+    <message><source>Quality: %1</source><translation>Calidad: %1</translation></message>
+    <message><source>License: %1</source><translation>Licencia: %1</translation></message>
+    <message><source>One download includes both voices.</source><translation>Una sola descarga incluye las dos voces.</translation></message>
+    <message><source>License and details</source><translation>Licencia y detalles</translation></message>
+    <message><source>Cancel</source><translation>Cancelar</translation></message>
+    <message><source>Download</source><translation>Descargar</translation></message>
+    <message><source>Use</source><translation>Usar</translation></message>
+    <message><source>In use</source><translation>En uso</translation></message>
+    <message><source>Delete</source><translation>Eliminar</translation></message>
+    <message><source>Voices that read translations aloud. Each language can have a female and a male voice; text translation works without them.</source><translation>Voces que leen las traducciones en voz alta. Cada idioma puede tener una voz femenina y otra masculina; la traducción de texto funciona sin ellas.</translation></message>
+    <message><source>Language</source><translation>Idioma</translation></message>
+    <message><source>Female voice</source><translation>Voz femenina</translation></message>
+    <message><source>Male voice</source><translation>Voz masculina</translation></message>
+    <message><source>Delete voice</source><translation>Eliminar voz</translation></message>
+    <message><source>Delete %1 from this computer? You can download it again later.</source><translation>¿Eliminar %1 de este equipo? Podrás volver a descargarla más adelante.</translation></message>
 </context>
 </TS>

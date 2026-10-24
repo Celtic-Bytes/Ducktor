@@ -15,6 +15,7 @@ namespace {
 using namespace ducktor;
 
 constexpr std::size_t kMaxTextBytes = 64 * 1024;
+constexpr int kMaxSpeakerId = 9999;
 
 struct Options
 {
@@ -55,7 +56,10 @@ void handleSpeak(piper_synthesizer* synth, const Options& options, const proto::
         sendError(id, "bad_request");
         return;
     }
-    if (piper_synthesize_start(synth, frame.payload.c_str(), nullptr) != PIPER_OK) {
+    piper_synthesize_options synthOptions = piper_default_synthesize_options(synth);
+    if (frame.fields.size() > 2)
+        synthOptions.speaker_id = std::clamp(std::atoi(frame.fields[2].c_str()), 0, kMaxSpeakerId);
+    if (piper_synthesize_start(synth, frame.payload.c_str(), &synthOptions) != PIPER_OK) {
         sendError(id, "synth_failed");
         return;
     }

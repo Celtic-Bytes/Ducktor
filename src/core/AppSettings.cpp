@@ -1,11 +1,16 @@
 #include "AppSettings.h"
 
+#include "Languages.h"
+
+#include <QVariantMap>
+
 #include <algorithm>
 
 namespace {
 const QString kMaxInputChars = QStringLiteral("limits/maxInputChars");
 const QString kMaxRecordingSeconds = QStringLiteral("limits/maxRecordingSeconds");
 const QString kAutoPlay = QStringLiteral("voice/autoPlayResults");
+const QString kUiLanguage = QStringLiteral("ui/language");
 } // namespace
 
 AppSettings::AppSettings(const QString& fileName, QObject* parent)
@@ -53,6 +58,28 @@ void AppSettings::setAutoPlayVoiceResults(bool value)
         return;
     m_settings.setValue(kAutoPlay, value);
     emit autoPlayVoiceResultsChanged();
+}
+
+QString AppSettings::uiLanguage() const
+{
+    const QString code = m_settings.value(kUiLanguage).toString();
+    return Languages::uiLanguages().contains(code) ? code : Languages::uiLanguages().first();
+}
+
+void AppSettings::setUiLanguage(const QString& code)
+{
+    if (!Languages::uiLanguages().contains(code) || code == uiLanguage())
+        return;
+    m_settings.setValue(kUiLanguage, code);
+    emit uiLanguageChanged();
+}
+
+QVariantList AppSettings::uiLanguageOptions() const
+{
+    QVariantList options;
+    for (const QString& code : Languages::uiLanguages())
+        options << QVariantMap{{QStringLiteral("code"), code}, {QStringLiteral("name"), Languages::uiLanguageName(code)}};
+    return options;
 }
 
 QString AppSettings::value(const QString& key) const

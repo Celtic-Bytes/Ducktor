@@ -1,0 +1,43 @@
+{
+  "models": [
+    {
+      "id": "two-voices",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Two",
+      "voiceLanguage": "es",
+      "speakers": { "female": 1, "male": 0 },
+      "files": [
+        {
+          "name": "two.onnx",
+          "url": "https://huggingface.co/x/y/resolve/abc/two.onnx",
+          "size": 5,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    },
+    {
+      "id": "no-gender",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Invalid",
+      "voiceLanguage": "es",
+      "files": [
+        {
+          "name": "x.onnx",
+          "url": "https://huggingface.co/x/y/resolve/abc/x.onnx",
+          "size": 5,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    },
+    {
+      "id": "future-engine",
+      "capability": "text-to-speech",
+      "engine": "not-integrated",
+      "name": "Future",
+      "voiceLanguage": "es",
+      "gender": "female"
+    }
+  ]
+}

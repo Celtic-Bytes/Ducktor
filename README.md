@@ -148,6 +148,16 @@ The `release` preset already produces optimized binaries that run on other CPUs 
 
 To make a portable build, place an empty `portable.txt` file next to the executable: settings and models will be stored in a `data` folder beside it.
 
+## Roadmap
+
+The _Settings_ page only lists models that Ducktor can run today. These newer engines are being evaluated and will appear there once they are integrated and tested on 8 GB CPU-only computers:
+
+| Capability         | Candidates                                                                                                                                                                                       | Status                                                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Translation        | [Index-Translate-9B](https://huggingface.co/IndexTeam/Index-Translate-9B), [Hy-MT2-7B](https://huggingface.co/tencent/Hy-MT2-7B) (Apache-2.0, already runnable with llama.cpp)                   | Larger and slower; needs measuring on 8 GB computers                                   |
+| Speech recognition | [Parakeet TDT 0.6B v3](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3), [Qwen3-ASR 0.6B](https://huggingface.co/Qwen/Qwen3-ASR-0.6B), [Moonshine](https://github.com/moonshine-ai/moonshine) | Need a native C/C++ runtime in a new helper                                            |
+| Voices             | [Kokoro 82M](https://huggingface.co/hexgrad/Kokoro-82M), [Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS)                                                                                        | Need a native runtime; Piper voices for Hebrew, Japanese and Thai need new phonemizers |
+
 ## Privacy
 
 Ducktor has no accounts, telemetry or history, and your text and voice never leave your computer. It only connects to the internet when you download a model. Details: [PRIVACY.md](PRIVACY.md).

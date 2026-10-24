@@ -34,23 +34,46 @@ set_target_properties(ducktor PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER com.celticbytes.Ducktor
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
 
+set_source_files_properties(qml/Theme.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 qt_add_qml_module(ducktor
     URI Ducktor
     VERSION 1.0
     QML_FILES
         qml/Main.qml
+        qml/Theme.qml
+        qml/Card.qml
+        qml/LanguageMenu.qml
         qml/TranslatorPage.qml
         qml/LimitedTextArea.qml
         qml/SettingsPage.qml
+        qml/ImportRow.qml
         qml/ModelSection.qml
         qml/ModelCard.qml
+        qml/VoiceSection.qml
         qml/AboutPage.qml)
 
 qt_add_resources(ducktor ducktor_assets
     PREFIX /
     FILES
         resources/models.json
-        resources/icons/ducktor.svg)
+        resources/icons/ducktor.svg
+        resources/icons/back.svg
+        resources/icons/clear.svg
+        resources/icons/copy.svg
+        resources/icons/delete.svg
+        resources/icons/download.svg
+        resources/icons/info.svg
+        resources/icons/mic.svg
+        resources/icons/settings.svg
+        resources/icons/stop.svg
+        resources/icons/swap.svg
+        resources/icons/volume.svg
+        resources/flags/en.svg
+        resources/flags/es.svg
+        resources/flags/fr.svg
+        resources/flags/it.svg
+        resources/flags/de.svg)
 
 # The repository documents are the single source shown in the About page.
 qt_add_resources(ducktor ducktor_docs
@@ -61,7 +84,11 @@ qt_add_resources(ducktor ducktor_docs
         THIRD_PARTY_NOTICES.md)
 
 if(Qt6LinguistTools_FOUND)
-    qt_add_translations(ducktor TS_FILES i18n/ducktor_es.ts)
+    qt_add_translations(ducktor TS_FILES
+        i18n/ducktor_es.ts
+        i18n/ducktor_fr.ts
+        i18n/ducktor_it.ts
+        i18n/ducktor_de.ts)
 endif()
 
 if(DUCKTOR_BUILD_ENGINES)

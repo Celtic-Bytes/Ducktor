@@ -9,6 +9,7 @@ Page {
     property int initialTab: 0
 
     title: qsTr("About Ducktor")
+    background: null
 
     // Relative links inside the documents point to the other bundled documents.
     function openLink(link) {
@@ -45,8 +46,8 @@ Page {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 16
-        spacing: 12
+        anchors.margins: 20
+        spacing: 14
 
         TabBar {
             id: tabs

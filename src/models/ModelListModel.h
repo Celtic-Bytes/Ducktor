@@ -25,7 +25,6 @@ public:
         ActiveRole,
         RecommendedRole,
         ExperimentalRole,
-        UnavailableReasonRole,
         VoiceLanguageRole,
     };
 

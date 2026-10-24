@@ -31,7 +31,7 @@ QVariant ModelListModel::data(const QModelIndex& index, int role) const
     case NameRole:
         return info->name;
     case DescriptionRole:
-        return info->description;
+        return info->description();
     case LicenseRole:
         return info->license;
     case LicenseUrlRole:
@@ -60,8 +60,6 @@ QVariant ModelListModel::data(const QModelIndex& index, int role) const
         return info->recommended;
     case ExperimentalRole:
         return info->experimental;
-    case UnavailableReasonRole:
-        return info->unavailableReason;
     case VoiceLanguageRole:
         return info->voiceLanguage;
     default:
@@ -85,7 +83,6 @@ QHash<int, QByteArray> ModelListModel::roleNames() const
             {ActiveRole, "active"},
             {RecommendedRole, "recommended"},
             {ExperimentalRole, "experimental"},
-            {UnavailableReasonRole, "unavailableReason"},
             {VoiceLanguageRole, "voiceLanguage"}};
 }
 
@@ -93,13 +90,10 @@ void ModelListModel::reload()
 {
     beginResetModel();
     m_ids.clear();
-    QStringList pending;
     for (const ModelInfo& info : m_manager->models()) {
-        if (info.capability != m_capability)
-            continue;
-        (info.available ? m_ids : pending) << info.id;
+        if (info.capability == m_capability)
+            m_ids << info.id;
     }
-    m_ids << pending;
     endResetModel();
 }
 

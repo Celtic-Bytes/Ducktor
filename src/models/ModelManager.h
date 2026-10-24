@@ -13,6 +13,7 @@
 
 class AppSettings;
 class ModelListModel;
+class VoiceTableModel;
 class QCryptographicHash;
 class QNetworkAccessManager;
 class QNetworkReply;
@@ -24,6 +25,7 @@ class ModelManager : public QObject
     Q_PROPERTY(QAbstractItemModel* translationModels READ translationModels CONSTANT)
     Q_PROPERTY(QAbstractItemModel* speechToTextModels READ speechToTextModels CONSTANT)
     Q_PROPERTY(QAbstractItemModel* textToSpeechModels READ textToSpeechModels CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* voiceTable READ voiceTable CONSTANT)
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool downloading READ downloading NOTIFY downloadingChanged)
     Q_PROPERTY(bool importing READ importing NOTIFY importingChanged)
@@ -35,10 +37,13 @@ public:
     ~ModelManager() override;
 
     void loadCatalog(const QByteArray& json);
+    // Refreshes texts that depend on the interface language.
+    void relocalize();
 
     QAbstractItemModel* translationModels() const;
     QAbstractItemModel* speechToTextModels() const;
     QAbstractItemModel* textToSpeechModels() const;
+    QAbstractItemModel* voiceTable() const;
     int revision() const { return m_revision; }
     bool downloading() const { return m_download != nullptr; }
     bool importing() const { return m_importing; }
@@ -54,11 +59,14 @@ public:
     bool isActive(const QString& id) const;
     QString activeModelId(const QString& capability) const;
     QString voiceFor(const QString& language) const;
+    QString voiceGender(const QString& language) const;
+    int voiceSpeaker(const QString& language) const;
+    bool isVoiceActive(const QString& language, const QString& id, const QString& gender) const;
 
     Q_INVOKABLE QVariantList installedModels(const QString& capability, const QString& language = {}) const;
     Q_INVOKABLE QString selectedModel(const QString& capability, const QString& language = {}) const;
     Q_INVOKABLE void selectModel(const QString& capability, const QString& id, const QString& language = {});
-    Q_INVOKABLE QStringList voiceLanguages() const;
+    Q_INVOKABLE void selectVoice(const QString& language, const QString& id, const QString& gender);
     Q_INVOKABLE QString languageName(const QString& code) const;
     Q_INVOKABLE void download(const QString& id);
     Q_INVOKABLE void cancelDownload();
@@ -89,6 +97,7 @@ private:
     void finishDownload(bool success, const QString& error);
     void finishImport(const ImportResult& result);
     void changed(const QString& capability);
+    void reloadLists();
     void refreshLists(const QString& id);
 
     AppSettings* m_settings;
@@ -98,6 +107,7 @@ private:
     ModelListModel* m_translationList = nullptr;
     ModelListModel* m_speechToTextList = nullptr;
     ModelListModel* m_textToSpeechList = nullptr;
+    VoiceTableModel* m_voiceTable = nullptr;
     QNetworkAccessManager* m_network = nullptr;
     std::unique_ptr<Download> m_download;
     quint64 m_nextToken = 0;

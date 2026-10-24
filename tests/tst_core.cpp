@@ -200,6 +200,32 @@ private slots:
         QCOMPARE(changed.size(), 1);
     }
 
+    void managerSelectsVoiceGender()
+    {
+        QStringList warnings;
+        QCOMPARE(ModelCatalog::parse(readTestData("voice_catalog.json"), &warnings).size(), 1);
+        QCOMPARE(warnings.size(), 1);
+
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        const QString userDir = dir.filePath(QStringLiteral("models"));
+        ModelManager models(&settings, userDir, {});
+        models.loadCatalog(readTestData("voice_catalog.json"));
+        const QString id = QStringLiteral("two-voices");
+        QVERIFY(models.voiceFor(QStringLiteral("es")).isEmpty());
+
+        QVERIFY(writeFile(userDir + QStringLiteral("/two-voices/two.onnx"), "hello"));
+        QCOMPARE(models.voiceFor(QStringLiteral("es")), id);
+        models.selectVoice(QStringLiteral("es"), id, QStringLiteral("male"));
+        QCOMPARE(models.voiceGender(QStringLiteral("es")), QStringLiteral("male"));
+        QCOMPARE(models.voiceSpeaker(QStringLiteral("es")), 0);
+        models.selectVoice(QStringLiteral("es"), id, QStringLiteral("female"));
+        QCOMPARE(models.voiceSpeaker(QStringLiteral("es")), 1);
+        QVERIFY(models.isVoiceActive(QStringLiteral("es"), id, QStringLiteral("female")));
+        QVERIFY(!models.isVoiceActive(QStringLiteral("es"), id, QStringLiteral("male")));
+        QCOMPARE(models.voiceTable()->rowCount(), 1);
+    }
+
     void managerImportsOnlyMatchingFiles()
     {
         QTemporaryDir dir;

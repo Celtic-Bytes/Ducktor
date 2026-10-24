@@ -1,6 +1,7 @@
 #include "ModelManager.h"
 
 #include "ModelListModel.h"
+#include "VoiceTableModel.h"
 #include "core/AppSettings.h"
 #include "core/Languages.h"
 
@@ -51,6 +52,7 @@ ModelManager::ModelManager(AppSettings* settings, const QString& userModelsDir, 
     m_translationList = new ModelListModel(this, Capability::Translation, this);
     m_speechToTextList = new ModelListModel(this, Capability::SpeechToText, this);
     m_textToSpeechList = new ModelListModel(this, Capability::TextToSpeech, this);
+    m_voiceTable = new VoiceTableModel(this, this);
 }
 
 ModelManager::~ModelManager()
@@ -68,9 +70,14 @@ void ModelManager::loadCatalog(const QByteArray& json)
     m_models = ModelCatalog::parse(json, &warnings);
     for (const QString& warning : std::as_const(warnings))
         qWarning("%s", qPrintable(warning));
-    m_translationList->reload();
-    m_speechToTextList->reload();
-    m_textToSpeechList->reload();
+    reloadLists();
+    ++m_revision;
+    emit revisionChanged();
+}
+
+void ModelManager::relocalize()
+{
+    reloadLists();
     ++m_revision;
     emit revisionChanged();
 }
@@ -78,6 +85,7 @@ void ModelManager::loadCatalog(const QByteArray& json)
 QAbstractItemModel* ModelManager::translationModels() const { return m_translationList; }
 QAbstractItemModel* ModelManager::speechToTextModels() const { return m_speechToTextList; }
 QAbstractItemModel* ModelManager::textToSpeechModels() const { return m_textToSpeechList; }
+QAbstractItemModel* ModelManager::voiceTable() const { return m_voiceTable; }
 
 const ModelInfo* ModelManager::model(const QString& id) const
 {
@@ -223,6 +231,29 @@ QString ModelManager::voiceFor(const QString& language) const
     return {};
 }
 
+QString ModelManager::voiceGender(const QString& language) const
+{
+    const ModelInfo* info = model(voiceFor(language));
+    if (!info || info->voices.isEmpty())
+        return {};
+    const QString chosen = m_settings->value(QStringLiteral("models/voiceGender/") + language);
+    if (m_settings->value(settingKey(Capability::TextToSpeech, language)) == info->id && info->voice(chosen))
+        return chosen;
+    return info->voices.first().gender;
+}
+
+int ModelManager::voiceSpeaker(const QString& language) const
+{
+    const ModelInfo* info = model(voiceFor(language));
+    const VoiceOption* voice = info ? info->voice(voiceGender(language)) : nullptr;
+    return voice ? voice->speaker : 0;
+}
+
+bool ModelManager::isVoiceActive(const QString& language, const QString& id, const QString& gender) const
+{
+    return !id.isEmpty() && voiceFor(language) == id && voiceGender(language) == gender;
+}
+
 QVariantList ModelManager::installedModels(const QString& capability, const QString& language) const
 {
     QVariantList result;
@@ -252,14 +283,15 @@ void ModelManager::selectModel(const QString& capability, const QString& id, con
     changed(capability);
 }
 
-QStringList ModelManager::voiceLanguages() const
+void ModelManager::selectVoice(const QString& language, const QString& id, const QString& gender)
 {
-    QStringList languages;
-    for (const ModelInfo& info : m_models) {
-        if (info.capability == Capability::TextToSpeech && info.available && !languages.contains(info.voiceLanguage))
-            languages << info.voiceLanguage;
-    }
-    return languages;
+    const ModelInfo* info = model(id);
+    if (!info || info->capability != Capability::TextToSpeech || info->voiceLanguage != language ||
+        !info->voice(gender) || !isInstalled(id))
+        return;
+    m_settings->setValue(settingKey(Capability::TextToSpeech, language), id);
+    m_settings->setValue(QStringLiteral("models/voiceGender/") + language, gender);
+    changed(Capability::TextToSpeech);
 }
 
 QString ModelManager::languageName(const QString& code) const
@@ -617,11 +649,17 @@ void ModelManager::changed(const QString& capability)
 {
     ++m_revision;
     emit revisionChanged();
+    reloadLists();
+    if (!capability.isEmpty())
+        emit activeModelChanged(capability);
+}
+
+void ModelManager::reloadLists()
+{
     m_translationList->reload();
     m_speechToTextList->reload();
     m_textToSpeechList->reload();
-    if (!capability.isEmpty())
-        emit activeModelChanged(capability);
+    m_voiceTable->reload();
 }
 
 void ModelManager::refreshLists(const QString& id)
@@ -629,4 +667,5 @@ void ModelManager::refreshLists(const QString& id)
     m_translationList->refresh(id);
     m_speechToTextList->refresh(id);
     m_textToSpeechList->refresh(id);
+    m_voiceTable->refresh(id);
 }

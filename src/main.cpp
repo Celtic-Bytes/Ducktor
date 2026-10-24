@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QGuiApplication>
 #include <QIcon>
+#include <QLibraryInfo>
 #include <QLocale>
 #include <QQmlApplicationEngine>
 #include <QQmlEngine>
@@ -23,11 +24,24 @@ int main(int argc, char* argv[])
     QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/resources/icons/ducktor.svg")));
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
 
-    QTranslator translator;
-    if (translator.load(QLocale(), QStringLiteral("ducktor"), QStringLiteral("_"), QStringLiteral(":/i18n")))
-        QGuiApplication::installTranslator(&translator);
-
     AppSettings settings(Paths::settingsFile());
+    QTranslator appTranslator;
+    QTranslator qtTranslator;
+    // English is the source language, so it needs no translation files.
+    const auto installLanguage = [&](const QString& code) {
+        QGuiApplication::removeTranslator(&appTranslator);
+        QGuiApplication::removeTranslator(&qtTranslator);
+        QLocale::setDefault(QLocale(code));
+        if (code == QLatin1String("en"))
+            return;
+        if (appTranslator.load(QStringLiteral(":/i18n/ducktor_") + code))
+            QGuiApplication::installTranslator(&appTranslator);
+        if (qtTranslator.load(QLocale(code), QStringLiteral("qtbase"), QStringLiteral("_"),
+                              QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
+            QGuiApplication::installTranslator(&qtTranslator);
+    };
+    installLanguage(settings.uiLanguage());
+
     ModelManager models(&settings, Paths::userModelsDir(), Paths::bundledModelDirs());
     QFile catalog(QStringLiteral(":/resources/models.json"));
     if (catalog.open(QIODevice::ReadOnly))
@@ -39,6 +53,12 @@ int main(int argc, char* argv[])
     qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "Settings", &settings);
 
     QQmlApplicationEngine engine;
+    QObject::connect(&settings, &AppSettings::uiLanguageChanged, &engine, [&]() {
+        installLanguage(settings.uiLanguage());
+        models.relocalize();
+        emit controller.languagesChanged();
+        engine.retranslate();
+    });
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed, &app, []() { QCoreApplication::exit(1); },
                      Qt::QueuedConnection);
     engine.loadFromModule("Ducktor", "Main");

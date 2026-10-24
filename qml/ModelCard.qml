@@ -1,9 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Ducktor
 import Ducktor.Core
 
-Frame {
+Card {
     id: card
 
     required property string capability
@@ -21,13 +22,29 @@ Frame {
     required property bool active
     required property bool recommended
     required property bool experimental
-    required property string unavailableReason
     required property string voiceLanguage
 
     readonly property bool installed: status === "installed" || status === "bundled"
     readonly property bool transferring: status === "downloading" || status === "verifying"
 
-    width: ListView.view ? ListView.view.width : implicitWidth
+    width: ListView.view ? ListView.view.width - 12 : implicitWidth
+
+    component Tag: Label {
+        property color tint: Theme.accent
+
+        leftPadding: 8
+        rightPadding: 8
+        topPadding: 2
+        bottomPadding: 2
+        font.pixelSize: 12
+        font.bold: true
+        color: tint
+        background: Rectangle {
+            radius: height / 2
+            color: "transparent"
+            border.color: parent.tint
+        }
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -39,34 +56,33 @@ Frame {
             Label {
                 text: card.name
                 font.bold: true
+                font.pixelSize: 15
                 Layout.fillWidth: true
                 elide: Text.ElideRight
             }
-            Label {
+            Tag {
                 visible: card.active
                 text: qsTr("In use")
-                color: palette.highlight
-                font.bold: true
+                tint: Theme.success
             }
-            Label {
+            Tag {
                 visible: card.recommended
                 text: qsTr("Recommended")
-                opacity: 0.8
             }
-            Label {
+            Tag {
                 visible: card.experimental
                 text: qsTr("Experimental")
-                color: "#b26a00"
+                tint: Theme.warning
             }
-            Label {
+            Tag {
                 visible: card.status === "bundled"
                 text: qsTr("Included")
-                opacity: 0.8
+                tint: Theme.mutedText
             }
             Label {
                 visible: card.sizeText !== ""
                 text: card.sizeText
-                opacity: 0.8
+                color: Theme.mutedText
             }
         }
 
@@ -79,13 +95,13 @@ Frame {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
             visible: card.languagesText !== ""
-            opacity: 0.8
+            color: Theme.mutedText
             text: qsTr("Languages: %1").arg(card.languagesText)
         }
         Label {
             Layout.fillWidth: true
             wrapMode: Text.Wrap
-            opacity: 0.8
+            color: Theme.mutedText
             textFormat: Text.StyledText
             text: {
                 const parts = []
@@ -99,17 +115,9 @@ Frame {
             }
             onLinkActivated: link => Qt.openUrlExternally(link)
         }
-        Label {
-            Layout.fillWidth: true
-            wrapMode: Text.Wrap
-            visible: card.status === "unavailable"
-            color: "#b26a00"
-            text: card.unavailableReason !== "" ? card.unavailableReason : qsTr("Not integrated in Ducktor yet.")
-        }
 
         RowLayout {
             spacing: 8
-            visible: card.status !== "unavailable"
 
             ProgressBar {
                 Layout.fillWidth: true
@@ -128,6 +136,8 @@ Frame {
             Button {
                 visible: card.status === "notInstalled"
                 text: qsTr("Download (%1)").arg(card.sizeText)
+                icon.source: "qrc:/resources/icons/download.svg"
+                icon.color: palette.buttonText
                 enabled: !Models.downloading && !Models.importing
                 onClicked: Models.download(card.modelId)
             }
@@ -139,11 +149,14 @@ Frame {
             Button {
                 visible: card.installed && !card.active
                 text: qsTr("Use")
+                highlighted: true
                 onClicked: Models.selectModel(card.capability, card.modelId, card.voiceLanguage)
             }
             Button {
                 visible: card.status === "installed"
                 text: qsTr("Delete")
+                icon.source: "qrc:/resources/icons/delete.svg"
+                icon.color: palette.buttonText
                 onClicked: deleteDialog.open()
             }
         }

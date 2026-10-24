@@ -14,3 +14,5 @@ Ducktor is licensed under the [GNU General Public License v3.0 or later](LICENSE
 ## AI models
 
 Ducktor does not include AI models in its source code. Each model is downloaded or imported by the user and keeps its own license, which may differ from Ducktor's. The license of every model is listed in [resources/models.json](resources/models.json) and shown in _Settings_ before downloading it.
+
+Some Piper voices were trained on recordings licensed for non-commercial use only, or were fine-tuned from voices with restrictive or unreviewed terms; their entry says so (for example, "non-commercial" or "base: lessac"). Check that license before using the generated audio outside personal use.

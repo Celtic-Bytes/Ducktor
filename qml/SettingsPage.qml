@@ -1,17 +1,26 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Ducktor
 import Ducktor.Core
 
 Page {
     id: settingsPage
 
+    signal privacyRequested()
+
     title: qsTr("Settings")
+    background: null
+
+    component SectionTitle: Label {
+        font.bold: true
+        font.pixelSize: 16
+    }
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 16
-        spacing: 12
+        anchors.margins: 20
+        spacing: 14
 
         TabBar {
             id: tabs
@@ -37,30 +46,29 @@ Page {
                 listModel: Models.speechToTextModels
                 intro: qsTr("Models that turn your voice into text. They detect the spoken language when the source language is set to automatic.")
             }
-            ModelSection {
-                capability: "text-to-speech"
-                listModel: Models.textToSpeechModels
-                intro: qsTr("Voices that read translations aloud. Each voice speaks one language; text translation works without them.")
-            }
+            VoiceSection {}
 
             ScrollView {
                 id: generalScroll
                 contentWidth: availableWidth
 
                 ColumnLayout {
-                    width: generalScroll.availableWidth
-                    spacing: 16
+                    width: generalScroll.availableWidth - 12
+                    spacing: 14
 
-                    GroupBox {
-                        title: qsTr("Limits")
+                    Card {
                         Layout.fillWidth: true
 
                         GridLayout {
                             anchors.fill: parent
                             columns: 2
                             columnSpacing: 16
-                            rowSpacing: 8
+                            rowSpacing: 10
 
+                            SectionTitle {
+                                Layout.columnSpan: 2
+                                text: qsTr("Limits")
+                            }
                             Label { text: qsTr("Maximum text length (characters)") }
                             SpinBox {
                                 from: Settings.minInputChars
@@ -83,31 +91,36 @@ Page {
                                 Layout.columnSpan: 2
                                 Layout.fillWidth: true
                                 wrapMode: Text.Wrap
-                                opacity: 0.75
+                                color: Theme.mutedText
                                 text: qsTr("These limits keep Ducktor responsive on computers with 8 GB of memory. You can lower them; higher values will be allowed once they have been tested.")
                             }
                         }
                     }
 
-                    GroupBox {
-                        title: qsTr("Voice")
-                        Layout.fillWidth: true
-
-                        Switch {
-                            text: qsTr("Read the translation aloud after dictating")
-                            checked: Settings.autoPlayVoiceResults
-                            onToggled: Settings.autoPlayVoiceResults = checked
-                        }
-                    }
-
-                    GroupBox {
-                        title: qsTr("Privacy")
+                    Card {
                         Layout.fillWidth: true
 
                         ColumnLayout {
                             anchors.fill: parent
                             spacing: 8
 
+                            SectionTitle { text: qsTr("Voice") }
+                            Switch {
+                                text: qsTr("Read the translation aloud after dictating")
+                                checked: Settings.autoPlayVoiceResults
+                                onToggled: Settings.autoPlayVoiceResults = checked
+                            }
+                        }
+                    }
+
+                    Card {
+                        Layout.fillWidth: true
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 8
+
+                            SectionTitle { text: qsTr("Privacy") }
                             Label {
                                 Layout.fillWidth: true
                                 wrapMode: Text.Wrap
@@ -116,12 +129,12 @@ Page {
                             Label {
                                 Layout.fillWidth: true
                                 wrapMode: Text.WrapAnywhere
-                                opacity: 0.75
+                                color: Theme.mutedText
                                 text: qsTr("Models folder: %1").arg(Models.modelsDirectory)
                             }
                             Button {
                                 text: qsTr("Read the privacy policy")
-                                onClicked: settingsPage.StackView.view.push(Qt.createComponent("Ducktor", "AboutPage"), { initialTab: 1 })
+                                onClicked: settingsPage.privacyRequested()
                             }
                         }
                     }

@@ -13,7 +13,10 @@
       "homepage": "https://huggingface.co/IndexTeam/Index-Translate-2B",
       "description": {
         "en": "Translation model released in September 2026. Its authors report better results than Hy-MT2-1.8B; Ducktor still has to confirm this for Spanish and English on 8 GB computers.",
-        "es": "Modelo de traducción publicado en septiembre de 2026. Sus autores publican mejores resultados que Hy-MT2-1.8B; Ducktor aún debe confirmarlo en español e inglés con equipos de 8 GB."
+        "es": "Modelo de traducción publicado en septiembre de 2026. Sus autores publican mejores resultados que Hy-MT2-1.8B; Ducktor aún debe confirmarlo en español e inglés con equipos de 8 GB.",
+        "fr": "Modèle de traduction publié en septembre 2026. Ses auteurs annoncent de meilleurs résultats que Hy-MT2-1.8B ; Ducktor doit encore le confirmer en espagnol et en anglais sur des ordinateurs de 8 Go.",
+        "it": "Modello di traduzione pubblicato a settembre 2026. I suoi autori riportano risultati migliori di Hy-MT2-1.8B; Ducktor deve ancora confermarlo in spagnolo e inglese su computer da 8 GB.",
+        "de": "Im September 2026 veröffentlichtes Übersetzungsmodell. Seine Autoren berichten bessere Ergebnisse als Hy-MT2-1.8B; Ducktor muss das für Spanisch und Englisch auf Rechnern mit 8 GB noch bestätigen."
       },
       "languages": [
         "es",
@@ -65,7 +68,10 @@
       "homepage": "https://huggingface.co/IndexTeam/Index-Translate-2B",
       "description": {
         "en": "The same model with less compression: it may translate slightly more faithfully, but it uses more memory and is slower.",
-        "es": "El mismo modelo con menos compresión: puede traducir con algo más de fidelidad, pero usa más memoria y es más lento."
+        "es": "El mismo modelo con menos compresión: puede traducir con algo más de fidelidad, pero usa más memoria y es más lento.",
+        "fr": "Le même modèle, moins compressé : il peut traduire un peu plus fidèlement, mais il utilise plus de mémoire et il est plus lent.",
+        "it": "Lo stesso modello con meno compressione: può tradurre in modo un po' più fedele, ma usa più memoria ed è più lento.",
+        "de": "Dasselbe Modell mit weniger Kompression: Es übersetzt eventuell etwas genauer, braucht aber mehr Speicher und ist langsamer."
       },
       "languages": [
         "es",
@@ -118,7 +124,10 @@
       "homepage": "https://huggingface.co/tencent/Hy-MT2-1.8B",
       "description": {
         "en": "Tencent translation model released in May 2026, smaller than Index-Translate. Pending validation of its prompt format with Ducktor's llama.cpp version.",
-        "es": "Modelo de traducción de Tencent publicado en mayo de 2026, más pequeño que Index-Translate. Pendiente de validar su formato de instrucciones con la versión de llama.cpp de Ducktor."
+        "es": "Modelo de traducción de Tencent publicado en mayo de 2026, más pequeño que Index-Translate. Pendiente de validar su formato de instrucciones con la versión de llama.cpp de Ducktor.",
+        "fr": "Modèle de traduction de Tencent publié en mai 2026, plus petit qu'Index-Translate. Son format d'instructions doit encore être validé avec la version de llama.cpp de Ducktor.",
+        "it": "Modello di traduzione di Tencent pubblicato a maggio 2026, più piccolo di Index-Translate. Il suo formato di istruzioni deve ancora essere convalidato con la versione di llama.cpp di Ducktor.",
+        "de": "Im Mai 2026 veröffentlichtes Übersetzungsmodell von Tencent, kleiner als Index-Translate. Sein Prompt-Format muss mit der llama.cpp-Version von Ducktor noch geprüft werden."
       },
       "languages": [
         "es",
@@ -170,7 +179,10 @@
       "homepage": "https://github.com/ggml-org/whisper.cpp",
       "description": {
         "en": "Small multilingual model that runs well on modest CPUs. It is not the newest option; it is the lightweight reference until newer engines are integrated.",
-        "es": "Modelo multilingüe pequeño que funciona bien en procesadores modestos. No es la opción más reciente: es la referencia ligera hasta integrar motores más nuevos."
+        "es": "Modelo multilingüe pequeño que funciona bien en procesadores modestos. No es la opción más reciente: es la referencia ligera hasta integrar motores más nuevos.",
+        "fr": "Petit modèle multilingue qui fonctionne bien sur des processeurs modestes. Ce n'est pas l'option la plus récente : c'est la référence légère en attendant d'intégrer des moteurs plus récents.",
+        "it": "Piccolo modello multilingue che funziona bene su processori modesti. Non è l'opzione più recente: è il riferimento leggero finché non verranno integrati motori più nuovi.",
+        "de": "Kleines mehrsprachiges Modell, das auf einfachen Prozessoren gut läuft. Es ist nicht die neueste Option, sondern die leichte Referenz, bis neuere Engines integriert sind."
       },
       "languages": [
         "es",
@@ -216,7 +228,10 @@
       "homepage": "https://github.com/ggml-org/whisper.cpp",
       "description": {
         "en": "More accurate than base, especially with accents or noise, but slower on modest CPUs.",
-        "es": "Más preciso que base, sobre todo con acentos o ruido, pero más lento en procesadores modestos."
+        "es": "Más preciso que base, sobre todo con acentos o ruido, pero más lento en procesadores modestos.",
+        "fr": "Plus précis que base, surtout avec des accents ou du bruit, mais plus lent sur des processeurs modestes.",
+        "it": "Più preciso di base, soprattutto con accenti o rumore, ma più lento su processori modesti.",
+        "de": "Genauer als base, besonders bei Akzenten oder Störgeräuschen, aber langsamer auf einfachen Prozessoren."
       },
       "languages": [
         "es",
@@ -252,72 +267,249 @@
       ]
     },
     {
-      "id": "parakeet-tdt-0.6b-v3",
-      "capability": "speech-to-text",
-      "engine": "nemo-speech",
-      "name": "NVIDIA Parakeet TDT 0.6B v3",
-      "released": "2025-08-14",
-      "license": "CC-BY-4.0",
-      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
-      "homepage": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
-      "description": {
-        "en": "Recognizes 25 European languages, including Spanish and English, with automatic language detection.",
-        "es": "Reconoce 25 idiomas europeos, incluidos español e inglés, con detección automática del idioma."
-      },
-      "unavailableReason": {
-        "en": "Requires integrating NVIDIA NeMo-Speech.cpp; not available in this version yet.",
-        "es": "Requiere integrar NVIDIA NeMo-Speech.cpp; aún no está disponible en esta versión."
-      }
+      "id": "piper-ar-jo-kareem-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Kareem",
+      "voiceLanguage": "ar",
+      "locale": "ar_JO",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: unreviewed · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ar/ar_JO/kareem/medium/MODEL_CARD",
+      "homepage": "https://github.com/AliMokhammad/arabicttstrain/",
+      "files": [
+        {
+          "name": "ar_JO-kareem-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ar/ar_JO/kareem/medium/ar_JO-kareem-medium.onnx",
+          "size": 63201294,
+          "sha256": "9e95cab07b679da603bba17c4dec7ab3111320571964ee95c0379603c086491e"
+        },
+        {
+          "name": "ar_JO-kareem-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ar/ar_JO/kareem/medium/ar_JO-kareem-medium.onnx.json",
+          "size": 5024,
+          "sha256": "ea6d9b9d9076dbdb6bf5c98c6a141ef154959d2359709b37855727964e7d6c4d"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ar/ar_JO/kareem/medium/MODEL_CARD",
+          "size": 283,
+          "sha256": "38e1e4f94c4cb9eda041a639096763a8c5681d0be5a5b3e22f990aed6bb4b86e"
+        }
+      ]
     },
     {
-      "id": "qwen3-asr-0.6b",
-      "capability": "speech-to-text",
-      "engine": "qwen3-asr",
-      "name": "Qwen3-ASR 0.6B",
-      "released": "2026-01",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
-      "homepage": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
-      "description": {
-        "en": "2026 model covering 30 languages and 22 Chinese dialects, with language identification.",
-        "es": "Modelo de 2026 con 30 idiomas y 22 dialectos chinos, con identificación del idioma."
-      },
-      "unavailableReason": {
-        "en": "Its official runtime uses Python and PyTorch; a native CPU engine still has to be validated.",
-        "es": "Su motor oficial usa Python y PyTorch; falta validar un motor nativo para CPU."
-      }
+      "id": "piper-ca-es-upc-ona-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Ona",
+      "voiceLanguage": "ca",
+      "locale": "ca_ES",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY-SA 3.0 ES · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_ona/medium/MODEL_CARD",
+      "homepage": "https://collectivat.cat/asr#upc-festcat-tts-corpora",
+      "files": [
+        {
+          "name": "ca_ES-upc_ona-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_ona/medium/ca_ES-upc_ona-medium.onnx",
+          "size": 63201294,
+          "sha256": "fdb652db8c11a4475527346cf3241cb064d1ba393cf370f3f2ec09a872d118fd"
+        },
+        {
+          "name": "ca_ES-upc_ona-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_ona/medium/ca_ES-upc_ona-medium.onnx.json",
+          "size": 4875,
+          "sha256": "7f76acc9c06f4eda9e6aef2997b75782d97855aab48d4b401eb956a6e655eddc"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_ona/medium/MODEL_CARD",
+          "size": 296,
+          "sha256": "2961b53af17c66971b3ebe3b174566a16ae6e9302997eed111a7d2b1954d31fd"
+        }
+      ]
     },
     {
-      "id": "moonshine-streaming",
-      "capability": "speech-to-text",
-      "engine": "moonshine",
-      "name": "Moonshine Streaming (ES/EN)",
-      "license": "MIT",
-      "licenseUrl": "https://github.com/moonshine-ai/moonshine/blob/main/LICENSE",
-      "homepage": "https://github.com/moonshine-ai/moonshine",
-      "description": {
-        "en": "Very light models with one model per language.",
-        "es": "Modelos muy ligeros, con un modelo por idioma."
-      },
-      "unavailableReason": {
-        "en": "Requires integrating the Moonshine runtime and solving automatic language detection.",
-        "es": "Requiere integrar el motor de Moonshine y resolver la detección automática del idioma."
-      }
+      "id": "piper-ca-es-upc-pau-x-low",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Pau",
+      "voiceLanguage": "ca",
+      "locale": "ca_ES",
+      "quality": "x_low",
+      "gender": "male",
+      "license": "MIT · dataset: CC BY-SA 3.0 ES",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_pau/x_low/MODEL_CARD",
+      "homepage": "https://collectivat.cat/asr#upc-festcat-tts-corpora",
+      "files": [
+        {
+          "name": "ca_ES-upc_pau-x_low.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_pau/x_low/ca_ES-upc_pau-x_low.onnx",
+          "size": 28130791,
+          "sha256": "c936a1a78b0a795af3c2422a0f2edb26303c389ff961616902ba12e26b489071"
+        },
+        {
+          "name": "ca_ES-upc_pau-x_low.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_pau/x_low/ca_ES-upc_pau-x_low.onnx.json",
+          "size": 4159,
+          "sha256": "f3e76f0640c73a0a87482b37e5c85dd93532127f81e37ea2875e0dace28bb1e2"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ca/ca_ES/upc_pau/x_low/MODEL_CARD",
+          "size": 258,
+          "sha256": "82d24aa9943e3b2f7303ef863fefb31a95c270ad62083ee37af77a92c74e918e"
+        }
+      ]
+    },
+    {
+      "id": "piper-cs-cz-kasandra-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Kasandra",
+      "voiceLanguage": "cs",
+      "locale": "cs_CZ",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY 4.0",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/kasandra/medium/MODEL_CARD",
+      "homepage": "https://huggingface.co/ondrazarici/Cassandra-Kasandra-piper-cz",
+      "files": [
+        {
+          "name": "cs_CZ-kasandra-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/kasandra/medium/cs_CZ-kasandra-medium.onnx",
+          "size": 63511038,
+          "sha256": "09d08aa23691ed2d53fb3db242cfe82b189adf9c1812dd5fe928b5789ed76df7"
+        },
+        {
+          "name": "cs_CZ-kasandra-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/kasandra/medium/cs_CZ-kasandra-medium.onnx.json",
+          "size": 3232,
+          "sha256": "5039f9e49def4f4f8438db031868800a13bf4c6246b62afdb0947f4c5478770e"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/kasandra/medium/MODEL_CARD",
+          "size": 424,
+          "sha256": "328794737f2a0d0f8111f5c628a9965e9924712e55a0e9f50100f9dd3c34f639"
+        }
+      ]
+    },
+    {
+      "id": "piper-cs-cz-jirka-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Jirka",
+      "voiceLanguage": "cs",
+      "locale": "cs_CZ",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/jirka/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "cs_CZ-jirka-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/jirka/medium/cs_CZ-jirka-medium.onnx",
+          "size": 63201294,
+          "sha256": "cbd5c900acacc8e8cbecd64347abb8de39c00a9d3104bed06fee92e4f319efc8"
+        },
+        {
+          "name": "cs_CZ-jirka-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/jirka/medium/cs_CZ-jirka-medium.onnx.json",
+          "size": 5025,
+          "sha256": "fb38b1799b7354808227c065efa97b1ffa2b0cde59505babb56a36d35af9c637"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/cs/cs_CZ/jirka/medium/MODEL_CARD",
+          "size": 282,
+          "sha256": "b8043c32e43496b109d49bbc28290e570c064a4ed949962a71a5ff6b2ad647e7"
+        }
+      ]
+    },
+    {
+      "id": "piper-de-de-ramona-low",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Ramona",
+      "voiceLanguage": "de",
+      "locale": "de_DE",
+      "quality": "low",
+      "gender": "female",
+      "license": "MIT · dataset: M-AILABS",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/ramona/low/MODEL_CARD",
+      "homepage": "https://www.caito.de/2019/01/03/the-m-ailabs-speech-dataset/",
+      "files": [
+        {
+          "name": "de_DE-ramona-low.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/ramona/low/de_DE-ramona-low.onnx",
+          "size": 63104526,
+          "sha256": "a1068592532aad8c49bf3d1a01b8749c11d7dba726689ee28ad64e7b627ae4c5"
+        },
+        {
+          "name": "de_DE-ramona-low.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/ramona/low/de_DE-ramona-low.onnx.json",
+          "size": 4157,
+          "sha256": "64906ab7a050ac685fa3dcea044baa798f67ed77be164f9c668a69298c6487d2"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/ramona/low/MODEL_CARD",
+          "size": 255,
+          "sha256": "3b6dbf2cde464e35cbdd3c06fccb34bf8cd590878c251391e9fd0a6f1bb993da"
+        }
+      ]
+    },
+    {
+      "id": "piper-de-de-thorsten-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Thorsten",
+      "voiceLanguage": "de",
+      "locale": "de_DE",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/thorsten/medium/MODEL_CARD",
+      "homepage": "https://github.com/thorstenMueller/Thorsten-Voice",
+      "files": [
+        {
+          "name": "de_DE-thorsten-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx",
+          "size": 63201294,
+          "sha256": "7e64762d8e5118bb578f2eea6207e1a35a8e0c30595010b666f983fc87bb7819"
+        },
+        {
+          "name": "de_DE-thorsten-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/thorsten/medium/de_DE-thorsten-medium.onnx.json",
+          "size": 4819,
+          "sha256": "974adee790533adb273a1ac88f49027d2a1b8f0f2cf4905954a4791e79264e85"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/de/de_DE/thorsten/medium/MODEL_CARD",
+          "size": 285,
+          "sha256": "5196b5ab0794e6056263a1f37c18bec407b61ac187529bee29d1c366871e5c9e"
+        }
+      ]
     },
     {
       "id": "piper-en-us-ljspeech-medium",
       "capability": "text-to-speech",
       "engine": "piper",
-      "name": "Piper · LJSpeech (English, US)",
+      "name": "LJSpeech",
       "voiceLanguage": "en",
+      "locale": "en_US",
+      "quality": "medium",
+      "gender": "female",
       "recommended": true,
-      "license": "MIT · LJ Speech: public domain",
-      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/main/en/en_US/ljspeech/medium/MODEL_CARD",
-      "homepage": "https://github.com/OHF-Voice/piper1-gpl",
-      "description": {
-        "en": "Female US English voice trained from scratch on the public domain LJ Speech dataset.",
-        "es": "Voz femenina de inglés de EE. UU. entrenada desde cero con LJ Speech, de dominio público."
-      },
+      "license": "MIT · dataset: public domain",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/ljspeech/medium/MODEL_CARD",
+      "homepage": "https://keithito.com/LJ-Speech-Dataset/",
       "files": [
         {
           "name": "en_US-ljspeech-medium.onnx",
@@ -340,19 +532,53 @@
       ]
     },
     {
+      "id": "piper-en-us-norman-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Norman",
+      "voiceLanguage": "en",
+      "locale": "en_US",
+      "quality": "medium",
+      "gender": "male",
+      "recommended": true,
+      "license": "MIT · dataset: public domain",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/norman/medium/MODEL_CARD",
+      "homepage": "https://librivox.org",
+      "files": [
+        {
+          "name": "en_US-norman-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/norman/medium/en_US-norman-medium.onnx",
+          "size": 63531379,
+          "sha256": "b9739443232a80a59c7d18810dd856899bf16a7964725f5ab81ea49b1351cb71"
+        },
+        {
+          "name": "en_US-norman-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/norman/medium/en_US-norman-medium.onnx.json",
+          "size": 4968,
+          "sha256": "6c2db7f558a4a8deb9fe822583c1c5105f6c4e834dd0f9de8ad17a888ee9fe1d"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/en/en_US/norman/medium/MODEL_CARD",
+          "size": 528,
+          "sha256": "60eaf4d10009d1bd4a1aa555d337dae00f60421d72fee415b9139a021e7cb5d0"
+        }
+      ]
+    },
+    {
       "id": "piper-es-es-sharvard-medium",
       "capability": "text-to-speech",
       "engine": "piper",
-      "name": "Piper · Sharvard (Español, España)",
+      "name": "Sharvard",
       "voiceLanguage": "es",
-      "experimental": true,
-      "license": "MIT · Sharvard: CC-BY-3.0",
-      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/main/es/es_ES/sharvard/medium/MODEL_CARD",
-      "homepage": "https://github.com/OHF-Voice/piper1-gpl",
-      "description": {
-        "en": "Spanish (Spain) voice with two speakers. It was fine-tuned from the English lessac voice, whose license is still under review, so it is not bundled.",
-        "es": "Voz de español de España con dos hablantes. Se ajustó a partir de la voz inglesa lessac, cuya licencia sigue en revisión, por eso no viene incluida."
+      "locale": "es_ES",
+      "quality": "medium",
+      "speakers": {
+        "female": 1
       },
+      "license": "MIT · dataset: CC BY 3.0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/sharvard/medium/MODEL_CARD",
+      "homepage": "https://datashare.ed.ac.uk/handle/10283/574",
       "files": [
         {
           "name": "es_ES-sharvard-medium.onnx",
@@ -375,61 +601,634 @@
       ]
     },
     {
-      "id": "kokoro-82m",
+      "id": "piper-es-es-davefx-medium",
       "capability": "text-to-speech",
-      "engine": "kokoro",
-      "name": "Kokoro 82M",
-      "released": "2025-01-27",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://huggingface.co/hexgrad/Kokoro-82M",
-      "homepage": "https://huggingface.co/hexgrad/Kokoro-82M",
-      "languages": ["es", "en", "fr", "it", "pt", "hi", "ja", "zh"],
-      "description": {
-        "en": "Small multilingual voice model with several Spanish and English voices.",
-        "es": "Modelo de voz multilingüe pequeño, con varias voces en español e inglés."
-      },
-      "unavailableReason": {
-        "en": "Requires integrating an ONNX engine for Kokoro and comparing it with Piper.",
-        "es": "Requiere integrar un motor ONNX para Kokoro y compararlo con Piper."
-      }
+      "engine": "piper",
+      "name": "Davefx",
+      "voiceLanguage": "es",
+      "locale": "es_ES",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/davefx/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "es_ES-davefx-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx",
+          "size": 63201294,
+          "sha256": "6658b03b1a6c316ee4c265a9896abc1393353c2d9e1bca7d66c2c442e222a917"
+        },
+        {
+          "name": "es_ES-davefx-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/davefx/medium/es_ES-davefx-medium.onnx.json",
+          "size": 4817,
+          "sha256": "0e0dda87c732f6f38771ff274a6380d9252f327dca77aa2963d5fbdf9ec54842"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/es/es_ES/davefx/medium/MODEL_CARD",
+          "size": 276,
+          "sha256": "420703b5d8ea239b729f13d83f31eea9bae5fcb89447de23ebc94aa8a4768f95"
+        }
+      ]
     },
     {
-      "id": "ming-3.0-tts-0.5b",
+      "id": "piper-fr-fr-siwis-medium",
       "capability": "text-to-speech",
-      "engine": "ming-tts",
-      "name": "Ming-3.0-TTS 0.5B",
-      "released": "2026-10",
-      "license": "MIT",
-      "licenseUrl": "https://github.com/inclusionAI/Ming-3.0-tts/blob/main/LICENSE",
-      "homepage": "https://huggingface.co/inclusionAI/Ming-3.0-tts-0.5B",
-      "languages": ["es", "en", "de", "fr", "ko", "ja", "zh"],
-      "description": {
-        "en": "Very recent expressive voice model with Spanish and English.",
-        "es": "Modelo de voz expresivo muy reciente, con español e inglés."
-      },
-      "unavailableReason": {
-        "en": "Its official runtime uses Python and was tested on GPUs; CPU viability is still unknown.",
-        "es": "Su motor oficial usa Python y se probó en GPU; aún se desconoce si es viable en CPU."
-      }
+      "engine": "piper",
+      "name": "Siwis",
+      "voiceLanguage": "fr",
+      "locale": "fr_FR",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY 4.0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/siwis/medium/MODEL_CARD",
+      "homepage": "https://datashare.is.ed.ac.uk/handle/10283/2353",
+      "files": [
+        {
+          "name": "fr_FR-siwis-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx",
+          "size": 63201294,
+          "sha256": "641d1ab097da2b81128c076810edb052b385decc8be3381814802a64a73baf99"
+        },
+        {
+          "name": "fr_FR-siwis-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/siwis/medium/fr_FR-siwis-medium.onnx.json",
+          "size": 4875,
+          "sha256": "39479916c2db192b5ac9764daddd0c744d83e023ad890c6976c0633ae4df8959"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/siwis/medium/MODEL_CARD",
+          "size": 284,
+          "sha256": "bd8b8d079d4d3d2c4cc20345889bbcd586d72f021a132f93357a763eb5232cce"
+        }
+      ]
     },
     {
-      "id": "qwen3-tts-0.6b",
+      "id": "piper-fr-fr-tom-medium",
       "capability": "text-to-speech",
-      "engine": "qwen3-tts",
-      "name": "Qwen3-TTS 0.6B",
-      "released": "2026-01-22",
-      "license": "Apache-2.0",
-      "licenseUrl": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice",
-      "homepage": "https://github.com/QwenLM/Qwen3-TTS",
-      "languages": ["es", "en", "de", "fr", "it", "pt", "ru", "ko", "ja", "zh"],
-      "description": {
-        "en": "Expressive voice model covering 10 languages. Its preset voices are not native Spanish speakers.",
-        "es": "Modelo de voz expresivo con 10 idiomas. Sus voces predefinidas no son hablantes nativos de español."
+      "engine": "piper",
+      "name": "Tom",
+      "voiceLanguage": "fr",
+      "locale": "fr_FR",
+      "quality": "medium",
+      "gender": "male",
+      "license": "AGPL-3.0",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/tom/medium/MODEL_CARD",
+      "homepage": "https://git.bksp.space/Tjiho/French-tts-model-piper",
+      "files": [
+        {
+          "name": "fr_FR-tom-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/tom/medium/fr_FR-tom-medium.onnx",
+          "size": 63511038,
+          "sha256": "bf65074ccdeeeeaa832e75edb1c0a513c01c9a972bdf085ff8a6e71ea234fd41"
+        },
+        {
+          "name": "fr_FR-tom-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/tom/medium/fr_FR-tom-medium.onnx.json",
+          "size": 4959,
+          "sha256": "2f7f885ad5a0aad802e3cc24e4f57239febdcb142b4876de5d238094674361cc"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/fr/fr_FR/tom/medium/MODEL_CARD",
+          "size": 233,
+          "sha256": "ece4132df4a1ae2f90e22c9f01539aec14acb7f8dc8ded64edd2051945d0f1e9"
+        }
+      ]
+    },
+    {
+      "id": "piper-hi-in-priyamvada-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Priyamvada",
+      "voiceLanguage": "hi",
+      "locale": "hi_IN",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY-NC-SA 4.0 (non-commercial)",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/priyamvada/medium/MODEL_CARD",
+      "homepage": "https://huggingface.co/rhasspy/piper-voices",
+      "files": [
+        {
+          "name": "hi_IN-priyamvada-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/priyamvada/medium/hi_IN-priyamvada-medium.onnx",
+          "size": 63516050,
+          "sha256": "aa63bcf2cd493b55a450f280e23cf77f03afc9af7015e6e5acd43b652f166c88"
+        },
+        {
+          "name": "hi_IN-priyamvada-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/priyamvada/medium/hi_IN-priyamvada-medium.onnx.json",
+          "size": 4973,
+          "sha256": "5efc0ccf7529f3528996d46e0fac1f969f681d44a8e55bfa6236ff8841b5d52d"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/priyamvada/medium/MODEL_CARD",
+          "size": 307,
+          "sha256": "8ce0324466010a59127fe8cab16416befcca136abf4b57ebd8ad5a2033c2021e"
+        }
+      ]
+    },
+    {
+      "id": "piper-hi-in-pratham-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Pratham",
+      "voiceLanguage": "hi",
+      "locale": "hi_IN",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC BY-NC-SA 4.0 (non-commercial)",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/pratham/medium/MODEL_CARD",
+      "homepage": "https://huggingface.co/rhasspy/piper-voices",
+      "files": [
+        {
+          "name": "hi_IN-pratham-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/pratham/medium/hi_IN-pratham-medium.onnx",
+          "size": 63516050,
+          "sha256": "169964b0871667f6793416d4b35e97357a68ba1ad01df8580c28048989ee7693"
+        },
+        {
+          "name": "hi_IN-pratham-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/pratham/medium/hi_IN-pratham-medium.onnx.json",
+          "size": 4970,
+          "sha256": "b68edd2cd7950dd436314013b7cd12e9699e5a3f6fe5af5af94294cf6aa7b9fd"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/hi/hi_IN/pratham/medium/MODEL_CARD",
+          "size": 304,
+          "sha256": "89cf491ea99e69b27c94599cecea3f0fc6aeacb30f4ccdb12897f659868df29e"
+        }
+      ]
+    },
+    {
+      "id": "piper-it-it-paola-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Paola",
+      "voiceLanguage": "it",
+      "locale": "it_IT",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: unreviewed · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/paola/medium/MODEL_CARD",
+      "homepage": "https://huggingface.co/datasets/paolapersico1/Voice-Dataset-Italian",
+      "files": [
+        {
+          "name": "it_IT-paola-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/paola/medium/it_IT-paola-medium.onnx",
+          "size": 63511038,
+          "sha256": "6fc918b5a0ea6137382833dddfa567bffbe6a5060c02043c87192ee59c04210c"
+        },
+        {
+          "name": "it_IT-paola-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/paola/medium/it_IT-paola-medium.onnx.json",
+          "size": 7099,
+          "sha256": "aea19c0a7fce29fbc359b93f10e7902854401e4c95ae2ea328ae516b15d296cf"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/paola/medium/MODEL_CARD",
+          "size": 303,
+          "sha256": "c53fd0070dc93b438edbce06728eb83759ba030fff0cce523209ee4a0a6363c0"
+        }
+      ]
+    },
+    {
+      "id": "piper-it-it-riccardo-x-low",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Riccardo",
+      "voiceLanguage": "it",
+      "locale": "it_IT",
+      "quality": "x_low",
+      "gender": "male",
+      "license": "MIT · dataset: M-AILABS",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/riccardo/x_low/MODEL_CARD",
+      "homepage": "https://www.caito.de/2019/01/03/the-m-ailabs-speech-dataset/",
+      "files": [
+        {
+          "name": "it_IT-riccardo-x_low.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx",
+          "size": 28130791,
+          "sha256": "1368de15f123275a7ef951c9e5e30be0f58a032daa14a0da44037443c1d1d21b"
+        },
+        {
+          "name": "it_IT-riccardo-x_low.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/riccardo/x_low/it_IT-riccardo-x_low.onnx.json",
+          "size": 4161,
+          "sha256": "146ab9c634afe524e9fb7530f2510df7a42fb1db56b52658ca1fb3d98001a62a"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/it/it_IT/riccardo/x_low/MODEL_CARD",
+          "size": 260,
+          "sha256": "7ce3b2fc4f454c84936887971574e436cc2154049b427a530f70bee050b2fdc6"
+        }
+      ]
+    },
+    {
+      "id": "piper-ko-kr-kss-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "KSS",
+      "voiceLanguage": "ko",
+      "locale": "ko_KR",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY-NC-SA 4.0 (non-commercial) · base: LibriTTS-R",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ko/ko_KR/kss/medium/MODEL_CARD",
+      "homepage": "https://www.kaggle.com/datasets/bryanpark/korean-single-speaker-speech-dataset",
+      "files": [
+        {
+          "name": "ko_KR-kss-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ko/ko_KR/kss/medium/ko_KR-kss-medium.onnx",
+          "size": 63221984,
+          "sha256": "624fd774e26895f24bebae1bd9a3379e3394baeade4b584924f83e414096e2c9"
+        },
+        {
+          "name": "ko_KR-kss-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ko/ko_KR/kss/medium/ko_KR-kss-medium.onnx.json",
+          "size": 5232,
+          "sha256": "153b5619d0580f824a59108d83ca19434de410eb8e4fe80325b58684fdc8a1df"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ko/ko_KR/kss/medium/MODEL_CARD",
+          "size": 333,
+          "sha256": "792db9e4889b69bf56bf49ed584809292110e16bf1fc904ff2b99faf8f778d6d"
+        }
+      ]
+    },
+    {
+      "id": "piper-nl-be-nathalie-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Nathalie",
+      "voiceLanguage": "nl",
+      "locale": "nl_BE",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/nathalie/medium/MODEL_CARD",
+      "homepage": "https://github.com/rhasspy/dataset-voice-nathalie",
+      "files": [
+        {
+          "name": "nl_BE-nathalie-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/nathalie/medium/nl_BE-nathalie-medium.onnx",
+          "size": 63201294,
+          "sha256": "49cf48023861f9fd42e13a8632f068fee67d1ce244a6ee38f29595afbf0a6be4"
+        },
+        {
+          "name": "nl_BE-nathalie-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/nathalie/medium/nl_BE-nathalie-medium.onnx.json",
+          "size": 4879,
+          "sha256": "4704af2736022e910a3f32672480d5530dd39da5c2bcc079f315f604166ff0de"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/nathalie/medium/MODEL_CARD",
+          "size": 284,
+          "sha256": "129daeda6c74903efac7aa522ae4fd6628a6acdd0975ee897384e1079acbcd2f"
+        }
+      ]
+    },
+    {
+      "id": "piper-nl-be-rdh-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "RDH",
+      "voiceLanguage": "nl",
+      "locale": "nl_BE",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/rdh/medium/MODEL_CARD",
+      "homepage": "https://github.com/r-dh/dutch-vl-tts",
+      "files": [
+        {
+          "name": "nl_BE-rdh-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/rdh/medium/nl_BE-rdh-medium.onnx",
+          "size": 63104526,
+          "sha256": "fb1a9d89ff53dbd510c5d10bd1365c36a5f76249c3ca603076646fd778003db1"
+        },
+        {
+          "name": "nl_BE-rdh-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/rdh/medium/nl_BE-rdh-medium.onnx.json",
+          "size": 4159,
+          "sha256": "65deb256664d22099b0db5bb36d96237a3e32e43885c6ce4ee6811e6c04a8d79"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/nl/nl_BE/rdh/medium/MODEL_CARD",
+          "size": 244,
+          "sha256": "a0ac804376a1b4be5aeba0f982e43380bccd105b84af3477208f8a2b0fb89cc3"
+        }
+      ]
+    },
+    {
+      "id": "piper-pl-pl-gosia-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Gosia",
+      "voiceLanguage": "pl",
+      "locale": "pl_PL",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/gosia/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "pl_PL-gosia-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/gosia/medium/pl_PL-gosia-medium.onnx",
+          "size": 63201294,
+          "sha256": "38f66464240ed74f186e6b7dc13c6e3b22e023426299f25c2b3cc9dfa9373fbc"
+        },
+        {
+          "name": "pl_PL-gosia-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/gosia/medium/pl_PL-gosia-medium.onnx.json",
+          "size": 4814,
+          "sha256": "1aefb31a9d53ffe44a8163ff73ec833acb7a6253848f6bb0403d8a66f9c7510d"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/gosia/medium/MODEL_CARD",
+          "size": 275,
+          "sha256": "6b4de033dfff0da758bbe4d438fd87fbd917ab843bdd83f591fa0f32b8eb5780"
+        }
+      ]
+    },
+    {
+      "id": "piper-pl-pl-darkman-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Darkman",
+      "voiceLanguage": "pl",
+      "locale": "pl_PL",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/darkman/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "pl_PL-darkman-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/darkman/medium/pl_PL-darkman-medium.onnx",
+          "size": 63201294,
+          "sha256": "db505438a5364e8e2e0242c4324130a873ed660dfbe8d9689cef428ffb1b645f"
+        },
+        {
+          "name": "pl_PL-darkman-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/darkman/medium/pl_PL-darkman-medium.onnx.json",
+          "size": 4816,
+          "sha256": "70f999f11fa8ad13d3ef779041ee93c9f38be5abdbacdfad42449712fe91c81b"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pl/pl_PL/darkman/medium/MODEL_CARD",
+          "size": 277,
+          "sha256": "8d860f0cf7dd85e84c923006c5aeaa779a2ff3b1fe89cf499116d93e3a62a4bd"
+        }
+      ]
+    },
+    {
+      "id": "piper-pt-br-faber-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Faber",
+      "voiceLanguage": "pt",
+      "locale": "pt_BR",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pt/pt_BR/faber/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "pt_BR-faber-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx",
+          "size": 63201294,
+          "sha256": "858555e3a064209c57088fe6bd70c4c3dc54d03eaa00c45d5ecaf43a33f95aa7"
+        },
+        {
+          "name": "pt_BR-faber-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pt/pt_BR/faber/medium/pt_BR-faber-medium.onnx.json",
+          "size": 4855,
+          "sha256": "7e694de195ae3fc36dd732c445eb04fb49b649854893cb5506b978f0d50a1d6f"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/pt/pt_BR/faber/medium/MODEL_CARD",
+          "size": 279,
+          "sha256": "01f1a5bcfd0538782726059ae407eae9c2dd1b5b35f7298fd53a68de91afe563"
+        }
+      ]
+    },
+    {
+      "id": "piper-ru-ru-irina-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Irina",
+      "voiceLanguage": "ru",
+      "locale": "ru_RU",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: unknown license · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/irina/medium/MODEL_CARD",
+      "homepage": "https://github.com/RHVoice/RHVoice",
+      "files": [
+        {
+          "name": "ru_RU-irina-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/irina/medium/ru_RU-irina-medium.onnx",
+          "size": 63201294,
+          "sha256": "8ff38212d23da300bbe3705c645e6e5b9475f0bfde01558eb17813e22acaaaaa"
+        },
+        {
+          "name": "ru_RU-irina-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/irina/medium/ru_RU-irina-medium.onnx.json",
+          "size": 4765,
+          "sha256": "c2ec28bb38e2b59e93b959b3e40348c1afebbd272f30fed5d41205d08e98a9d7"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/irina/medium/MODEL_CARD",
+          "size": 271,
+          "sha256": "f4fc2deb0e8c6219f29202b8dd06c9638c5ffd50ad5c6b2c90cf1aa59d507593"
+        }
+      ]
+    },
+    {
+      "id": "piper-ru-ru-denis-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Denis",
+      "voiceLanguage": "ru",
+      "locale": "ru_RU",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/denis/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "ru_RU-denis-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/denis/medium/ru_RU-denis-medium.onnx",
+          "size": 63201294,
+          "sha256": "15fab56e11a097858ee115545d0f697fc2a316c41a291a5362349fb870411b0a"
+        },
+        {
+          "name": "ru_RU-denis-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/denis/medium/ru_RU-denis-medium.onnx.json",
+          "size": 4823,
+          "sha256": "831c860dac0b5073eaa81610a0a638ec23d90a6cf8e5f871b4485c2cec3767c8"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/ru/ru_RU/denis/medium/MODEL_CARD",
+          "size": 276,
+          "sha256": "8b5d685dd80f8ad3f8dbbe1c56b16bb0809f00c144af3642dbcf3b707eb89c12"
+        }
+      ]
+    },
+    {
+      "id": "piper-tr-tr-dfki-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "DFKI",
+      "voiceLanguage": "tr",
+      "locale": "tr_TR",
+      "quality": "medium",
+      "gender": "male",
+      "license": "MIT · dataset: CC BY-NC-SA 4.0 (non-commercial) · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/tr/tr_TR/dfki/medium/MODEL_CARD",
+      "homepage": "https://github.com/marytts/dfki-ot-data/",
+      "files": [
+        {
+          "name": "tr_TR-dfki-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/tr/tr_TR/dfki/medium/tr_TR-dfki-medium.onnx",
+          "size": 63201294,
+          "sha256": "2844717f524ab965d3fe86e60562cbb601d3e456836efcc2196cc3a14112a8fb"
+        },
+        {
+          "name": "tr_TR-dfki-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/tr/tr_TR/dfki/medium/tr_TR-dfki-medium.onnx.json",
+          "size": 4960,
+          "sha256": "13ebd7810f1b61b5027583cf3131a0a233b6ea81c38f2200ebc4ff41c3cca039"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/tr/tr_TR/dfki/medium/MODEL_CARD",
+          "size": 319,
+          "sha256": "a3e08c57b9c6d428f8e4fb146512c8b1fb96a68c99d43820ed1dfea6d39cb35f"
+        }
+      ]
+    },
+    {
+      "id": "piper-uk-ua-ukrainian-tts-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Lada · Mykyta",
+      "voiceLanguage": "uk",
+      "locale": "uk_UA",
+      "quality": "medium",
+      "speakers": {
+        "female": 0,
+        "male": 1
       },
-      "unavailableReason": {
-        "en": "Its official runtime uses Python and PyTorch; a native CPU engine still has to be validated.",
-        "es": "Su motor oficial usa Python y PyTorch; falta validar un motor nativo para CPU."
-      }
+      "license": "MIT · dataset: CC0",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/uk/uk_UA/ukrainian_tts/medium/MODEL_CARD",
+      "homepage": "https://github.com/OHF-Voice/voice-datasets",
+      "files": [
+        {
+          "name": "uk_UA-ukrainian_tts-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx",
+          "size": 76735663,
+          "sha256": "7920419ac5f6fd8b6450520f24b52ed5a319cb53dd018fbcd71c9e079cbac84f"
+        },
+        {
+          "name": "uk_UA-ukrainian_tts-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/uk/uk_UA/ukrainian_tts/medium/uk_UA-ukrainian_tts-medium.onnx.json",
+          "size": 2002,
+          "sha256": "4e96e72917ca9b94edc77d6ccfee03a73f450ba2fc1ca93c2e562bc014e5aa55"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/uk/uk_UA/ukrainian_tts/medium/MODEL_CARD",
+          "size": 267,
+          "sha256": "ce09d0c9d1d90cdc98d1ea8a4ecbdeb5e937d44593876e4194302c5eabbaad9d"
+        }
+      ]
+    },
+    {
+      "id": "piper-vi-vn-vais1000-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "VAIS-1000",
+      "voiceLanguage": "vi",
+      "locale": "vi_VN",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: CC BY 4.0 · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/MODEL_CARD",
+      "homepage": "https://ieee-dataport.org/documents/vais-1000-vietnamese-speech-synthesis-corpus",
+      "files": [
+        {
+          "name": "vi_VN-vais1000-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx",
+          "size": 63201294,
+          "sha256": "ec7c89e2c85f4d1edc24b6120c18aaf1bda614f06b511567eb9c7c0de15e2dab"
+        },
+        {
+          "name": "vi_VN-vais1000-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/vi_VN-vais1000-medium.onnx.json",
+          "size": 4860,
+          "sha256": "fafb9da1354ed4b77c31af228ed41fb41cd825c14cffa105454b25e6ae751ee0"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/vi/vi_VN/vais1000/medium/MODEL_CARD",
+          "size": 361,
+          "sha256": "302db8a930ffc2b1c2181db26deaf8272116eca2b08b8f80da6375b0a994af7b"
+        }
+      ]
+    },
+    {
+      "id": "piper-zh-cn-huayan-medium",
+      "capability": "text-to-speech",
+      "engine": "piper",
+      "name": "Huayan",
+      "voiceLanguage": "zh",
+      "locale": "zh_CN",
+      "quality": "medium",
+      "gender": "female",
+      "license": "MIT · dataset: unknown license · base: lessac",
+      "licenseUrl": "https://huggingface.co/rhasspy/piper-voices/blob/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/zh/zh_CN/huayan/medium/MODEL_CARD",
+      "homepage": "https://github.com/PlayVoice/HuaYan_TTS",
+      "files": [
+        {
+          "name": "zh_CN-huayan-medium.onnx",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/zh/zh_CN/huayan/medium/zh_CN-huayan-medium.onnx",
+          "size": 63201294,
+          "sha256": "9929917bf8cabb26fd528ea44d3a6699c11e87317a14765312420be230be0f3d"
+        },
+        {
+          "name": "zh_CN-huayan-medium.onnx.json",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/zh/zh_CN/huayan/medium/zh_CN-huayan-medium.onnx.json",
+          "size": 4822,
+          "sha256": "d521dc45504a8ccc99e325822b35946dd701840bfb07e3dbb31a40929ed6a82b"
+        },
+        {
+          "name": "MODEL_CARD",
+          "url": "https://huggingface.co/rhasspy/piper-voices/resolve/5041a7a49ae5b3a0f30e6837769eb03fdbb231bd/zh/zh_CN/huayan/medium/MODEL_CARD",
+          "size": 276,
+          "sha256": "25d7d8f7a03e9382e629c5c4f074176e7ca84e08be12a873022e91fcac98c2c7"
+        }
+      ]
     }
   ]
 }

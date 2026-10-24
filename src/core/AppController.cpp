@@ -320,7 +320,8 @@ void AppController::speak(const QString& text, const QString& language)
 
     m_player->stop();
     m_speakRequest = QByteArray::number(++m_nextRequest);
-    m_speakEngine->send({QByteArrayLiteral("SPEAK"), m_speakRequest}, text.toUtf8());
+    m_speakEngine->send({QByteArrayLiteral("SPEAK"), m_speakRequest, QByteArray::number(m_models->voiceSpeaker(language))},
+                        text.toUtf8());
     setState(kSynthesizing);
     setStatus(tr("Generating speech…"));
     m_watchdog.start(kSpeakTimeoutMs);
