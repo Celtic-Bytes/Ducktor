@@ -73,7 +73,7 @@ Page {
                     spacing: 10
 
                     Image {
-                        source: "qrc:/resources/icons/ducktor.svg"
+                        source: "image://svg/icons/ducktor.svg"
                         sourceSize: Qt.size(96, 96)
                         Layout.preferredWidth: 96
                         Layout.preferredHeight: 96

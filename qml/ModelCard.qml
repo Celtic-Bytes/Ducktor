@@ -136,7 +136,7 @@ Card {
             Button {
                 visible: card.status === "notInstalled"
                 text: qsTr("Download (%1)").arg(card.sizeText)
-                icon.source: "qrc:/resources/icons/download.svg"
+                icon.source: "image://svg/icons/download.svg"
                 icon.color: palette.buttonText
                 enabled: !Models.downloading && !Models.importing
                 onClicked: Models.download(card.modelId)
@@ -155,7 +155,7 @@ Card {
             Button {
                 visible: card.status === "installed"
                 text: qsTr("Delete")
-                icon.source: "qrc:/resources/icons/delete.svg"
+                icon.source: "image://svg/icons/delete.svg"
                 icon.color: palette.buttonText
                 onClicked: deleteDialog.open()
             }

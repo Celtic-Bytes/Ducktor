@@ -8,10 +8,53 @@
 #include <QIcon>
 #include <QLibraryInfo>
 #include <QLocale>
+#include <QPainter>
 #include <QQmlApplicationEngine>
 #include <QQmlEngine>
+#include <QQuickImageProvider>
 #include <QQuickStyle>
+#include <QSvgRenderer>
 #include <QTranslator>
+
+namespace {
+
+// Rendering with QtSvg directly avoids depending on the qsvg image format plugin, which some
+// Linux distributions ship in a separate package and deployment tools may leave out.
+QImage renderSvg(const QString& path, const QSize& requestedSize)
+{
+    QSvgRenderer renderer(path);
+    if (!renderer.isValid())
+        return {};
+    QSize size = renderer.defaultSize();
+    if (requestedSize.width() > 0 && requestedSize.height() > 0)
+        size.scale(requestedSize, Qt::KeepAspectRatio);
+    else if (requestedSize.width() > 0)
+        size = QSize(requestedSize.width(), size.height() * requestedSize.width() / size.width());
+    else if (requestedSize.height() > 0)
+        size = QSize(size.width() * requestedSize.height() / size.height(), requestedSize.height());
+    QImage image(size, QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+    QPainter painter(&image);
+    renderer.render(&painter);
+    return image;
+}
+
+// Serves image://svg/<path> from the :/resources/ directory of the application resources.
+class SvgImageProvider : public QQuickImageProvider
+{
+public:
+    SvgImageProvider() : QQuickImageProvider(QQuickImageProvider::Image) {}
+
+    QImage requestImage(const QString& id, QSize* size, const QSize& requestedSize) override
+    {
+        QImage image = renderSvg(QStringLiteral(":/resources/") + id, requestedSize);
+        if (size)
+            *size = image.size();
+        return image;
+    }
+};
+
+} // namespace
 
 int main(int argc, char* argv[])
 {
@@ -21,7 +64,10 @@ int main(int argc, char* argv[])
     QGuiApplication::setApplicationName(QStringLiteral("Ducktor"));
     QGuiApplication::setApplicationVersion(QStringLiteral(DUCKTOR_VERSION));
     QGuiApplication::setDesktopFileName(QStringLiteral("com.celticbytes.Ducktor"));
-    QGuiApplication::setWindowIcon(QIcon(QStringLiteral(":/resources/icons/ducktor.svg")));
+    QIcon windowIcon;
+    for (int side : {16, 24, 32, 48, 64, 128, 256})
+        windowIcon.addPixmap(QPixmap::fromImage(renderSvg(QStringLiteral(":/resources/icons/ducktor.svg"), QSize(side, side))));
+    QGuiApplication::setWindowIcon(windowIcon);
     QQuickStyle::setStyle(QStringLiteral("Fusion"));
 
     AppSettings settings(Paths::settingsFile());
@@ -53,6 +99,7 @@ int main(int argc, char* argv[])
     qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "Settings", &settings);
 
     QQmlApplicationEngine engine;
+    engine.addImageProvider(QStringLiteral("svg"), new SvgImageProvider);
     QObject::connect(&settings, &AppSettings::uiLanguageChanged, &engine, [&]() {
         installLanguage(settings.uiLanguage());
         models.relocalize();

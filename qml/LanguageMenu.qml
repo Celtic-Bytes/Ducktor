@@ -9,7 +9,7 @@ ComboBox {
 
     // Flags from flag-icons (MIT), see THIRD_PARTY_NOTICES.md.
     function flag(code) {
-        return "qrc:/resources/flags/" + (code === "en" ? "gb" : code) + ".svg"
+        return "image://svg/flags/" + (code === "en" ? "gb" : code) + ".svg"
     }
 
     model: Settings.uiLanguageOptions

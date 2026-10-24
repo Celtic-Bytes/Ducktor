@@ -64,7 +64,7 @@ ColumnLayout {
         }
         ToolButton {
             visible: cell.present
-            icon.source: "qrc:/resources/icons/info.svg"
+            icon.source: "image://svg/icons/info.svg"
             icon.width: 16
             icon.height: 16
             icon.color: Theme.mutedText
@@ -81,7 +81,7 @@ ColumnLayout {
         }
         ToolButton {
             visible: cell.transferring
-            icon.source: "qrc:/resources/icons/clear.svg"
+            icon.source: "image://svg/icons/clear.svg"
             icon.width: 16
             icon.height: 16
             icon.color: Theme.text
@@ -93,7 +93,7 @@ ColumnLayout {
         Button {
             visible: cell.present && cell.voice.status === "notInstalled"
             text: cell.present ? cell.voice.sizeText : ""
-            icon.source: "qrc:/resources/icons/download.svg"
+            icon.source: "image://svg/icons/download.svg"
             icon.width: 16
             icon.height: 16
             icon.color: palette.buttonText
@@ -117,7 +117,7 @@ ColumnLayout {
         }
         ToolButton {
             visible: cell.present && cell.voice.status === "installed"
-            icon.source: "qrc:/resources/icons/delete.svg"
+            icon.source: "image://svg/icons/delete.svg"
             icon.width: 16
             icon.height: 16
             icon.color: Theme.mutedText

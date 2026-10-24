@@ -99,7 +99,7 @@ Page {
         }
         RoundButton {
             Layout.alignment: Qt.AlignHCenter
-            icon.source: "qrc:/resources/icons/swap.svg"
+            icon.source: "image://svg/icons/swap.svg"
             icon.color: Theme.text
             enabled: !App.busy
             ToolTip.visible: hovered
@@ -155,14 +155,14 @@ Page {
                         text: page.recording
                               ? qsTr("Stop %1 / %2").arg(page.formatSeconds(App.recordingSeconds)).arg(page.formatSeconds(Settings.maxRecordingSeconds))
                               : qsTr("Dictate")
-                        icon.source: page.recording ? "qrc:/resources/icons/stop.svg" : "qrc:/resources/icons/mic.svg"
+                        icon.source: page.recording ? "image://svg/icons/stop.svg" : "image://svg/icons/mic.svg"
                         palette.buttonText: page.recording ? Theme.danger : Theme.text
                         enabled: page.recording || !App.busy
                         onClicked: page.recording ? App.stopRecording() : App.startRecording(page.sourceCode)
                     }
                     PaneButton {
                         text: qsTr("Clear")
-                        icon.source: "qrc:/resources/icons/clear.svg"
+                        icon.source: "image://svg/icons/clear.svg"
                         enabled: !App.busy && input.length > 0
                         onClicked: {
                             input.clear()
@@ -275,13 +275,13 @@ Page {
 
                     PaneButton {
                         text: qsTr("Copy")
-                        icon.source: "qrc:/resources/icons/copy.svg"
+                        icon.source: "image://svg/icons/copy.svg"
                         enabled: App.translatedText.length > 0
                         onClicked: App.copyToClipboard(App.translatedText)
                     }
                     PaneButton {
                         text: App.playing ? qsTr("Stop audio") : qsTr("Listen")
-                        icon.source: App.playing ? "qrc:/resources/icons/stop.svg" : "qrc:/resources/icons/volume.svg"
+                        icon.source: App.playing ? "image://svg/icons/stop.svg" : "image://svg/icons/volume.svg"
                         enabled: App.playing || (!App.busy && App.translatedText.length > 0)
                         onClicked: App.playing ? App.stopAudio() : App.speak(App.translatedText, page.targetCode)
                     }

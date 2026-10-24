@@ -67,7 +67,7 @@ ApplicationWindow {
             spacing: 8
 
             Image {
-                source: "qrc:/resources/icons/ducktor.svg"
+                source: "image://svg/icons/ducktor.svg"
                 sourceSize: Qt.size(64, 64)
                 Layout.preferredWidth: 32
                 Layout.preferredHeight: 32
@@ -86,37 +86,34 @@ ApplicationWindow {
             HeaderButton {
                 visible: stack.depth > 1
                 text: qsTr("Back")
-                icon.source: "qrc:/resources/icons/back.svg"
+                display: AbstractButton.IconOnly
+                icon.source: "image://svg/icons/back.svg"
+                icon.width: 22
+                icon.height: 22
+                ToolTip.visible: hovered
+                ToolTip.delay: 600
+                ToolTip.text: text
                 onClicked: stack.pop()
             }
-            Label {
-                visible: stack.depth > 1
-                text: stack.currentItem ? stack.currentItem.title : ""
-                font.pixelSize: 16
-                color: Theme.mutedText
-                elide: Text.ElideRight
-                Layout.fillWidth: true
-            }
             Item {
-                visible: stack.depth === 1
                 Layout.fillWidth: true
             }
             HeaderButton {
                 text: qsTr("About")
-                icon.source: "qrc:/resources/icons/info.svg"
+                icon.source: "image://svg/icons/info.svg"
                 checkable: false
                 checked: stack.currentItem !== null && stack.currentItem.objectName === "about"
                 onClicked: window.openPage(aboutComponent, "about")
             }
-            LanguageMenu {
-                Layout.preferredHeight: 34
-            }
             HeaderButton {
                 text: qsTr("Settings")
-                icon.source: "qrc:/resources/icons/settings.svg"
+                icon.source: "image://svg/icons/settings.svg"
                 checkable: false
                 checked: stack.currentItem !== null && stack.currentItem.objectName === "settings"
                 onClicked: window.openPage(settingsComponent, "settings")
+            }
+            LanguageMenu {
+                Layout.preferredHeight: 34
             }
         }
     }
