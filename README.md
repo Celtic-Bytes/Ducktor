@@ -81,6 +81,10 @@ Build commands on Windows must run in the **x64 Native Tools Command Prompt for 
 
    The `qml6-module-*` packages are needed to start the app; without them Ducktor exits with a message such as `module "QtQuick.Controls" is not installed`.
 
+> To find where the QT library have been installed you can run:
+> - The command`qmake6 -query QT_INSTALL_PREFIX 2>/dev/null || qt6-qmake -query QT_INSTALL_PREFIX` if you installed it using *apt* 
+> - Or the command `ls -d ~/Qt/[0-9]*` if you used the online installer.
+
 ## Run in development mode
 
 ### From the terminal

@@ -11,6 +11,7 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 
 ## Packaging
 
+- All code must build and run on Linux, Windows and macOS and stay correct inside every configured package (`.deb`, Windows/macOS ZIPs, AppImage, Flatpak). Use the Qt/CMake abstractions and the paths in [Paths.cpp](src/core/Paths.cpp); never assume POSIX-only APIs, path separators or shell behavior.
 - Install layout lives in [cmake/Install.cmake](cmake/Install.cmake) and must match the search paths in [Paths.cpp](src/core/Paths.cpp) (Linux engines in `libexec/ducktor`, Windows next to `ducktor.exe`, macOS in `Ducktor.app/Contents/MacOS`).
 - CPack ([cmake/Packaging.cmake](cmake/Packaging.cmake)) makes the `.deb` and the Windows/macOS ZIPs; AppImage and Flatpak live in [packaging/](packaging). Output always goes to `dist/`.
 - When a dependency is added, copy its license text into `${DUCKTOR_LICENSE_OUTPUT_DIR}` from its own sources during the build, and list it in THIRD_PARTY_NOTICES.md.
@@ -41,3 +42,8 @@ Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overvi
 
 - Wrap UI strings in `qsTr()`/`tr()` and add the entry to every file in [i18n/](i18n/) (`es`, `fr`, `it`, `de`; English is the source). The context is the QML file basename or the C++ class name. Catalog descriptions in `models.json` use the same language keys and fall back to `en`.
 - The interface language is the `Settings.uiLanguage` setting (default English) and switches live through `QQmlEngine::retranslate()` in [src/main.cpp](src/main.cpp).
+
+## Git
+
+- Never record commits yourself — no `git commit`, `git commit --amend` or equivalent. The maintainer does all committing; leave the changes in the working tree and hand over a proposed message.
+- Proposed commit messages follow Conventional Commits: `type(scope): summary` with `feat`, `fix`, `refactor`, `docs`, `build`, `ci`, `chore`; English, imperative mood, summary ≤ 72 characters (e.g. `feat(tts): add piper voice catalog`).
