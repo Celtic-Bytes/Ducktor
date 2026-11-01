@@ -151,14 +151,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # macos-latest is an Apple Silicon runner, so Qt is installed for
-      # macos-arm64 (the ZIP then contains a native arm64 Ducktor.app).
+      # The Qt 6.9 macOS package (the only one, clang_64) is a universal2
+      # binary, so it runs natively on the Apple Silicon macos-latest runner
+      # and the ZIP contains a native arm64 Ducktor.app.
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
           target: desktop
-          arch: macos-arm64
+          arch: clang_64
           # The base Qt 6 package already contains Qml, Quick, QuickControls2,
           # Svg and Tools; only Multimedia is a separate addon module.
           modules: qtmultimedia

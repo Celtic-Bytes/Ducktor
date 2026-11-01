@@ -30,13 +30,15 @@ jobs:
       # jurplel/install-qt-action (aqt) installs the community edition of Qt
       # from the qt.io online installer; it needs no account or token. The
       # base Qt 6 package already contains Qml, Quick, QuickControls2, Svg
-      # and Tools; only Multimedia is a separate addon module.
+      # and Tools; only Multimedia is a separate addon module. The Qt 6.8+
+      # metadata names the Linux spec with the full architecture
+      # (linux_gcc_64); the short gcc_64 no longer resolves.
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
           version: 6.9.3
           target: desktop
-          arch: gcc_64
+          arch: linux_gcc_64
           modules: qtmultimedia
           install-deps: false
           cache: true
