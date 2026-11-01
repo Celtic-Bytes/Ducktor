@@ -9,6 +9,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch: {}
 
 jobs:
   tests:
@@ -26,14 +27,16 @@ jobs:
             build-essential cmake ninja-build git \
             libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libpulse-dev
 
+      # jurplel/install-qt-action (aqt) installs the community edition of Qt
+      # from the qt.io online installer; it needs no account or token.
       - name: Install Qt
-        uses: qt/qt6-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: 6.9.3
-          arch: desktop
-          target: linux
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
-          token: ${{ secrets.QT_TOKEN }}
+          target: desktop
+          arch: gcc_64
+          modules: qtdeclarative qtquickcontrols2 qtmultimedia qtsvg qttools
+          install-deps: false
           cache: true
 
       - name: Configure and build (ui-only)

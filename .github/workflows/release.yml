@@ -4,11 +4,10 @@
 # touches the release, so it is a way to test the pipeline without a tag.
 #
 # The Linux job builds inside an Ubuntu 26.04 container with the
-# distribution's Qt 6.10 packages (the .deb dependencies are then derived
-# from standard qt6-* packages). The Windows and macOS jobs install Qt with
-# qt/qt6-action from the qt.io online installer, which needs a free Qt
-# account: store its token in the repository secret QT_TOKEN (Settings ->
-# Secrets and variables -> Actions).
+# distribution's Qt 6.10 packages, so the .deb dependencies are derived from
+# standard qt6-* packages (cmake/DebianQtDepends.cmake). The Windows and
+# macOS jobs install Qt with jurplel/install-qt-action (aqt) from the qt.io
+# online installer; the community edition needs no account or token.
 name: Release
 
 on:
@@ -111,14 +110,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # The runner ships Visual Studio 2022 with the C++ workload and its
+      # environment is already configured in the default shell.
       - name: Install Qt
-        uses: qt/qt6-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
-          arch: desktop
-          target: windows
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
-          token: ${{ secrets.QT_TOKEN }}
+          target: desktop
+          arch: win64_msvc2022_64
+          modules: qtdeclarative qtquickcontrols2 qtmultimedia qtsvg qttools
+          install-deps: false
           cache: true
 
       - name: Configure and build
@@ -146,14 +147,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # macos-latest is an Apple Silicon runner, so Qt is installed for
+      # macos-arm64 (the ZIP then contains a native arm64 Ducktor.app).
       - name: Install Qt
-        uses: qt/qt6-action@v2
+        uses: jurplel/install-qt-action@v4
         with:
           version: ${{ env.QT_VERSION }}
-          arch: desktop
-          target: macos
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
-          token: ${{ secrets.QT_TOKEN }}
+          target: desktop
+          arch: macos-arm64
+          modules: qtdeclarative qtquickcontrols2 qtmultimedia qtsvg qttools
+          install-deps: false
           cache: true
 
       - name: Configure and build
@@ -178,25 +181,34 @@ jobs:
     if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
     runs-on: ubuntu-latest
     container:
-      image: flatpak/flatpak-github-actions:bookworm
-      options: --security-secaprofile=unconfined
+      # The official Flathub image: it already has the flatpak tooling and
+      # the runtime repos cached; --privileged is required by flatpak-builder.
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-48
+      options: --privileged
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v6
 
+      - name: Read the project version
+        id: version
+        run: |
+          set -euo pipefail
+          echo "version=$(sed -n 's/^project(Ducktor VERSION \([0-9][0-9.]*\).*/\1/p' CMakeLists.txt)" >> "$GITHUB_OUTPUT"
+
       - name: Build the Flatpak and the bundle
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v1
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: packaging/flatpak/com.celticbytes.Ducktor.yml
-          bundle-name: Ducktor
-          bundle-version: ${{ github.ref_name }}
-          runtime-repo: https://dl.flathub.org/repo/flathub.flatpakrepo
+          bundle: Ducktor-${{ steps.version.outputs.version }}.flatpak
+          # The bundle is built in the workspace root; the release job
+          # collects it through the artifact below.
+          upload-artifact: false
 
       - name: Upload the package
         uses: actions/upload-artifact@v4
         with:
           name: flatpak-package
-          path: dist/*.flatpak
+          path: Ducktor-*.flatpak
 
   release:
     name: GitHub release

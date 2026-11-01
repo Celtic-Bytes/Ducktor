@@ -276,7 +276,7 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 | Windows ZIP | `windows-latest` | `cmake --preset release` + `cpack --preset release` (portable, `windeployqt`) |
 | macOS ZIP | `macos-latest` | `cmake --preset release` + `cpack --preset release` (`Ducktor.app`, ad hoc signature) |
 
-Qt is installed with [qt/qt6-action](https://github.com/marketplace/actions/qt6-action) from the qt.io online installer, so the repository needs a `QT_TOKEN` secret (free Qt account: Settings → Secrets and variables → Actions). The engine sources and the Flathub runtime download from the internet during the build.
+Qt is installed with [jurplel/install-qt-action](https://github.com/jurplel/install-qt-action) (aqt) from the qt.io online installer; the community edition needs no account or token. The engine sources and the Flathub runtime download from the internet during the build.
 
 A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on every push and pull request to `main`: it builds the interface with the `ui-only` preset (no engines, so it is fast) and runs the test suite with `ctest --preset ui-only`. Its status is the `CI` badge in the header.
 
