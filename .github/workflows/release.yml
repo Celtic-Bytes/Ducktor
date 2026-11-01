@@ -1,0 +1,207 @@
+# Builds all platform packages (.deb, AppImage, Flatpak, Windows ZIP, macOS
+# ZIP) and publishes them to a GitHub release. Triggers only on version tags
+# (v1.0.0); a manual run (workflow_dispatch) builds everything but never
+# touches the release, so it is a way to test the pipeline without a tag.
+#
+# Qt is installed with qt/qt6-action from the qt.io online installer, which
+# needs a free Qt account: store its token in the repository secret QT_TOKEN
+# (Settings -> Secrets and variables -> Actions).
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+concurrency:
+  cancel-in-progress: false
+
+env:
+  QT_VERSION: 6.9.3
+
+jobs:
+  check-version:
+    name: Check tag matches the project version
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Check tag matches the project version
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/^project(Ducktor VERSION \([0-9][0-9.]*\).*/\1/p' CMakeLists.txt)"
+          if [[ "v$VERSION" != "$GITHUB_REF_NAME" ]]; then
+            echo "Tag $GITHUB_REF_NAME does not match project version $VERSION in CMakeLists.txt" >&2
+            echo "Bump project(Ducktor VERSION ...) to ${GITHUB_REF_NAME#v}, commit, delete the tag, and push it again." >&2
+            exit 1
+          fi
+          echo "Tag matches project version $VERSION"
+
+  linux:
+    name: Linux packages (.deb + AppImage)
+    needs: [check-version]
+    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install the system libraries Qt needs and dpkg-dev (for the .deb)
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build git \
+            libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libpulse-dev \
+            dpkg-dev
+
+      - name: Install Qt
+        uses: qt/qt6-action@v2
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: desktop
+          target: linux
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          token: ${{ secrets.QT_TOKEN }}
+          cache: true
+
+      - name: Configure and build
+        run: |
+          set -euo pipefail
+          cmake --preset release
+          cmake --build --preset release --parallel
+
+      - name: Build the .deb
+        run: |
+          set -euo pipefail
+          cpack --preset release
+          ls -lh dist/*.deb
+
+      - name: Build the AppImage
+        run: |
+          set -euo pipefail
+          bash packaging/linux/build-appimage.sh
+          ls -lh dist/*.AppImage
+
+      - name: Upload the packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packages
+          path: |
+            dist/*.deb
+            dist/*.AppImage
+
+  windows:
+    name: Windows ZIP
+    needs: [check-version]
+    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    runs-on: windows-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Qt
+        uses: qt/qt6-action@v2
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: desktop
+          target: windows
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          token: ${{ secrets.QT_TOKEN }}
+          cache: true
+
+      - name: Configure and build
+        run: |
+          cmake --preset release
+          cmake --build --preset release --parallel
+
+      - name: Build the ZIP
+        run: |
+          cpack --preset release
+          Get-ChildItem dist\*.zip
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-package
+          path: dist/*.zip
+
+  macos:
+    name: macOS ZIP
+    needs: [check-version]
+    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Qt
+        uses: qt/qt6-action@v2
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: desktop
+          target: macos
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          token: ${{ secrets.QT_TOKEN }}
+          cache: true
+
+      - name: Configure and build
+        run: |
+          cmake --preset release
+          cmake --build --preset release --parallel
+
+      - name: Build the ZIP (Ducktor.app + ad hoc signature)
+        run: |
+          cpack --preset release
+          ls -lh dist/*.zip
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-package
+          path: dist/*.zip
+
+  flatpak:
+    name: Flatpak
+    needs: [check-version]
+    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Build the Flatpak and the bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v1
+        with:
+          manifest-path: packaging/flatpak/com.celticbytes.Ducktor.yml
+          bundle-name: Ducktor
+          runtime-repo: https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: flatpak-package
+          path: dist/*.flatpak
+
+  release:
+    name: GitHub release
+    if: github.event_name == 'push'
+    needs: [linux, windows, macos, flatpak]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create or update the release and upload the packages
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Ducktor ${{ github.ref_name }}
+          body: |
+            Automated release. Packages: .deb, AppImage and Flatpak for Linux,
+            portable ZIPs for Windows and macOS.
+          files: artifacts/**/*

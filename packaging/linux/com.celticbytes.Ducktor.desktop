@@ -1,0 +1,19 @@
+[Desktop Entry]
+Type=Application
+Name=Ducktor
+GenericName=Offline translator
+GenericName[es]=Traductor sin conexión
+GenericName[fr]=Traducteur hors ligne
+GenericName[it]=Traduttore offline
+GenericName[de]=Offline-Übersetzer
+Comment=Translate text and voice without sending anything to the internet
+Comment[es]=Traduce texto y voz sin enviar nada a Internet
+Comment[fr]=Traduisez du texte et de la voix sans rien envoyer sur Internet
+Comment[it]=Traduci testo e voce senza inviare nulla a Internet
+Comment[de]=Text und Sprache übersetzen, ohne etwas ins Internet zu senden
+Exec=ducktor
+Icon=com.celticbytes.Ducktor
+Terminal=false
+Categories=Office;Utility;
+Keywords=translate;translation;translator;speech;voice;dictation;offline;
+StartupWMClass=ducktor

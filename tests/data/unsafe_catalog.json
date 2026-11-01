@@ -1,0 +1,67 @@
+{
+  "models": [
+    {
+      "id": "a1",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "A",
+      "files": [
+        {
+          "name": "../evil.gguf",
+          "url": "https://huggingface.co/a",
+          "size": 1,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    },
+    {
+      "id": "b1",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "B",
+      "files": [
+        {
+          "name": "b.gguf",
+          "url": "http://huggingface.co/b",
+          "size": 1,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    },
+    {
+      "id": "c1",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "C",
+      "files": [
+        {
+          "name": "c.gguf",
+          "url": "https://example.com/c",
+          "size": 1,
+          "sha256": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+        }
+      ]
+    },
+    {
+      "id": "d1",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "D",
+      "files": [
+        {
+          "name": "d.gguf",
+          "url": "https://huggingface.co/d",
+          "size": 1,
+          "sha256": "xyz"
+        }
+      ]
+    },
+    {
+      "id": "../e",
+      "capability": "translation",
+      "engine": "llama",
+      "name": "E",
+      "files": []
+    }
+  ]
+}
