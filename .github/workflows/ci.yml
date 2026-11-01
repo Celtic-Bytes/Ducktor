@@ -32,7 +32,7 @@ jobs:
           version: 6.9.3
           arch: desktop
           target: linux
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
           token: ${{ secrets.QT_TOKEN }}
           cache: true
 

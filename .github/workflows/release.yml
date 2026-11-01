@@ -3,9 +3,12 @@
 # (v1.0.0); a manual run (workflow_dispatch) builds everything but never
 # touches the release, so it is a way to test the pipeline without a tag.
 #
-# Qt is installed with qt/qt6-action from the qt.io online installer, which
-# needs a free Qt account: store its token in the repository secret QT_TOKEN
-# (Settings -> Secrets and variables -> Actions).
+# The Linux job builds inside an Ubuntu 26.04 container with the
+# distribution's Qt 6.10 packages (the .deb dependencies are then derived
+# from standard qt6-* packages). The Windows and macOS jobs install Qt with
+# qt/qt6-action from the qt.io online installer, which needs a free Qt
+# account: store its token in the repository secret QT_TOKEN (Settings ->
+# Secrets and variables -> Actions).
 name: Release
 
 on:
@@ -45,28 +48,33 @@ jobs:
     needs: [check-version]
     if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu:26.04
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install the system libraries Qt needs and dpkg-dev (for the .deb)
+      # The same toolchain as packaging/docker/Dockerfile: Ubuntu 26.04's Qt
+      # 6.10 packages satisfy the Qt >= 6.9 requirement, and building against
+      # the distribution's packages is what lets
+      # cmake/DebianQtDepends.cmake derive the .deb dependencies from standard
+      # qt6-* packages.
+      - name: Install the toolchain
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential cmake ninja-build git \
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build git curl ca-certificates \
+            dpkg-dev \
             libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libpulse-dev \
-            dpkg-dev
-
-      - name: Install Qt
-        uses: qt/qt6-action@v2
-        with:
-          version: ${{ env.QT_VERSION }}
-          arch: desktop
-          target: linux
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
-          token: ${{ secrets.QT_TOKEN }}
-          cache: true
+            qt6-base-dev qt6-base-dev-tools \
+            qt6-declarative-dev qt6-declarative-dev-tools \
+            qt6-multimedia-dev qt6-svg-dev qt6-svg-plugins qt6-tools-dev \
+            qml6-module-qtquick qml6-module-qtquick-controls \
+            qml6-module-qtquick-templates qml6-module-qtquick-layouts \
+            qml6-module-qtquick-dialogs qml6-module-qtquick-window \
+            qml6-module-qtqml-workerscript \
+          && rm -rf /var/lib/apt/lists/*
 
       - name: Configure and build
         run: |
@@ -109,7 +117,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           arch: desktop
           target: windows
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
           token: ${{ secrets.QT_TOKEN }}
           cache: true
 
@@ -144,7 +152,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           arch: desktop
           target: macos
-          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qttools
+          modules: qtdeclarative,qtquickcontrols2,qtmultimedia,qtsvg,qttools
           token: ${{ secrets.QT_TOKEN }}
           cache: true
 
@@ -169,6 +177,9 @@ jobs:
     needs: [check-version]
     if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
     runs-on: ubuntu-latest
+    container:
+      image: flatpak/flatpak-github-actions:bookworm
+      options: --security-secaprofile=unconfined
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v6
@@ -178,6 +189,7 @@ jobs:
         with:
           manifest-path: packaging/flatpak/com.celticbytes.Ducktor.yml
           bundle-name: Ducktor
+          bundle-version: ${{ github.ref_name }}
           runtime-repo: https://dl.flathub.org/repo/flathub.flatpakrepo
 
       - name: Upload the package
