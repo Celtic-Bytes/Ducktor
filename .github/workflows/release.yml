@@ -16,7 +16,10 @@ on:
       - 'v*'
   workflow_dispatch: {}
 
+# One run per workflow+ref at a time; a re-run is queued instead of being
+# cancelled, so a tag push never races with itself.
 concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 env:
@@ -53,9 +56,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # The same toolchain as packaging/docker/Dockerfile: Ubuntu 26.04's Qt
-      # 6.10 packages satisfy the Qt >= 6.9 requirement, and building against
-      # the distribution's packages is what lets
+      # Ubuntu 26.04's Qt 6.10 packages satisfy the Qt >= 6.9 requirement,
+      # and building against the distribution's packages is what lets
       # cmake/DebianQtDepends.cmake derive the .deb dependencies from standard
       # qt6-* packages.
       - name: Install the toolchain

@@ -264,9 +264,14 @@ npm run generate
 
 ### Automated releases (GitHub Actions)
 
-The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Celtic-Bytes/Ducktor), mirrored from a private self-hosted [Forgejo](https://codeberg.org/forgejo/forgejo) instance. Pushing a version tag runs both pipelines.
+The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Celtic-Bytes/Ducktor), mirrored from a private self-hosted instance. Pushing a version tag runs the release workflow:
 
-**GitHub Actions** ([.github/workflows/release.yml](.github/workflows/release.yml)) builds all the packages on GitHub's public runners and publishes them as a GitHub release:
+| Trigger                                   | What runs                                                                                                                                          |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `git push origin v<version>`              | Builds all the packages, creates the release and uploads them                                                                                       |
+| Manual run (_Actions → Release → Run workflow_) | Builds the same packages but never touches the release: a way to test the pipeline without a tag                                             |
+
+[.github/workflows/release.yml](.github/workflows/release.yml) builds all the packages on GitHub's public runners and publishes them as a GitHub release:
 
 | Package | Runner | How it is built |
 | --- | --- | --- |
@@ -280,32 +285,12 @@ Qt is installed with [jurplel/install-qt-action](https://github.com/jurplel/inst
 
 A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on every push and pull request to `main`: it builds the interface with the `ui-only` preset (no engines, so it is fast) and runs the test suite with `ctest --preset ui-only`. Its status is the `CI` badge in the header.
 
-**Forgejo Actions** ([.forgejo/workflows/release.yml](.forgejo/workflows/release.yml)) builds the three Linux packages on a self-hosted runner and publishes them as a Forgejo release:
-
-| Trigger                                   | What runs                                                                                                                                          |
-| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `git push origin v<version>`              | Creates the release and uploads the `.deb`, the AppImage and the Flatpak from `dist`                                                                 |
-| Manual run (_Actions → Release → Run workflow_) | Builds the same packages but never touches the release: a way to test the pipeline without a tag                                             |
-
-The build runs in a toolchain image stored in the Forgejo container registry, so a release run only needs the local network for the toolchain; the engine sources and the Flathub runtime still download from the internet (only the linuxdeploy tools retry on failure).
-
 The release procedure — the tag must match the version:
 
 1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt) and commit.
 2. `git tag v<version> && git push origin v<version>`.
 
-Both workflows fail before compiling if the pushed tag does not match the project version.
-
-Updating the Forgejo toolchain:
-
-1. Edit [packaging/docker/Dockerfile](packaging/docker/Dockerfile).
-2. Run **Build CI image** ([.forgejo/workflows/build-ci-image.yml](.forgejo/workflows/build-ci-image.yml)) with a new tag, e.g. `v2`.
-3. Change the `CI_IMAGE` line in [.forgejo/workflows/release.yml](.forgejo/workflows/release.yml) to the new tag.
-4. Make sure the `ducktor-ci` package stays **public** on the packages page: the job containers and the DinD daemon pull it anonymously.
-
-The registry host is not part of the repository: the workflows read it from the `DUCKTOR_CI_REGISTRY` variable of the Forgejo instance (Settings → Repository → Variables), so no LAN address appears in the code.
-
-The runner never re-downloads an image tag it has already seen, which is why the tags are incremented instead of reusing one.
+The workflow fails before compiling if the pushed tag does not match the project version.
 
 ## Roadmap
 
