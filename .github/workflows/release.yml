@@ -120,7 +120,9 @@ jobs:
           version: ${{ env.QT_VERSION }}
           target: desktop
           arch: win64_msvc2022_64
-          modules: qtdeclarative qtquickcontrols2 qtmultimedia qtsvg qttools
+          # The base Qt 6 package already contains Qml, Quick, QuickControls2,
+          # Svg and Tools; only Multimedia is a separate addon module.
+          modules: qtmultimedia
           install-deps: false
           cache: true
 
@@ -157,7 +159,9 @@ jobs:
           version: ${{ env.QT_VERSION }}
           target: desktop
           arch: macos-arm64
-          modules: qtdeclarative qtquickcontrols2 qtmultimedia qtsvg qttools
+          # The base Qt 6 package already contains Qml, Quick, QuickControls2,
+          # Svg and Tools; only Multimedia is a separate addon module.
+          modules: qtmultimedia
           install-deps: false
           cache: true
 
