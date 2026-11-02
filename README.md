@@ -14,18 +14,23 @@
 </p>
 
 <p align="center">
-  <strong>An offline, free, open source, privacy-first desktop translator</strong><br>
-  Text or voice input, local translation and read-aloud output.
+  <strong>Ducktor is an offline, free, open source, privacy-first desktop translator</strong><br>
+  Text or voice input, local translation and read-aloud output.  
 </p>
 
-<p align="center">
-  Linux is the primary platform; Windows and macOS are planned targets.<br>
-  <em>Still in alpha: works on Linux, other OS not yet checked. Packages not yet released.</em>
-</p>
+If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate things without any internet access, Ducktor is for you.
 
-> Status: first functional version of the code, **not yet built or validated on real machines**. Model figures come from their authors and have not yet been measured on 8 GB computers.
+> Remember that an initial internet connection is needed to download the models locally. After that, the app works 100% offline.
 
-## Technologies in brief
+This software is still in alpha. It has been successfully tested on Linux. Since we don't have Windows or macOS computers, those platforms are not yet fully tested, so let us know if you find any bugs.
+
+## If you want to download
+
+If you just want to download the app and use it, go to the [Release page](https://github.com/Celtic-Bytes/Ducktor/releases).
+
+## If you are a developer
+
+### Technologies in brief
 
 | Piece                                                                                                                                                        | What it is                              | Why Ducktor uses it                                               |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | ----------------------------------------------------------------- |
@@ -36,7 +41,7 @@
 | [Ninja](https://ninja-build.org/)                                                                                                                            | Fast build runner used by CMake         | Required by the presets in [CMakePresets.json](CMakePresets.json) |
 | [llama.cpp](https://github.com/ggml-org/llama.cpp), [whisper.cpp](https://github.com/ggml-org/whisper.cpp), [Piper](https://github.com/OHF-Voice/piper1-gpl) | Local AI engines                        | Translation, speech recognition and speech synthesis              |
 
-## Architecture
+### Architecture
 
 - Interface: Qt 6.9+ with Qt Quick and C++ ([Qt documentation](https://doc.qt.io/qt-6/)).
 - Each inference engine is a separate helper program that communicates through local pipes, with no server or network:
@@ -46,11 +51,11 @@
 - If a model runs out of memory or crashes, its process is closed and the interface keeps responding.
 - Models are downloaded from Settings, with resumable downloads and SHA-256 verification, or imported from a local file.
 
-## What to install
+### What to install
 
 You need five things: a C++ compiler, CMake, Ninja, Git and Qt 6.9 or later. Qt must include the **Qt Multimedia** module, which is not selected by default in the Qt installer.
 
-### Windows 10/11
+#### Windows 10/11
 
 1. Install Git, CMake, Ninja and the Microsoft C++ compiler from PowerShell:
 
@@ -71,7 +76,7 @@ You need five things: a C++ compiler, CMake, Ninja, Git and Qt 6.9 or later. Qt 
 
 Build commands on Windows must run in the **x64 Native Tools Command Prompt for VS 2022** (search for it in the Start menu), which prepares the compiler.
 
-### Linux (Debian, Ubuntu, PikaOS)
+#### Linux (Debian, Ubuntu, PikaOS)
 
 1. Install the build tools and the system libraries Qt needs:
 
@@ -94,13 +99,13 @@ Build commands on Windows must run in the **x64 Native Tools Command Prompt for 
 
    The `qml6-module-*` packages are needed to start the app; without them Ducktor exits with a message such as `module "QtQuick.Controls" is not installed`.
 
-> To find where the QT library have been installed you can run:
-> - The command`qmake6 -query QT_INSTALL_PREFIX 2>/dev/null || qt6-qmake -query QT_INSTALL_PREFIX` if you installed it using *apt* 
+> To find where the Qt libraries were installed, run:
+> - The command `qmake6 -query QT_INSTALL_PREFIX 2>/dev/null || qt6-qmake -query QT_INSTALL_PREFIX` if you installed it using *apt* 
 > - Or the command `ls -d ~/Qt/[0-9]*` if you used the online installer.
 
-## Run in development mode
+### Run in development mode
 
-### From the terminal
+#### From the terminal
 
 Replace the Qt path with yours:
 
@@ -128,7 +133,7 @@ What to expect:
 - To work only on the interface, use the `ui-only` preset instead of `dev`: it skips the engines, so it builds quickly, but translation and voice will report that a component is missing.
 - To see the engines' diagnostic output, set the environment variable `DUCKTOR_DEBUG_ENGINES=1` before starting Ducktor. Their output can include fragments of the processed text, so use it only for debugging.
 
-### From Visual Studio Code
+#### From Visual Studio Code
 
 1. Open the repository folder in VS Code and install the recommended extensions when prompted. They are listed in [.vscode/extensions.json](.vscode/extensions.json):
    - [CMake Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cmake-tools): configure, build, test and run from the status bar.
@@ -157,7 +162,7 @@ What to expect:
 
 On Windows, start VS Code from the _x64 Native Tools Command Prompt for VS 2022_ (run `code .` in the repository folder) so CMake can find the compiler.
 
-## Packages
+### Packages
 
 Packages are created with the `release` preset, which builds engines that run on any CPU of the same architecture. All finished packages are written to the `dist` folder in the repository. None of them include AI models: users download them from _Settings_.
 
@@ -176,7 +181,7 @@ Rules that apply to every format:
 - Every package includes [LICENSE](LICENSE), [PRIVACY.md](PRIVACY.md), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and a `licenses` folder with the license texts of the bundled components.
 - The version comes from `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt); the Linux release date and notes are in [packaging/linux/com.celticbytes.Ducktor.metainfo.xml](packaging/linux/com.celticbytes.Ducktor.metainfo.xml).
 
-### .deb
+#### .deb
 
 Needs your distribution's Qt (see [What to install](#linux-debian-ubuntu-pikaos)) and the `dpkg-dev` package:
 
@@ -188,7 +193,7 @@ sudo apt install ./dist/ducktor_0.1.0_amd64.deb
 
 The package installs Ducktor in `/usr/bin`, its engines in `/usr/libexec/ducktor` and adds it to the applications menu. Its dependencies are calculated automatically from the Qt packages installed on the build machine. To uninstall it: `sudo apt remove ducktor`.
 
-### AppImage
+#### AppImage
 
 A single file that runs without installing anything and carries its own copy of Qt:
 
@@ -203,7 +208,7 @@ chmod +x dist/Ducktor-0.1.0-x86_64.AppImage
 - The Qt plugin requires the SVG icon engine (`qt6/plugins/iconengines/libqsvgicon.so`) to exist, because Ducktor links Qt6::Svg. On Debian and Ubuntu it is part of `libqt6svg6`; on PikaOS it is in a separate package: `sudo apt install qt6-svg-plugins`.
 - With the Qt Online Installer, pass your Qt path and its `qmake`: `QMAKE=~/Qt/6.9.3/gcc_64/bin/qmake bash packaging/linux/build-appimage.sh -DCMAKE_PREFIX_PATH=$HOME/Qt/6.9.3/gcc_64`.
 
-### Flatpak
+#### Flatpak
 
 Builds against the KDE 6.10 runtime, which already contains Qt. Install the tools and the runtime once:
 
@@ -224,7 +229,7 @@ flatpak run com.celticbytes.Ducktor
 
 The manifest ([packaging/flatpak/com.celticbytes.Ducktor.yml](packaging/flatpak/com.celticbytes.Ducktor.yml)) allows network access during the build because the engines download their sources. That is fine for local builds; publishing on Flathub would require listing every source in the manifest instead.
 
-### Windows ZIP
+#### Windows ZIP
 
 In the _x64 Native Tools Command Prompt for VS 2022_, with your Qt path:
 
@@ -236,7 +241,7 @@ cpack --preset release
 
 The ZIP contains `ducktor.exe`, its engines, Qt (copied by `windeployqt`) and the Microsoft C++ runtime. Unzip it anywhere and run `ducktor.exe`. It includes a `portable.txt` file, so settings and models are stored in a `data` folder next to the program; delete that file to use your user profile instead. The program is not signed, so Windows SmartScreen may ask for confirmation the first time (_More info → Run anyway_).
 
-### macOS ZIP
+#### macOS ZIP
 
 In Terminal, with Xcode Command Line Tools (`xcode-select --install`) and your Qt path:
 
@@ -248,11 +253,11 @@ cpack --preset release
 
 The ZIP contains `Ducktor.app` (with Qt copied by `macdeployqt`) and the license documents. The app has an ad hoc signature but is not notarized by Apple, so the first time you must right-click it and choose _Open_. macOS asks for microphone permission the first time you dictate.
 
-### Portable mode
+#### Portable mode
 
 Any copy of Ducktor becomes portable if an empty `portable.txt` file sits next to the executable (next to `Ducktor.app` on macOS): settings and models are then stored in a `data` folder beside it.
 
-### Icons
+#### Icons
 
 The logo is [resources/icons/ducktor.svg](resources/icons/ducktor.svg). The Linux PNG sizes, the Windows `.ico` and the macOS `.icns` are generated from it and committed to the repository. After changing the SVG, regenerate them with [Node.js](https://nodejs.org/):
 
@@ -262,7 +267,7 @@ npm ci
 npm run generate
 ```
 
-### Automated releases (GitHub Actions)
+#### Automated releases (GitHub Actions)
 
 The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Celtic-Bytes/Ducktor), mirrored from a private self-hosted instance. Pushing a version tag runs the release workflow:
 
@@ -292,7 +297,7 @@ The release procedure — the tag must match the version:
 
 The workflow fails before compiling if the pushed tag does not match the project version.
 
-## Roadmap
+### Roadmap
 
 The _Settings_ page only lists models that Ducktor can run today. These newer engines are being evaluated and will appear there once they are integrated and tested on 8 GB CPU-only computers:
 
