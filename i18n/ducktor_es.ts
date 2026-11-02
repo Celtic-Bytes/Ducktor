@@ -58,6 +58,7 @@
     <message><source>The file has the expected size but its contents do not match any model. It was not imported.</source><translation>El archivo tiene el tamaño esperado, pero su contenido no coincide con ningún modelo. No se ha importado.</translation></message>
     <message><source>The model file could not be copied to the models folder.</source><translation>No se ha podido copiar el archivo a la carpeta de modelos.</translation></message>
     <message><source>File imported. %1 still needs other files.</source><translation>Archivo importado. %1 todavía necesita otros archivos.</translation></message>
+    <message><source>The folder could not be opened.</source><translation>No se ha podido abrir la carpeta.</translation></message>
 </context>
 <context>
     <name>Main</name>
@@ -127,7 +128,9 @@
     <message><source>Read the translation aloud after dictating</source><translation>Leer la traducción en voz alta después de dictar</translation></message>
     <message><source>Privacy</source><translation>Privacidad</translation></message>
     <message><source>Ducktor translates, transcribes and speaks on this computer. It has no account, telemetry or history, and it only connects to the internet when you download a model.</source><translation>Ducktor traduce, transcribe y habla en este equipo. No tiene cuentas, telemetría ni historial, y solo se conecta a Internet cuando descargas un modelo.</translation></message>
-    <message><source>Models folder: %1</source><translation>Carpeta de modelos: %1</translation></message>
+    <message><source>App files</source><translation>Archivos de la aplicación</translation></message>
+    <message><source>Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.</source><translation>Ducktor guarda su configuración y los modelos que descargas en esta carpeta. Desinstalar Ducktor no la elimina; puedes borrarla manualmente si ya no la necesitas.</translation></message>
+    <message><source>App folder: %1</source><translation>Carpeta de la aplicación: %1</translation></message>
 </context>
 <context>
     <name>ModelSection</name>

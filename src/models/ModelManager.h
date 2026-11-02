@@ -29,11 +29,12 @@ class ModelManager : public QObject
     Q_PROPERTY(int revision READ revision NOTIFY revisionChanged)
     Q_PROPERTY(bool downloading READ downloading NOTIFY downloadingChanged)
     Q_PROPERTY(bool importing READ importing NOTIFY importingChanged)
+    Q_PROPERTY(QString dataDirectory READ dataDirectory CONSTANT)
     Q_PROPERTY(QString modelsDirectory READ modelsDirectory CONSTANT)
 
 public:
-    ModelManager(AppSettings* settings, const QString& userModelsDir, const QStringList& bundledDirs,
-                 QObject* parent = nullptr);
+    ModelManager(AppSettings* settings, const QString& dataDir, const QString& userModelsDir,
+                 const QStringList& bundledDirs, QObject* parent = nullptr);
     ~ModelManager() override;
 
     void loadCatalog(const QByteArray& json);
@@ -47,6 +48,7 @@ public:
     int revision() const { return m_revision; }
     bool downloading() const { return m_download != nullptr; }
     bool importing() const { return m_importing; }
+    QString dataDirectory() const { return m_dataDir; }
     QString modelsDirectory() const { return m_userDir; }
 
     const QList<ModelInfo>& models() const { return m_models; }
@@ -72,6 +74,7 @@ public:
     Q_INVOKABLE void cancelDownload();
     Q_INVOKABLE void remove(const QString& id);
     Q_INVOKABLE void importFile(const QUrl& url);
+    Q_INVOKABLE void openDataDirectory();
 
 signals:
     void revisionChanged();
@@ -99,8 +102,10 @@ private:
     void changed(const QString& capability);
     void reloadLists();
     void refreshLists(const QString& id);
+    void openFolder(const QString& path);
 
     AppSettings* m_settings;
+    QString m_dataDir;
     QString m_userDir;
     QStringList m_bundledDirs;
     QList<ModelInfo> m_models;

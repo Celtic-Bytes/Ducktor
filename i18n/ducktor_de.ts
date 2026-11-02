@@ -58,6 +58,7 @@
     <message><source>The file has the expected size but its contents do not match any model. It was not imported.</source><translation>Die Datei hat die erwartete Größe, aber ihr Inhalt passt zu keinem Modell. Sie wurde nicht importiert.</translation></message>
     <message><source>The model file could not be copied to the models folder.</source><translation>Die Modelldatei konnte nicht in den Modellordner kopiert werden.</translation></message>
     <message><source>File imported. %1 still needs other files.</source><translation>Datei importiert. %1 benötigt noch weitere Dateien.</translation></message>
+    <message><source>The folder could not be opened.</source><translation>Der Ordner konnte nicht geöffnet werden.</translation></message>
 </context>
 <context>
     <name>Main</name>
@@ -127,7 +128,9 @@
     <message><source>Read the translation aloud after dictating</source><translation>Übersetzung nach dem Diktieren vorlesen</translation></message>
     <message><source>Privacy</source><translation>Datenschutz</translation></message>
     <message><source>Ducktor translates, transcribes and speaks on this computer. It has no account, telemetry or history, and it only connects to the internet when you download a model.</source><translation>Ducktor übersetzt, transkribiert und spricht auf diesem Computer. Es gibt kein Konto, keine Telemetrie und keinen Verlauf, und es verbindet sich nur mit dem Internet, wenn Sie ein Modell herunterladen.</translation></message>
-    <message><source>Models folder: %1</source><translation>Modellordner: %1</translation></message>
+    <message><source>App files</source><translation>Anwendungdateien</translation></message>
+    <message><source>Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.</source><translation>Ducktor speichert hier seine Einstellungen und die von Ihnen heruntergeladenen Modelle. Die Deinstallation von Ducktor entfernt diesen Ordner nicht; Sie können ihn manuell löschen, wenn Sie ihn nicht mehr benötigen.</translation></message>
+    <message><source>App folder: %1</source><translation>Anwendungsordner: %1</translation></message>
 </context>
 <context>
     <name>ModelSection</name>

@@ -58,6 +58,7 @@
     <message><source>The file has the expected size but its contents do not match any model. It was not imported.</source><translation>Il file ha la dimensione prevista, ma il contenuto non corrisponde a nessun modello. Non è stato importato.</translation></message>
     <message><source>The model file could not be copied to the models folder.</source><translation>Impossibile copiare il file nella cartella dei modelli.</translation></message>
     <message><source>File imported. %1 still needs other files.</source><translation>File importato. %1 ha ancora bisogno di altri file.</translation></message>
+    <message><source>The folder could not be opened.</source><translation>Impossibile aprire la cartella.</translation></message>
 </context>
 <context>
     <name>Main</name>
@@ -127,7 +128,9 @@
     <message><source>Read the translation aloud after dictating</source><translation>Leggi la traduzione ad alta voce dopo la dettatura</translation></message>
     <message><source>Privacy</source><translation>Privacy</translation></message>
     <message><source>Ducktor translates, transcribes and speaks on this computer. It has no account, telemetry or history, and it only connects to the internet when you download a model.</source><translation>Ducktor traduce, trascrive e parla su questo computer. Non ha account, telemetria né cronologia, e si collega a Internet solo quando scarichi un modello.</translation></message>
-    <message><source>Models folder: %1</source><translation>Cartella dei modelli: %1</translation></message>
+    <message><source>App files</source><translation>File dell'applicazione</translation></message>
+    <message><source>Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.</source><translation>Ducktor conserva qui le proprie impostazioni e i modelli che scarichi. Disinstallare Ducktor non elimina questa cartella; puoi rimuoverla manualmente se non ti serve più.</translation></message>
+    <message><source>App folder: %1</source><translation>Cartella dell'applicazione: %1</translation></message>
 </context>
 <context>
     <name>ModelSection</name>

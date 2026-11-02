@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
     };
     installLanguage(settings.uiLanguage());
 
-    ModelManager models(&settings, Paths::userModelsDir(), Paths::bundledModelDirs());
+    ModelManager models(&settings, Paths::dataDir(), Paths::userModelsDir(), Paths::bundledModelDirs());
     QFile catalog(QStringLiteral(":/resources/models.json"));
     if (catalog.open(QIODevice::ReadOnly))
         models.loadCatalog(catalog.readAll());

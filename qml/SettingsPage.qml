@@ -9,6 +9,11 @@ Page {
 
     signal privacyRequested()
 
+    // Escapes HTML special characters so a folder path can be shown inside a StyledText link.
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    }
+
     title: qsTr("Settings")
     background: null
 
@@ -120,17 +125,39 @@ Page {
                             anchors.fill: parent
                             spacing: 8
 
+                            SectionTitle { text: qsTr("App files") }
+                            Label {
+                                Layout.fillWidth: true
+                                wrapMode: Text.Wrap
+                                color: Theme.mutedText
+                                text: qsTr("Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.")
+                            }
+                            Label {
+                                Layout.fillWidth: true
+                                wrapMode: Text.WrapAnywhere
+                                textFormat: Text.StyledText
+                                text: qsTr("App folder: %1").arg("<a href=\"#\">" + settingsPage.escapeHtml(Models.dataDirectory) + "</a>")
+                                onLinkActivated: link => Models.openDataDirectory()
+
+                                HoverHandler {
+                                    cursorShape: parent.hoveredLink !== "" ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                }
+                            }
+                        }
+                    }
+
+                    Card {
+                        Layout.fillWidth: true
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 8
+
                             SectionTitle { text: qsTr("Privacy") }
                             Label {
                                 Layout.fillWidth: true
                                 wrapMode: Text.Wrap
                                 text: qsTr("Ducktor translates, transcribes and speaks on this computer. It has no account, telemetry or history, and it only connects to the internet when you download a model.")
-                            }
-                            Label {
-                                Layout.fillWidth: true
-                                wrapMode: Text.WrapAnywhere
-                                color: Theme.mutedText
-                                text: qsTr("Models folder: %1").arg(Models.modelsDirectory)
                             }
                             Button {
                                 text: qsTr("Read the privacy policy")

@@ -6,6 +6,7 @@
 #include "core/Languages.h"
 
 #include <QCryptographicHash>
+#include <QDesktopServices>
 #include <QDir>
 #include <QFileInfo>
 #include <QLocale>
@@ -13,6 +14,7 @@
 #include <QNetworkReply>
 #include <QStorageInfo>
 #include <QThreadPool>
+#include <QUrl>
 
 namespace {
 constexpr qint64 kDiskMarginBytes = 200LL * 1024 * 1024;
@@ -43,10 +45,10 @@ struct ModelManager::ImportResult
     QString error;
 };
 
-ModelManager::ModelManager(AppSettings* settings, const QString& userModelsDir, const QStringList& bundledDirs,
-                           QObject* parent)
-    : QObject(parent), m_settings(settings), m_userDir(userModelsDir), m_bundledDirs(bundledDirs),
-      m_network(new QNetworkAccessManager(this))
+ModelManager::ModelManager(AppSettings* settings, const QString& dataDir, const QString& userModelsDir,
+                           const QStringList& bundledDirs, QObject* parent)
+    : QObject(parent), m_settings(settings), m_dataDir(dataDir), m_userDir(userModelsDir),
+      m_bundledDirs(bundledDirs), m_network(new QNetworkAccessManager(this))
 {
     m_network->setRedirectPolicy(QNetworkRequest::NoLessSafeRedirectPolicy);
     m_translationList = new ModelListModel(this, Capability::Translation, this);
@@ -86,6 +88,14 @@ QAbstractItemModel* ModelManager::translationModels() const { return m_translati
 QAbstractItemModel* ModelManager::speechToTextModels() const { return m_speechToTextList; }
 QAbstractItemModel* ModelManager::textToSpeechModels() const { return m_textToSpeechList; }
 QAbstractItemModel* ModelManager::voiceTable() const { return m_voiceTable; }
+
+void ModelManager::openDataDirectory() { openFolder(m_dataDir); }
+
+void ModelManager::openFolder(const QString& path)
+{
+    if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path)))
+        emit message(tr("The folder could not be opened."));
+}
 
 const ModelInfo* ModelManager::model(const QString& id) const
 {

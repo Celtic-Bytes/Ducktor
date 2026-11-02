@@ -58,6 +58,7 @@
     <message><source>The file has the expected size but its contents do not match any model. It was not imported.</source><translation>Le fichier a la taille attendue, mais son contenu ne correspond à aucun modèle. Il n'a pas été importé.</translation></message>
     <message><source>The model file could not be copied to the models folder.</source><translation>Impossible de copier le fichier dans le dossier des modèles.</translation></message>
     <message><source>File imported. %1 still needs other files.</source><translation>Fichier importé. %1 a encore besoin d'autres fichiers.</translation></message>
+    <message><source>The folder could not be opened.</source><translation>Impossible d'ouvrir le dossier.</translation></message>
 </context>
 <context>
     <name>Main</name>
@@ -127,7 +128,9 @@
     <message><source>Read the translation aloud after dictating</source><translation>Lire la traduction à voix haute après la dictée</translation></message>
     <message><source>Privacy</source><translation>Confidentialité</translation></message>
     <message><source>Ducktor translates, transcribes and speaks on this computer. It has no account, telemetry or history, and it only connects to the internet when you download a model.</source><translation>Ducktor traduit, transcrit et parle sur cet ordinateur. Il n'a ni compte, ni télémétrie, ni historique, et il ne se connecte à Internet que lorsque vous téléchargez un modèle.</translation></message>
-    <message><source>Models folder: %1</source><translation>Dossier des modèles : %1</translation></message>
+    <message><source>App files</source><translation>Fichiers de l'application</translation></message>
+    <message><source>Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.</source><translation>Ducktor y stocke ses paramètres et les modèles que vous téléchargez. Désinstaller Ducktor ne supprime pas ce dossier ; vous pouvez le supprimer manuellement si vous n'en avez plus besoin.</translation></message>
+    <message><source>App folder: %1</source><translation>Dossier de l'application : %1</translation></message>
 </context>
 <context>
     <name>ModelSection</name>

@@ -161,7 +161,7 @@ private slots:
     {
         QTemporaryDir dir;
         AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
-        ModelManager models(&settings, dir.filePath(QStringLiteral("models")), {});
+        ModelManager models(&settings, dir.path(), dir.filePath(QStringLiteral("models")), {});
         AppController controller(&settings, &models);
 
         QVERIFY(controller.fitsLimit(4990, 0, 10, 5000));
@@ -183,7 +183,8 @@ private slots:
         QTemporaryDir dir;
         AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
         const QString userDir = dir.filePath(QStringLiteral("models"));
-        ModelManager models(&settings, userDir, {});
+        ModelManager models(&settings, dir.path(), userDir, {});
+        QCOMPARE(models.dataDirectory(), dir.path());
         models.loadCatalog(tinyCatalog());
 
         QVERIFY(!models.isInstalled(QStringLiteral("tiny-model")));
@@ -209,7 +210,7 @@ private slots:
         QTemporaryDir dir;
         AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
         const QString userDir = dir.filePath(QStringLiteral("models"));
-        ModelManager models(&settings, userDir, {});
+        ModelManager models(&settings, dir.path(), userDir, {});
         models.loadCatalog(readTestData("voice_catalog.json"));
         const QString id = QStringLiteral("two-voices");
         QVERIFY(models.voiceFor(QStringLiteral("es")).isEmpty());
@@ -230,7 +231,7 @@ private slots:
     {
         QTemporaryDir dir;
         AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
-        ModelManager models(&settings, dir.filePath(QStringLiteral("models")), {});
+        ModelManager models(&settings, dir.path(), dir.filePath(QStringLiteral("models")), {});
         models.loadCatalog(tinyCatalog());
 
         const QString wrong = dir.filePath(QStringLiteral("wrong.bin"));
