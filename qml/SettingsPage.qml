@@ -30,28 +30,16 @@ Page {
         TabBar {
             id: tabs
             Layout.fillWidth: true
+            TabButton { text: qsTr("General") }
             TabButton { text: qsTr("Translation") }
             TabButton { text: qsTr("Speech recognition") }
             TabButton { text: qsTr("Voices") }
-            TabButton { text: qsTr("General") }
         }
 
         StackLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             currentIndex: tabs.currentIndex
-
-            ModelSection {
-                capability: "translation"
-                listModel: Models.translationModels
-                intro: qsTr("Models that translate text. Larger files usually translate better but need more memory and time.")
-            }
-            ModelSection {
-                capability: "speech-to-text"
-                listModel: Models.speechToTextModels
-                intro: qsTr("Models that turn your voice into text. They detect the spoken language when the source language is set to automatic.")
-            }
-            VoiceSection {}
 
             ScrollView {
                 id: generalScroll
@@ -167,6 +155,18 @@ Page {
                     }
                 }
             }
+
+            ModelSection {
+                capability: "translation"
+                listModel: Models.translationModels
+                intro: qsTr("Models that translate text. Larger files usually translate better but need more memory and time.")
+            }
+            ModelSection {
+                capability: "speech-to-text"
+                listModel: Models.speechToTextModels
+                intro: qsTr("Models that turn your voice into text. They detect the spoken language when the source language is set to automatic.")
+            }
+            VoiceSection {}
         }
     }
 }
