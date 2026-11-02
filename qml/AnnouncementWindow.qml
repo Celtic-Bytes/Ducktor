@@ -79,6 +79,7 @@ Window {
                 selectByMouse: true
                 wrapMode: TextEdit.Wrap
                 textFormat: TextEdit.MarkdownText
+                font.pixelSize: 16
                 text: Announcement.body
                 color: root.palette.text
                 onLinkActivated: link => Qt.openUrlExternally(link)
