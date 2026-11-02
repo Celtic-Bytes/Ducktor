@@ -2,7 +2,13 @@
 
 Offline desktop translator (Qt 6.9 + C++17). Build steps and architecture overview: [README.md](README.md). Repository docs, code, comments and UI source strings are in English; chat with the maintainer is in Spanish.
 
-The public repository is <https://github.com/Celtic-Bytes/Ducktor>, mirrored from a private self-hosted instance. All CI and packaging automation targets GitHub Actions (`.github/workflows/`); never write the private instance's LAN address (IP, registry host) into any tracked file.
+## Public repository
+
+The public repository is <https://github.com/Celtic-Bytes/Ducktor>, mirrored from a private self-hosted instance. All CI and packaging automation targets GitHub Actions (`.github/workflows/`). Tracked files must be safe for any contributor of the public repo:
+
+- Never write the private instance's LAN address (IP, registry host) into any tracked file.
+- No personal data in tracked files: usernames, local file paths, personal hardware or infrastructure details.
+- No documentation or artifacts coupled to personal tooling: AI skills, MCP servers, or local agent workspaces (e.g. `docs/superpowers/`, `.superpowers/`).
 
 ## Build and test
 
