@@ -25,6 +25,7 @@ Page {
 
         required property string documentName
         property bool markdown: true
+        property bool centered: false
 
         signal linkClicked(string link)
 
@@ -34,6 +35,7 @@ Page {
             readOnly: true
             selectByMouse: true
             wrapMode: TextEdit.Wrap
+            horizontalAlignment: view.centered ? Text.AlignHCenter : Text.AlignLeft
             textFormat: view.markdown ? TextEdit.MarkdownText : TextEdit.PlainText
             text: App.document(view.documentName)
             onLinkActivated: link => view.linkClicked(link)
@@ -77,29 +79,35 @@ Page {
                         sourceSize: Qt.size(96, 96)
                         Layout.preferredWidth: 96
                         Layout.preferredHeight: 96
+                        Layout.alignment: Qt.AlignHCenter
                         Accessible.ignored: true
                     }
                     Label {
                         text: "Ducktor"
                         font.bold: true
                         font.pixelSize: 24
+                        Layout.alignment: Qt.AlignHCenter
                     }
                     Label {
                         text: qsTr("Version %1").arg(Qt.application.version)
+                        Layout.alignment: Qt.AlignHCenter
                     }
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignHCenter
                         text: qsTr("Offline translator for text and voice. Your text and recordings never leave this computer.")
                     }
                     Label {
                         textFormat: Text.StyledText
+                        Layout.alignment: Qt.AlignHCenter
                         text: "© 2026 celticbytes · <a href=\"https://celticbytes.com\">celticbytes.com</a>"
                         onLinkActivated: link => Qt.openUrlExternally(link)
                     }
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.Wrap
+                        horizontalAlignment: Text.AlignHCenter
                         opacity: 0.8
                         text: qsTr("Free software under the GNU General Public License, version 3 or later. It comes with no warranty: machine translations and transcriptions can contain errors.")
                     }
@@ -113,6 +121,7 @@ Page {
             DocumentView {
                 documentName: "license"
                 markdown: false
+                centered: true
                 onLinkClicked: link => page.openLink(link)
             }
             DocumentView {
