@@ -159,7 +159,7 @@ Page {
             ModelSection {
                 capability: "translation"
                 listModel: Models.translationModels
-                intro: qsTr("Models that translate text. Larger files usually translate better but need more memory and time.")
+                intro: qsTr("Models that translate text. You only need to download one model to start translating; you can download several and switch between them with the model selector. Larger files usually translate better but need more memory and time.")
             }
             ModelSection {
                 capability: "speech-to-text"

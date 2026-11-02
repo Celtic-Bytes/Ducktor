@@ -118,7 +118,7 @@
     <message><source>Speech recognition</source><translation>Reconocimiento de voz</translation></message>
     <message><source>Voices</source><translation>Voces</translation></message>
     <message><source>General</source><translation>General</translation></message>
-    <message><source>Models that translate text. Larger files usually translate better but need more memory and time.</source><translation>Modelos que traducen texto. Los archivos más grandes suelen traducir mejor, pero necesitan más memoria y tiempo.</translation></message>
+    <message><source>Models that translate text. You only need to download one model to start translating; you can download several and switch between them with the model selector. Larger files usually translate better but need more memory and time.</source><translation>Modelos que traducen texto. Solo necesitas descargar un modelo para empezar a traducir; puedes descargar varios y cambiar entre ellos con el selector de modelos. Los archivos más grandes suelen traducir mejor, pero necesitan más memoria y tiempo.</translation></message>
     <message><source>Models that turn your voice into text. They detect the spoken language when the source language is set to automatic.</source><translation>Modelos que convierten tu voz en texto. Detectan el idioma hablado cuando el idioma de origen está en automático.</translation></message>
     <message><source>Limits</source><translation>Límites</translation></message>
     <message><source>Maximum text length (characters)</source><translation>Longitud máxima del texto (caracteres)</translation></message>
@@ -180,7 +180,7 @@
     <message><source>Use</source><translation>Usar</translation></message>
     <message><source>In use</source><translation>En uso</translation></message>
     <message><source>Delete</source><translation>Eliminar</translation></message>
-    <message><source>Voices that read translations aloud. Each language can have a female and a male voice; text translation works without them.</source><translation>Voces que leen las traducciones en voz alta. Cada idioma puede tener una voz femenina y otra masculina; la traducción de texto funciona sin ellas.</translation></message>
+    <message><source>Voices that read translations aloud. One voice per language is enough to read text; you can download several, for example both the female and the male voice. Text translation works without any voice.</source><translation>Voces que leen las traducciones en voz alta. Una voz por idioma es suficiente para leer el texto; puedes descargar varias, por ejemplo la voz femenina y la masculina. La traducción de texto funciona sin ninguna voz.</translation></message>
     <message><source>Language</source><translation>Idioma</translation></message>
     <message><source>Female voice</source><translation>Voz femenina</translation></message>
     <message><source>Male voice</source><translation>Voz masculina</translation></message>

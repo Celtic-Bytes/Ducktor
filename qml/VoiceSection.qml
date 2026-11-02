@@ -132,7 +132,7 @@ ColumnLayout {
         Layout.fillWidth: true
         wrapMode: Text.Wrap
         color: Theme.mutedText
-        text: qsTr("Voices that read translations aloud. Each language can have a female and a male voice; text translation works without them.")
+        text: qsTr("Voices that read translations aloud. One voice per language is enough to read text; you can download several, for example both the female and the male voice. Text translation works without any voice.")
     }
 
     ImportRow {
