@@ -50,6 +50,8 @@ ApplicationWindow {
         if (Announcement.available && Announcement.unseen)
             showAnnouncement()
 
+
+
     // Hides the announcement without acknowledging it: the user only marks it as seen by
     // closing it on purpose, so it is shown again if the main window was closed first.
     onClosing:

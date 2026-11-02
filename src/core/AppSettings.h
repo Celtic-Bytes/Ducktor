@@ -44,6 +44,10 @@ public:
 
     QString value(const QString& key) const;
     void setValue(const QString& key, const QString& value);
+    void remove(const QString& key);
+    // QSettings only writes on destruction or a clean exit; flush a change that must survive
+    // a killed process.
+    void sync();
 
 signals:
     void maxInputCharsChanged();

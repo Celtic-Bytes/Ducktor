@@ -39,6 +39,14 @@ bool writeFile(const QString& path, const QByteArray& data)
     return file.open(QIODevice::WriteOnly) && file.write(data) == data.size();
 }
 
+// QSettings instances in the same process share a cache, so persistence is checked against the
+// raw file, not through another QSettings.
+QByteArray readRawIni(const QString& path)
+{
+    QFile file(path);
+    return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+}
+
 QString reassemble(const std::vector<ducktor::seg::Segment>& segments)
 {
     std::string out;
@@ -329,6 +337,7 @@ private slots:
         announcement.acknowledge();
         QVERIFY(!announcement.unseen());
         QCOMPARE(settings.value(QStringLiteral("ui/lastSeenAnnouncement")), QStringLiteral("test-announcement"));
+        QVERIFY(readRawIni(ini).contains("lastSeenAnnouncement"));
 
         // A new instance over the same settings file keeps the acknowledgement.
         AppSettings reloaded(ini);
@@ -354,6 +363,33 @@ private slots:
         QCOMPARE(announcement.id(), QStringLiteral("welcome-window"));
         QVERIFY(!announcement.title().isEmpty());
         QVERIFY(!announcement.body().isEmpty());
+    }
+
+    void announcementTogglesVisibility()
+    {
+        const QByteArray json = readTestData("announcement.json");
+        const QString ini = QTemporaryDir().filePath(QStringLiteral("s.ini"));
+        AppSettings settings(ini);
+        QLocale::setDefault(QLocale("en"));
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.unseen());
+
+        // Acknowledging hides it; the inverse action shows it again on the next launch.
+        announcement.acknowledge();
+        QVERIFY(!announcement.unseen());
+        QVERIFY(readRawIni(ini).contains("lastSeenAnnouncement"));
+        announcement.showOnNextLaunch();
+        QVERIFY(announcement.unseen());
+        QVERIFY(!readRawIni(ini).contains("lastSeenAnnouncement"));
+
+        // The reset is persisted, so a new instance over the same file is unseen again.
+        AppSettings reloaded(ini);
+        Announcement reloadedAnnouncement(&reloaded, json);
+        QVERIFY(reloadedAnnouncement.unseen());
+
+        // Calling it while already unseen is a no-op.
+        announcement.showOnNextLaunch();
+        QVERIFY(announcement.unseen());
     }
 
     void resamplerKeepsDuration()

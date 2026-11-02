@@ -32,8 +32,12 @@ Window {
     palette.toolTipBase: Theme.surface
     palette.toolTipText: Theme.text
 
-    // Covers the OK button, Escape and the window manager's close button alike.
-    onClosing: Announcement.acknowledge()
+    // Covers the OK button, Escape and the window manager's close button alike. Qt also
+    // emits closing during app shutdown for windows that were shown in the session; those
+    // are not user actions, so only acknowledge a close while the window is on screen.
+    onClosing:
+        if (root.visible)
+            Announcement.acknowledge()
 
     Shortcut {
         sequences: [Qt.Key_Escape]

@@ -91,3 +91,13 @@ void AppSettings::setValue(const QString& key, const QString& value)
 {
     m_settings.setValue(key, value);
 }
+
+void AppSettings::remove(const QString& key)
+{
+    m_settings.remove(key);
+}
+
+void AppSettings::sync()
+{
+    m_settings.sync();
+}

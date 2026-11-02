@@ -128,5 +128,15 @@ void Announcement::acknowledge()
     if (!m_available || !unseen())
         return;
     m_settings->setValue(kSeenKey, m_id);
+    m_settings->sync();
+    emit unseenChanged();
+}
+
+void Announcement::showOnNextLaunch()
+{
+    if (!m_available || unseen())
+        return;
+    m_settings->remove(kSeenKey);
+    m_settings->sync();
     emit unseenChanged();
 }

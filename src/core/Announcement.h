@@ -36,6 +36,8 @@ public:
     // Must be called after QLocale has been updated with the new interface language.
     void relocalize();
     Q_INVOKABLE void acknowledge();
+    // Marks the announcement as unseen again so that it is shown on the next launch.
+    Q_INVOKABLE void showOnNextLaunch();
 
 signals:
     void titleChanged();

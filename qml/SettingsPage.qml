@@ -108,6 +108,26 @@ Page {
 
                     Card {
                         Layout.fillWidth: true
+                        visible: Announcement.available
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            spacing: 8
+
+                            SectionTitle { text: qsTr("Announcement") }
+                            CheckBox {
+                                text: qsTr("Show the announcement window on next start")
+                                checked: Announcement.unseen
+                                onToggled: if (checked)
+                                    Announcement.showOnNextLaunch()
+                                else
+                                    Announcement.acknowledge()
+                            }
+                        }
+                    }
+
+                    Card {
+                        Layout.fillWidth: true
 
                         ColumnLayout {
                             anchors.fill: parent

@@ -131,6 +131,8 @@
     <message><source>App files</source><translation>Archivos de la aplicación</translation></message>
     <message><source>Ducktor stores its settings and the models you download in this folder. Uninstalling Ducktor does not delete it; you can remove it manually if you no longer need it.</source><translation>Ducktor guarda su configuración y los modelos que descargas en esta carpeta. Desinstalar Ducktor no la elimina; puedes borrarla manualmente si ya no la necesitas.</translation></message>
     <message><source>App folder: %1</source><translation>Carpeta de la aplicación: %1</translation></message>
+    <message><source>Announcement</source><translation>Aviso</translation></message>
+    <message><source>Show the announcement window on next start</source><translation>Mostrar la ventana de aviso en el próximo arranque</translation></message>
 </context>
 <context>
     <name>ModelSection</name>
