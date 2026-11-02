@@ -1,0 +1,17 @@
+{
+  "id": "welcome-window",
+  "title": {
+    "en": "Welcome to Ducktor",
+    "es": "Bienvenido a Ducktor",
+    "fr": "Bienvenue dans Ducktor",
+    "it": "Benvenuto in Ducktor",
+    "de": "Willkommen bei Ducktor"
+  },
+  "body": {
+    "en": "This is a placeholder message. The content of this window will be defined later.",
+    "es": "Este es un mensaje de ejemplo. El contenido de esta ventana se definirá más adelante.",
+    "fr": "Ceci est un message d'exemple. Le contenu de cette fenêtre sera défini plus tard.",
+    "it": "Questo è un messaggio di esempio. Il contenuto di questa finestra sarà definito in seguito.",
+    "de": "Dies ist eine Beispielnachricht. Der Inhalt dieses Fensters wird später festgelegt."
+  }
+}

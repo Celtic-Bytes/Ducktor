@@ -30,7 +30,7 @@ The public repository is <https://github.com/Celtic-Bytes/Ducktor>, mirrored fro
 - The GUI never links inference libraries. Each engine is a helper process (`engines/<name>/main.cpp`) spawned by [EngineProcess](src/engines/EngineProcess.cpp), so a crash or OOM only kills that helper.
 - Helper protocol: header line `FIELD ... <payloadBytes>\n` followed by the raw payload. Writer: [engines/common/protocol.hpp](engines/common/protocol.hpp); reader: [FrameParser](src/engines/FrameParser.cpp). Change both sides together and keep fields free of spaces; user text always goes in the payload, never in arguments.
 - [AppController](src/core/AppController.cpp) runs one heavy task at a time (`state` string) and ignores frames whose request id is stale. Cancelling kills the helper.
-- QML talks to C++ only through the singletons `App`, `Models` and `Settings` registered in [src/main.cpp](src/main.cpp) (`import Ducktor.Core`).
+- QML talks to C++ only through the singletons `App`, `Models`, `Settings` and `Announcement` registered in [src/main.cpp](src/main.cpp) (`import Ducktor.Core`).
 
 ## Models and privacy
 

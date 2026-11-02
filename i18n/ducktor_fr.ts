@@ -187,4 +187,8 @@
     <message><source>Delete voice</source><translation>Supprimer la voix</translation></message>
     <message><source>Delete %1 from this computer? You can download it again later.</source><translation>Supprimer %1 de cet ordinateur ? Vous pourrez la télécharger à nouveau plus tard.</translation></message>
 </context>
+<context>
+    <name>AnnouncementWindow</name>
+    <message><source>OK</source><translation>OK</translation></message>
+</context>
 </TS>

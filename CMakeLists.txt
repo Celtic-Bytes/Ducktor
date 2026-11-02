@@ -62,12 +62,14 @@ qt_add_qml_module(ducktor
         qml/ModelSection.qml
         qml/ModelCard.qml
         qml/VoiceSection.qml
-        qml/AboutPage.qml)
+        qml/AboutPage.qml
+        qml/AnnouncementWindow.qml)
 
 qt_add_resources(ducktor ducktor_assets
     PREFIX /
     FILES
         resources/models.json
+        resources/announcement.json
         resources/icons/ducktor.svg
         resources/icons/back.svg
         resources/icons/clear.svg

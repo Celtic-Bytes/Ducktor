@@ -19,7 +19,7 @@ Ducktor is a free, open-source translator that works on your computer. It is des
 
 ## What Ducktor stores on your computer
 
-- `settings.ini`: your limits, the interface language, the voice playback preference and the models you selected.
+- `settings.ini`: your limits, the interface language, the voice playback preference, the models you selected and the id of the last announcement you saw.
 - `models/`: the AI models you downloaded or imported, plus unfinished downloads (`.part` files) so they can be resumed.
 
 These files are stored in:

@@ -1,6 +1,7 @@
 qt_add_library(ducktor_core STATIC
     core/AppController.cpp core/AppController.h
     core/AppSettings.cpp core/AppSettings.h
+    core/Announcement.cpp core/Announcement.h
     core/Languages.cpp core/Languages.h
     core/Paths.cpp core/Paths.h
     engines/EngineProcess.cpp engines/EngineProcess.h

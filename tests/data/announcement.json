@@ -1,0 +1,11 @@
+{
+  "id": "test-announcement",
+  "title": {
+    "en": "Hello (en)",
+    "es": "Hola (es)"
+  },
+  "body": {
+    "en": "Body in English",
+    "es": "Cuerpo en español"
+  }
+}

@@ -1,4 +1,5 @@
 #include "audio/AudioDsp.h"
+#include "core/Announcement.h"
 #include "core/AppController.h"
 #include "core/AppSettings.h"
 #include "engines/FrameParser.h"
@@ -8,6 +9,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QLocale>
 #include <QSignalSpy>
 #include <QTemporaryDir>
 #include <QTest>
@@ -247,6 +249,111 @@ private slots:
         QTRY_VERIFY(!models.importing());
         QVERIFY(models.isInstalled(QStringLiteral("tiny-model")));
         QCOMPARE(messages.size(), 2);
+    }
+
+    void announcementParsesAndLocalizes()
+    {
+        const QByteArray json = readTestData("announcement.json");
+        QVERIFY(!json.isEmpty());
+
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        QLocale::setDefault(QLocale("en"));
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.available());
+        QCOMPARE(announcement.id(), QStringLiteral("test-announcement"));
+        QCOMPARE(announcement.title(), QStringLiteral("Hello (en)"));
+        QCOMPARE(announcement.body(), QStringLiteral("Body in English"));
+        QVERIFY(announcement.unseen());
+
+        QLocale::setDefault(QLocale("es"));
+        announcement.relocalize();
+        QCOMPARE(announcement.title(), QStringLiteral("Hola (es)"));
+        QCOMPARE(announcement.body(), QStringLiteral("Cuerpo en español"));
+    }
+
+    void announcementFallsBackToEnglish()
+    {
+        const QByteArray json = readTestData("announcement.json");
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        QLocale::setDefault(QLocale("de")); // not present in the test file
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.available());
+        QCOMPARE(announcement.title(), QStringLiteral("Hello (en)"));
+    }
+
+    void announcementAcceptsPlainText()
+    {
+        const QByteArray json = R"({"id":"plain","title":"Only title","body":"Only body"})";
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        QLocale::setDefault(QLocale("en"));
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.available());
+        QCOMPARE(announcement.title(), QStringLiteral("Only title"));
+        QCOMPARE(announcement.body(), QStringLiteral("Only body"));
+    }
+
+    void announcementRejectsInvalidData()
+    {
+        const QByteArray invalid[] = {
+            QByteArray(),
+            QByteArray("not json"),
+            R"({"title":{"en":"t"},"body":{"en":"b"}})",
+            R"({"id":"","title":{"en":"t"},"body":{"en":"b"}})",
+            R"({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"url":"file://x"})",
+            R"({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"urlLabel":{"en":"l"}})",
+            R"js({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"url":"javascript:alert(1)","urlLabel":{"en":"l"}})js",
+            R"({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"image":"//etc/passwd"})",
+            R"({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"image":"icons/../../etc/passwd"})",
+            R"({"id":"test-announcement","title":{"en":"t"},"body":{"en":"b"},"image":"icons/logo.png"})",
+        };
+        for (const QByteArray& json : invalid) {
+            QTemporaryDir dir;
+            AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+            Announcement announcement(&settings, json);
+            QVERIFY2(!announcement.available(), qPrintable(json));
+        }
+    }
+
+    void announcementPersistsAcknowledgement()
+    {
+        const QByteArray json = readTestData("announcement.json");
+        const QString ini = QTemporaryDir().filePath(QStringLiteral("s.ini"));
+        AppSettings settings(ini);
+        QLocale::setDefault(QLocale("en"));
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.unseen());
+
+        announcement.acknowledge();
+        QVERIFY(!announcement.unseen());
+        QCOMPARE(settings.value(QStringLiteral("ui/lastSeenAnnouncement")), QStringLiteral("test-announcement"));
+
+        // A new instance over the same settings file keeps the acknowledgement.
+        AppSettings reloaded(ini);
+        Announcement reloadedAnnouncement(&reloaded, json);
+        QVERIFY(!reloadedAnnouncement.unseen());
+
+        // A different id is unseen again.
+        const QByteArray other = R"({"id":"other-id","title":{"en":"t"},"body":{"en":"b"}})";
+        Announcement otherAnnouncement(&reloaded, other);
+        QVERIFY(otherAnnouncement.unseen());
+    }
+
+    void bundledAnnouncementIsValid()
+    {
+        QFile file(QStringLiteral(DUCKTOR_SOURCE_DIR "/resources/announcement.json"));
+        QVERIFY(file.open(QIODevice::ReadOnly));
+        const QByteArray json = file.readAll();
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        QLocale::setDefault(QLocale("en"));
+        Announcement announcement(&settings, json);
+        QVERIFY2(announcement.available(), qPrintable(json));
+        QCOMPARE(announcement.id(), QStringLiteral("welcome-window"));
+        QVERIFY(!announcement.title().isEmpty());
+        QVERIFY(!announcement.body().isEmpty());
     }
 
     void resamplerKeepsDuration()

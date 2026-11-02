@@ -1,3 +1,4 @@
+#include "core/Announcement.h"
 #include "core/AppController.h"
 #include "core/AppSettings.h"
 #include "core/Paths.h"
@@ -93,16 +94,22 @@ int main(int argc, char* argv[])
     if (catalog.open(QIODevice::ReadOnly))
         models.loadCatalog(catalog.readAll());
     AppController controller(&settings, &models);
+    QFile announcementFile(QStringLiteral(":/resources/announcement.json"));
+    const QByteArray announcementJson =
+        announcementFile.open(QIODevice::ReadOnly) ? announcementFile.readAll() : QByteArray();
+    Announcement announcement(&settings, announcementJson);
 
     qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "App", &controller);
     qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "Models", &models);
     qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "Settings", &settings);
+    qmlRegisterSingletonInstance("Ducktor.Core", 1, 0, "Announcement", &announcement);
 
     QQmlApplicationEngine engine;
     engine.addImageProvider(QStringLiteral("svg"), new SvgImageProvider);
     QObject::connect(&settings, &AppSettings::uiLanguageChanged, &engine, [&]() {
         installLanguage(settings.uiLanguage());
         models.relocalize();
+        announcement.relocalize();
         emit controller.languagesChanged();
         engine.retranslate();
     });
