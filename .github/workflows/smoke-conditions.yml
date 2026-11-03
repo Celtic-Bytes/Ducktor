@@ -1,0 +1,33 @@
+# DIAGNOSTIC (temporary, to be deleted): same probe as smoke.yml plus the
+# exact if/needs pattern used by releases.yml. On a manual run, "check"
+# is skipped by its own if; "build" needs it and only runs when
+# needs.check.result is success or skipped; "always" is a control job
+# that must run in any case, so the run-level machinery is exercised
+# even if the pattern is broken.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+jobs:
+  always:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: echo "always ran"
+
+  check:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: echo "check ran"
+
+  build:
+    needs: [check]
+    if: ${{ needs.check.result == 'success' || needs.check.result == 'skipped' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: echo "build ran"

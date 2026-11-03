@@ -1,0 +1,20 @@
+# DIAGNOSTIC (temporary, to be deleted): same probe as smoke.yml plus a
+# concurrency block with a brand-new group name. If smoke.yml runs but
+# this one is skipped, the concurrency keyword itself is what GitHub
+# refuses for this repository.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+concurrency:
+  group: ducktor-smoke-concurrency-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: echo "smoke concurrency ok"
