@@ -35,6 +35,10 @@ if(DUCKTOR_BUILD_ENGINES)
                 PATTERN "*.so*"
                 PATTERN "*.dylib"
                 PATTERN "*.dll"
+                # On macOS the runtime directory also holds the built Ducktor.app;
+                # without this exclusion its QML plugin dylibs would be copied
+                # into Contents/MacOS as a nested bundle and break macdeployqt.
+                PATTERN "*.app" EXCLUDE
                 PATTERN "espeak-ng-data" EXCLUDE)
         install(DIRECTORY ${DUCKTOR_RUNTIME_DIR}/espeak-ng-data DESTINATION ${DUCKTOR_INSTALL_ENGINES})
     endif()

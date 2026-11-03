@@ -66,7 +66,7 @@ jobs:
           set -euo pipefail
           apt-get update
           apt-get install -y --no-install-recommends \
-            build-essential cmake ninja-build git curl ca-certificates \
+            build-essential cmake ninja-build file git curl ca-certificates \
             dpkg-dev \
             libgl1-mesa-dev libxkbcommon-dev libxcb-cursor0 libpulse-dev \
             qt6-base-dev qt6-base-dev-tools \
@@ -113,8 +113,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # The runner ships Visual Studio 2022 with the C++ workload and its
-      # environment is already configured in the default shell.
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
@@ -127,8 +125,20 @@ jobs:
           install-deps: false
           cache: true
 
+      # The runner ships Visual Studio 2022 with the C++ workload, but its
+      # environment is not active in the default shell. Without cl.exe on the
+      # PATH CMake picks up the runner's MinGW, which cannot link the MSVC Qt
+      # this job installs (and piper only compiles its Windows console code
+      # with MSVC). Activate the MSVC environment before configuring.
       - name: Configure and build
+        shell: cmd
         run: |
+          set "VCVARS=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          if not exist "%VCVARS%" (
+            echo Visual Studio 2022 C++ tools not found at %VCVARS%
+            exit /b 1
+          )
+          call "%VCVARS%"
           cmake --preset release
           cmake --build --preset release --parallel
 
