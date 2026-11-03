@@ -274,15 +274,15 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 | Trigger                                   | What runs                                                                                                                                          |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `git push origin v<version>`              | Builds all the packages, creates the release and uploads them                                                                                       |
-| Manual run (_Actions → Release → Run workflow_) | Builds the same packages but never touches the release: a way to test the pipeline without a tag                                             |
+| Manual run (_Actions → Releases → Run workflow_) | Builds the same packages but never touches the release: a way to test the pipeline without a tag                                             |
 
-[.github/workflows/release.yml](.github/workflows/release.yml) builds all the packages on GitHub's public runners and publishes them as a GitHub release:
+[.github/workflows/releases.yml](.github/workflows/releases.yml) builds all the packages on GitHub's public runners and publishes them as a GitHub release:
 
 | Package | Runner | How it is built |
 | --- | --- | --- |
 | `.deb` | `ubuntu-latest` | `cmake --preset release` + `cpack --preset release` |
 | AppImage | `ubuntu-latest` | [packaging/linux/build-appimage.sh](packaging/linux/build-appimage.sh) (linuxdeploy with pinned SHA-256) |
-| Flatpak | `ubuntu-latest` | `flatpak-builder` with the Flathub KDE 6.10 runtime ([.github/workflows/release.yml](.github/workflows/release.yml), flatpak job) |
+| Flatpak | `ubuntu-latest` | `flatpak-builder` with the Flathub KDE 6.10 runtime ([.github/workflows/releases.yml](.github/workflows/releases.yml), flatpak job) |
 | Windows ZIP | `windows-latest` | `cmake --preset release` + `cpack --preset release` (portable, `windeployqt`) |
 | macOS ZIP | `macos-latest` | `cmake --preset release` + `cpack --preset release` (`Ducktor.app`, ad hoc signature) |
 

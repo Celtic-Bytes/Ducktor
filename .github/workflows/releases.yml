@@ -8,7 +8,7 @@
 # standard qt6-* packages (cmake/DebianQtDepends.cmake). The Windows and
 # macOS jobs install Qt with jurplel/install-qt-action (aqt) from the qt.io
 # online installer; the community edition needs no account or token.
-name: Release
+name: Releases
 
 on:
   push:
@@ -16,10 +16,11 @@ on:
       - 'v*'
   workflow_dispatch: {}
 
-# One run per workflow+ref at a time; a re-run is queued instead of being
-# cancelled, so a tag push never races with itself.
+# One run per ref at a time; a re-run is queued instead of being cancelled,
+# so a tag push never races with itself. The group name is explicit (not
+# built from github.workflow) so it stays stable if the workflow is renamed.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ducktor-releases-${{ github.ref }}
   cancel-in-progress: false
 
 env:
