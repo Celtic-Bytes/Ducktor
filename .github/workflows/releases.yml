@@ -49,7 +49,7 @@ jobs:
   linux:
     name: Linux packages (.deb + AppImage)
     needs: [check-version]
-    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: ubuntu-latest
     container:
       image: ubuntu:26.04
@@ -107,7 +107,7 @@ jobs:
   windows:
     name: Windows ZIP
     needs: [check-version]
-    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: windows-latest
     timeout-minutes: 180
     steps:
@@ -146,7 +146,7 @@ jobs:
   macos:
     name: macOS ZIP
     needs: [check-version]
-    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: macos-latest
     timeout-minutes: 180
     steps:
@@ -186,7 +186,7 @@ jobs:
   flatpak:
     name: Flatpak
     needs: [check-version]
-    if: ${{ needs.check-version.result == 'success' || needs.check-version.result == 'skipped' }}
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: ubuntu-latest
     container:
       # The official Flathub image: it already has the flatpak tooling and
