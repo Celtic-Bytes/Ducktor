@@ -97,7 +97,7 @@ jobs:
           ls -lh dist/*.AppImage
 
       - name: Upload the packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: linux-packages
           path: |
@@ -125,20 +125,22 @@ jobs:
           install-deps: false
           cache: true
 
-      # The runner ships Visual Studio 2022 with the C++ workload, but its
+      # The runner ships Visual Studio with the C++ workload, but its
       # environment is not active in the default shell. Without cl.exe on the
       # PATH CMake picks up the runner's MinGW, which cannot link the MSVC Qt
       # this job installs (and piper only compiles its Windows console code
-      # with MSVC). Activate the MSVC environment before configuring.
+      # with MSVC). Locate the newest VS installation with vswhere (the
+      # edition and year vary between runner images) and activate its x64
+      # environment before configuring.
       - name: Configure and build
         shell: cmd
         run: |
-          set "VCVARS=C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-          if not exist "%VCVARS%" (
-            echo Visual Studio 2022 C++ tools not found at %VCVARS%
+          for /f "usebackq tokens=*" %%i in (`"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VS_PATH=%%i"
+          if not defined VS_PATH (
+            echo No Visual Studio installation with the C++ workload found
             exit /b 1
           )
-          call "%VCVARS%"
+          call "%VS_PATH%\VC\Auxiliary\Build\vcvars64.bat"
           cmake --preset release
           cmake --build --preset release --parallel
 
@@ -148,7 +150,7 @@ jobs:
           Get-ChildItem dist\*.zip
 
       - name: Upload the package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: windows-package
           path: dist/*.zip
@@ -188,7 +190,7 @@ jobs:
           ls -lh dist/*.zip
 
       - name: Upload the package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: macos-package
           path: dist/*.zip
@@ -223,7 +225,7 @@ jobs:
           upload-artifact: false
 
       - name: Upload the package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: flatpak-package
           path: Ducktor-*.flatpak
@@ -235,7 +237,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           path: artifacts
 
