@@ -1,5 +1,5 @@
 {
-  "id": "welcome-window-3",
+  "id": "welcome-window-4",
   "title": {
     "en": "Ducktor",
     "es": "Ducktor",
@@ -8,11 +8,11 @@
     "de": "Ducktor"
   },
   "body": {
-    "en": "This app is still in alpha.  \nGo to Settings to download the models you want to use.",
-    "es": "Esta aplicación sigue en versión alpha.  \nVe a Configuración para descargar los modelos que quieras usar.",
-    "fr": "Cette application est encore en version alpha.  \nAllez dans Paramètres pour télécharger les modèles que vous voulez utiliser.",
-    "it": "Questa applicazione è ancora in versione alpha.  \nVai in Impostazioni per scaricare i modelli che vuoi usare.",
-    "de": "Diese Anwendung ist noch in der Alpha-Phase.  \nGehen Sie zu Einstellungen, um die Modelle herunterzuladen, die Sie verwenden möchten."
+    "en": "This app is still in alpha.  \nGo to Settings to download the models you want to use.  \nTranslation quality depends on the model you select.",
+    "es": "Esta aplicación sigue en versión alpha.  \nVe a Configuración para descargar los modelos que quieras usar.  \nLa calidad de las traducciones dependerá del modelo seleccionado.",
+    "fr": "Cette application est encore en version alpha.  \nAllez dans Paramètres pour télécharger les modèles que vous voulez utiliser.  \nLa qualité des traductions dépendra du modèle sélectionné.",
+    "it": "Questa applicazione è ancora in versione alpha.  \nVai in Impostazioni per scaricare i modelli che vuoi usare.  \nLa qualità delle traduzioni dipenderà dal modello selezionato.",
+    "de": "Diese Anwendung ist noch in der Alpha-Phase.  \nGehen Sie zu Einstellungen, um die Modelle herunterzuladen, die Sie verwenden möchten.  \nDie Qualität der Übersetzungen hängt vom ausgewählten Modell ab."
   },
   "image": "icons/ducktor.svg"
 }
