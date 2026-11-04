@@ -1,4 +1,4 @@
-# Package formats made with CPack: .deb on Linux, ZIP on Windows and macOS.
+# Package formats made with CPack: .deb and .tar.xz on Linux, ZIP on Windows and macOS.
 # AppImage and Flatpak have their own tools; see packaging/ and the README.
 set(CPACK_PACKAGE_NAME ducktor)
 set(CPACK_PACKAGE_VENDOR celticbytes)
@@ -17,8 +17,10 @@ elseif(APPLE)
     set(CPACK_GENERATOR ZIP)
     set(CPACK_PACKAGE_FILE_NAME Ducktor-${PROJECT_VERSION}-macos-${CMAKE_SYSTEM_PROCESSOR})
 else()
-    set(CPACK_GENERATOR DEB)
+    set(CPACK_GENERATOR DEB TXZ)
     set(CPACK_PACKAGING_INSTALL_PREFIX /usr)
+    # Name of the tarball; the .deb keeps the standard Debian name (DEB-DEFAULT).
+    set(CPACK_PACKAGE_FILE_NAME ducktor-${PROJECT_VERSION}-linux-x86_64)
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
     set(CPACK_DEBIAN_PACKAGE_SECTION utils)
     set(CPACK_DEBIAN_PACKAGE_DESCRIPTION

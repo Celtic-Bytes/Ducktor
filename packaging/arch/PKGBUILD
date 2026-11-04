@@ -1,0 +1,44 @@
+# Maintainer: celticbytes <info@celticbytes.com>
+#
+# Builds Ducktor from source. The inference engines (llama.cpp, whisper.cpp,
+# Piper) are cloned and compiled during the build, so it needs network access
+# and a while to finish. When a new release tag is cut, bump pkgver and
+# recalculate sha256sums from the tarball at
+# https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v<pkgver>.tar.gz
+
+pkgname=ducktor
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Offline desktop translator for text and voice"
+arch=(x86_64)
+url="https://github.com/Celtic-Bytes/Ducktor"
+license=(GPL-3.0-or-later)
+depends=(
+    qt6-base
+    qt6-declarative
+    qt6-multimedia
+    qt6-svg
+)
+makedepends=(
+    cmake
+    git
+    ninja
+    qt6-base
+    qt6-declarative
+    qt6-multimedia
+    qt6-svg
+    qt6-tools
+)
+source=("https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('f2a78db82cf93e736baa82a2f8dcf2ac8b03e6c6a78cb53b9e8aa6fbd2ad84ae')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    cmake --preset release
+    cmake --build --preset release --parallel
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    cmake --install build/release --prefix /usr --destdir "${pkgdir}"
+}

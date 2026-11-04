@@ -176,10 +176,13 @@ Packages are created with the `release` preset, which builds engines that run on
 | System  | Format                          | Command                                                                              | Result                                    |
 | ------- | ------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------- |
 | Linux   | `.deb` (Debian, Ubuntu, PikaOS) | `cmake --workflow --preset package`                                                  | `dist/ducktor_<version>_amd64.deb`        |
+| Linux   | `.tar.xz` (other distributions) | `cmake --workflow --preset package`                                                  | `dist/ducktor-<version>-linux-x86_64.tar.xz` |
 | Linux   | AppImage (portable)             | `bash packaging/linux/build-appimage.sh`                                             | `dist/Ducktor-<version>-x86_64.AppImage`  |
 | Linux   | Flatpak                         | see [Flatpak](#flatpak)                                                              | `dist/Ducktor-<version>.flatpak`          |
+| Linux   | AUR (Arch, from source)         | see [Arch (AUR)](#arch-aur)                                                          | `ducktor-<version>-1-x86_64.pkg.tar.zst`  |
 | Windows | Portable ZIP                    | `cmake --preset release -DCMAKE_PREFIX_PATH=C:/Qt/6.9.3/msvc2022_64`, build, `cpack` | `dist/Ducktor-<version>-windows-x64.zip`  |
 | macOS   | `.app` inside a ZIP             | same as Windows, with your Qt path                                                   | `dist/Ducktor-<version>-macos-<arch>.zip` |
+| macOS   | DMG (drag and drop)             | `bash packaging/macos/build-dmg.sh` after `cpack`                                    | `dist/Ducktor-<version>-macos-<arch>.dmg` |
 
 Rules that apply to every format:
 
@@ -199,6 +202,17 @@ sudo apt install ./dist/ducktor_0.1.0_amd64.deb
 ```
 
 The package installs Ducktor in `/usr/bin`, its engines in `/usr/libexec/ducktor` and adds it to the applications menu. Its dependencies are calculated automatically from the Qt packages installed on the build machine. To uninstall it: `sudo apt remove ducktor`.
+
+#### .tar.xz
+
+The same FHS layout as the `.deb` as a plain tarball, for distributions without a package:
+
+```bash
+cmake --workflow --preset package
+sudo tar -xJf dist/ducktor-0.1.0-linux-x86_64.tar.xz -C /
+```
+
+It needs the same Qt libraries as the `.deb` (see [What to install](#linux-debian-ubuntu-pikaos)). Nothing is installed through the package manager, so to remove it delete the files it placed under `/usr` (the same list the `.deb` contains).
 
 #### AppImage
 
@@ -236,6 +250,17 @@ flatpak run com.celticbytes.Ducktor
 
 The manifest ([packaging/flatpak/com.celticbytes.Ducktor.yml](packaging/flatpak/com.celticbytes.Ducktor.yml)) allows network access during the build because the engines download their sources. That is fine for local builds; publishing on Flathub would require listing every source in the manifest instead.
 
+#### Arch (AUR)
+
+The [PKGBUILD](packaging/arch/PKGBUILD) builds Ducktor from source with the `release` preset, so it needs network access (the engines download their sources) and a while to finish. For local use:
+
+```bash
+cd packaging/arch
+makepkg -si
+```
+
+To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD there. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag.
+
 #### Windows ZIP
 
 In the _x64 Native Tools Command Prompt for VS 2022_, with your Qt path:
@@ -248,7 +273,7 @@ cpack --preset release
 
 The ZIP contains `ducktor.exe`, its engines, Qt (copied by `windeployqt`) and the Microsoft C++ runtime. Unzip it anywhere and run `ducktor.exe`. It includes a `portable.txt` file, so settings and models are stored in a `data` folder next to the program; delete that file to use your user profile instead. The program is not signed, so Windows SmartScreen may ask for confirmation the first time (_More info → Run anyway_).
 
-#### macOS ZIP
+#### macOS ZIP and DMG
 
 In Terminal, with Xcode Command Line Tools (`xcode-select --install`) and your Qt path:
 
@@ -259,6 +284,15 @@ cpack --preset release
 ```
 
 The ZIP contains `Ducktor.app` (with Qt copied by `macdeployqt`) and the license documents. The app has an ad hoc signature but is not notarized by Apple, so the first time you must right-click it and choose _Open_. macOS asks for microphone permission the first time you dictate.
+
+For a DMG instead, run [packaging/macos/build-dmg.sh](packaging/macos/build-dmg.sh) after `cpack`; it reuses the ZIP, so both formats contain exactly the same files:
+
+```bash
+bash packaging/macos/build-dmg.sh
+hdiutil attach dist/Ducktor-0.1.0-macos-arm64.dmg
+```
+
+The DMG contains `Ducktor.app` and a link to `/Applications` for drag-and-drop installation.
 
 #### Portable mode
 
@@ -296,6 +330,8 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 Qt is installed with [jurplel/install-qt-action](https://github.com/jurplel/install-qt-action) (aqt) from the qt.io online installer; the community edition needs no account or token. The engine sources and the Flathub runtime download from the internet during the build.
 
 A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on every push and pull request to `main`: it builds the interface with the `ui-only` preset (no engines, so it is fast) and runs the test suite with `ctest --preset ui-only`. Its status is the `CI` badge in the header.
+
+A third workflow, [.github/workflows/package-test.yml](.github/workflows/package-test.yml), is run by hand only (_Actions → Package test → Run workflow_): it builds the `.tar.xz`, the DMG and validates the AUR PKGBUILD without publishing anything, a way to test package formats before they join the release workflow.
 
 The release procedure — the tag must match the version:
 
