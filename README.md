@@ -18,6 +18,10 @@
   Text or voice input, local translation and read-aloud output.  
 </p>
 
+<div align="center">
+  <img src="docs/resources/screenshot.png" alt="Ducktor interface: text translated from English to Italian" width="900">
+</div>
+
 If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate things without any internet access, Ducktor is for you.
 
 > Remember that an initial internet connection is needed to download the models locally. After that, the app works 100% offline.
