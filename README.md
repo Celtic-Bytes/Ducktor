@@ -27,7 +27,7 @@
 
 If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate things without any internet access, Ducktor is for you.
 
-> Remember that an initial internet connection is needed to download the models locally. After that, the app works 100% offline.
+An initial internet connection is needed to download the models locally. After that, the app works 100% offline.
 
 This software is still in alpha. It has been successfully tested on Linux. Since we don't have Windows or macOS computers, those platforms are not yet fully tested, so let us know if you find any bugs.
 
