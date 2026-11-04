@@ -49,13 +49,15 @@ ApplicationWindow {
 
     // Shown once per bundled announcement and app version; the user closes it manually.
     // The window manager places the main window only after this component completes, so the
-    // announcement waits a moment for that to happen; shown immediately it would be centered
-    // on the main window's initial position (0,0) and could end up on another screen than
-    // the main one.
+    // check runs a moment into the session, when the main window is already placed; shown
+    // immediately it would be centered on the main window's initial position (0,0) and could
+    // end up on another screen than the main one. The timer fires once per session so a
+    // later change of Announcement.unseen (for example, the "show on next start" option in
+    // the settings) never opens the window in the current session.
     Timer {
         interval: 500
         repeat: false
-        running: Announcement.available && Announcement.unseen
+        running: true
         onTriggered:
             if (Announcement.available && Announcement.unseen)
                 showAnnouncement()
