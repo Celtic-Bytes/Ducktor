@@ -8,6 +8,12 @@
 # standard qt6-* packages (cmake/DebianQtDepends.cmake). The Windows and
 # macOS jobs install Qt with jurplel/install-qt-action (aqt) from the qt.io
 # online installer; the community edition needs no account or token.
+#
+# Host runners are pinned to ubuntu-24.04 instead of ubuntu-latest: the
+# label migrates to Ubuntu 26.04 in November 2026, and a floating label
+# would change the build host without a review. The Linux and Flatpak jobs
+# run inside their own containers, so their artifacts are unaffected by
+# the host version.
 name: Releases
 
 on:
@@ -30,7 +36,7 @@ jobs:
   check-version:
     name: Check tag matches the project version
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
@@ -50,7 +56,7 @@ jobs:
     name: Linux packages (.deb + AppImage)
     needs: [check-version]
     if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       image: ubuntu:26.04
     timeout-minutes: 180
@@ -97,7 +103,7 @@ jobs:
           ls -lh dist/*.AppImage
 
       - name: Upload the packages
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: linux-packages
           path: |
@@ -150,7 +156,7 @@ jobs:
           Get-ChildItem dist\*.zip
 
       - name: Upload the package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: windows-package
           path: dist/*.zip
@@ -190,7 +196,7 @@ jobs:
           ls -lh dist/*.zip
 
       - name: Upload the package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: macos-package
           path: dist/*.zip
@@ -199,7 +205,7 @@ jobs:
     name: Flatpak
     needs: [check-version]
     if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container:
       # The official Flathub image: it already has the flatpak tooling and
       # the runtime repos cached; --privileged is required by flatpak-builder.
@@ -225,7 +231,7 @@ jobs:
           upload-artifact: false
 
       - name: Upload the package
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: flatpak-package
           path: Ducktor-*.flatpak
@@ -234,15 +240,15 @@ jobs:
     name: GitHub release
     if: github.event_name == 'push'
     needs: [linux, windows, macos, flatpak]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           path: artifacts
 
       - name: Create or update the release and upload the packages
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: Ducktor ${{ github.ref_name }}
           body: |

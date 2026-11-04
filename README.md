@@ -280,9 +280,9 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 
 | Package | Runner | How it is built |
 | --- | --- | --- |
-| `.deb` | `ubuntu-latest` | `cmake --preset release` + `cpack --preset release` |
-| AppImage | `ubuntu-latest` | [packaging/linux/build-appimage.sh](packaging/linux/build-appimage.sh) (linuxdeploy with pinned SHA-256) |
-| Flatpak | `ubuntu-latest` | `flatpak-builder` with the Flathub KDE 6.10 runtime ([.github/workflows/releases.yml](.github/workflows/releases.yml), flatpak job) |
+| `.deb` | `ubuntu-24.04` | `cmake --preset release` + `cpack --preset release` |
+| AppImage | `ubuntu-24.04` | [packaging/linux/build-appimage.sh](packaging/linux/build-appimage.sh) (linuxdeploy with pinned SHA-256) |
+| Flatpak | `ubuntu-24.04` | `flatpak-builder` with the Flathub KDE 6.10 runtime ([.github/workflows/releases.yml](.github/workflows/releases.yml), flatpak job) |
 | Windows ZIP | `windows-latest` | `cmake --preset release` + `cpack --preset release` (portable, `windeployqt`) |
 | macOS ZIP | `macos-latest` | `cmake --preset release` + `cpack --preset release` (`Ducktor.app`, ad hoc signature) |
 
