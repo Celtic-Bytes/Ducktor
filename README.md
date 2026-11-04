@@ -22,6 +22,9 @@
   <img src="docs/resources/screenshot.png" alt="Ducktor interface: text translated from English to Italian" width="900">
 </div>
 
+> [!WARNING]
+> Translation quality depends on the models you download. Larger models generally produce better translations, but they need more RAM and CPU.
+
 If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate things without any internet access, Ducktor is for you.
 
 > Remember that an initial internet connection is needed to download the models locally. After that, the app works 100% offline.
