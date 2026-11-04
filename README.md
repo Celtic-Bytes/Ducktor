@@ -15,7 +15,7 @@
 
 <p align="center">
   <strong>Ducktor is an offline, free, open source, privacy-first desktop translator</strong><br>
-  Text or voice input, local translation and read-aloud output.  
+  Text or voice input, translation with local AI models and read-aloud output.  
 </p>
 
 <div align="center">
