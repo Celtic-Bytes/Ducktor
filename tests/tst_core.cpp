@@ -327,6 +327,7 @@ private slots:
 
     void announcementPersistsAcknowledgement()
     {
+        qApp->setApplicationVersion(QStringLiteral("1.2.3"));
         const QByteArray json = readTestData("announcement.json");
         const QString ini = QTemporaryDir().filePath(QStringLiteral("s.ini"));
         AppSettings settings(ini);
@@ -336,7 +337,7 @@ private slots:
 
         announcement.acknowledge();
         QVERIFY(!announcement.unseen());
-        QCOMPARE(settings.value(QStringLiteral("ui/lastSeenAnnouncement")), QStringLiteral("test-announcement"));
+        QCOMPARE(settings.value(QStringLiteral("ui/lastSeenAnnouncement")), QStringLiteral("test-announcement@1.2.3"));
         QVERIFY(readRawIni(ini).contains("lastSeenAnnouncement"));
 
         // A new instance over the same settings file keeps the acknowledgement.
@@ -348,6 +349,29 @@ private slots:
         const QByteArray other = R"({"id":"other-id","title":{"en":"t"},"body":{"en":"b"}})";
         Announcement otherAnnouncement(&reloaded, other);
         QVERIFY(otherAnnouncement.unseen());
+    }
+
+    void announcementReappearsInNewVersion()
+    {
+        const QByteArray json = readTestData("announcement.json");
+        const QString ini = QTemporaryDir().filePath(QStringLiteral("s.ini"));
+        QLocale::setDefault(QLocale("en"));
+
+        qApp->setApplicationVersion(QStringLiteral("1.0.0"));
+        AppSettings settings(ini);
+        Announcement announcement(&settings, json);
+        QVERIFY(announcement.unseen());
+        announcement.acknowledge();
+        QVERIFY(!announcement.unseen());
+        QCOMPARE(settings.value(QStringLiteral("ui/lastSeenAnnouncement")), QStringLiteral("test-announcement@1.0.0"));
+
+        // A new version shows the announcement again on its first launch.
+        qApp->setApplicationVersion(QStringLiteral("1.1.0"));
+        AppSettings reloaded(ini);
+        Announcement newer(&reloaded, json);
+        QVERIFY(newer.unseen());
+        newer.acknowledge();
+        QVERIFY(readRawIni(ini).contains("test-announcement@1.1.0"));
     }
 
     void bundledAnnouncementIsValid()

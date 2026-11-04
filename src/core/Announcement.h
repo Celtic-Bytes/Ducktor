@@ -7,8 +7,9 @@
 
 class AppSettings;
 
-// The announcement bundled with the app (welcome, notices...), shown once per id and closed by
-// the user. It is parsed and validated from a JSON resource and localized to the UI language.
+// The announcement bundled with the app (welcome, notices...), shown once per id and app
+// version and closed by the user. It is parsed and validated from a JSON resource and
+// localized to the UI language.
 class Announcement : public QObject
 {
     Q_OBJECT

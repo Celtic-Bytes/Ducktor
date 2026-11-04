@@ -3,6 +3,7 @@
 #include "AppSettings.h"
 #include "Languages.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -12,6 +13,13 @@
 namespace {
 
 const QString kSeenKey = QStringLiteral("ui/lastSeenAnnouncement");
+
+// The acknowledgement is per announcement id and app version, so a new release shows its
+// bundled announcement again on the first launch of that version.
+QString seenMarker(const QString& id)
+{
+    return id + QLatin1Char('@') + QCoreApplication::applicationVersion();
+}
 
 // A text is either a single string (treated as English) or an object mapping language codes to strings.
 bool parseTexts(const QJsonValue& value, QVariantMap& out)
@@ -99,7 +107,7 @@ Announcement::Announcement(AppSettings* settings, const QByteArray& json, QObjec
 
 bool Announcement::unseen() const
 {
-    return m_settings->value(kSeenKey) != m_id;
+    return m_settings->value(kSeenKey) != seenMarker(m_id);
 }
 
 void Announcement::relocalize()
@@ -127,7 +135,7 @@ void Announcement::acknowledge()
 {
     if (!m_available || !unseen())
         return;
-    m_settings->setValue(kSeenKey, m_id);
+    m_settings->setValue(kSeenKey, seenMarker(m_id));
     m_settings->sync();
     emit unseenChanged();
 }

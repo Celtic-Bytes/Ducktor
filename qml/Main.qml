@@ -37,7 +37,9 @@ ApplicationWindow {
         stack.push(component, properties || {})
     }
 
-    // Centers and shows the announcement window on top of the main one.
+    // Centers and shows the announcement window on top of the main one. Window positions are
+    // absolute in the virtual desktop, so the center is computed from the main window's own
+    // position.
     function showAnnouncement() {
         announcementWindow.x = window.x + (window.width - announcementWindow.width) / 2
         announcementWindow.y = window.y + (window.height - announcementWindow.height) / 2
@@ -45,10 +47,19 @@ ApplicationWindow {
         announcementWindow.raise()
     }
 
-    // Shown once per bundled announcement; the user closes it manually.
-    Component.onCompleted:
-        if (Announcement.available && Announcement.unseen)
-            showAnnouncement()
+    // Shown once per bundled announcement and app version; the user closes it manually.
+    // The window manager places the main window only after this component completes, so the
+    // announcement waits a moment for that to happen; shown immediately it would be centered
+    // on the main window's initial position (0,0) and could end up on another screen than
+    // the main one.
+    Timer {
+        interval: 500
+        repeat: false
+        running: Announcement.available && Announcement.unseen
+        onTriggered:
+            if (Announcement.available && Announcement.unseen)
+                showAnnouncement()
+    }
 
 
 
