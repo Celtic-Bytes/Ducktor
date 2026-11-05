@@ -167,6 +167,11 @@ jobs:
         run: |
           set -euo pipefail
           pacman -Syu --noconfirm base-devel
+          # Install the makedepends declared in the PKGBUILD as root: the build
+          # user has no sudo, so makepkg --syncdeps cannot install them itself.
+          MAKEDEPS="$(makepkg --printsrcinfo packaging/arch/PKGBUILD \
+              | sed -n 's/^makedepends=//p' | tr -d "'")"
+          pacman -Sy --noconfirm $MAKEDEPS
 
       # makepkg refuses to run as root (the container's default user), so a
       # regular user is created and handed the repository.
