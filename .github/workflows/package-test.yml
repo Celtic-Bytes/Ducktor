@@ -179,13 +179,17 @@ jobs:
       # Install the makedepends declared in the PKGBUILD: makepkg cannot read
       # them as root (it refuses to run at all), and the build user has no
       # sudo, so the list is read by the build user and installed by root.
+      # The srcinfo lists each array item on its own indented line, like
+      # "\tmakedepends = cmake".
       - name: Install the makedepends from the PKGBUILD
         run: |
           set -euo pipefail
-          # makepkg only reads the PKGBUILD of the current directory, so the
-          # command changes into it first, like the validation step below.
           MAKEDEPS="$(su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --printsrcinfo" \
-              | sed -n 's/^makedepends=//p' | tr -d "'")"
+              | sed -n 's/^[[:space:]]*makedepends[[:space:]]*=[[:space:]]*//p' | tr -d "'")"
+          if [ -z "$MAKEDEPS" ]; then
+              echo "No makedepends found in the PKGBUILD srcinfo" >&2
+              exit 1
+          fi
           pacman -S --noconfirm $MAKEDEPS
 
       # Validates the PKGBUILD syntax and metadata without downloading or
