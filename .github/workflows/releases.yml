@@ -1,7 +1,9 @@
-# Builds all platform packages (.deb, AppImage, Flatpak, Windows ZIP, macOS
-# ZIP) and publishes them to a GitHub release. Triggers only on version tags
-# (v1.0.0); a manual run (workflow_dispatch) builds everything but never
-# touches the release, so it is a way to test the pipeline without a tag.
+# Builds all platform packages (.deb, .tar.xz, AppImage, Flatpak, Windows
+# ZIP, macOS ZIP and DMG), validates the Arch PKGBUILD (full source build
+# only on request), and publishes the packages to a GitHub release. Triggers
+# only on version tags (v1.0.0); a manual run (workflow_dispatch) builds
+# everything but never touches the release, so it is a way to test the
+# pipeline without a tag.
 #
 # The Linux job builds inside an Ubuntu 26.04 container with the
 # distribution's Qt 6.10 packages, so the .deb dependencies are derived from
@@ -11,16 +13,21 @@
 #
 # Host runners are pinned to ubuntu-24.04 instead of ubuntu-latest: the
 # label migrates to Ubuntu 26.04 in November 2026, and a floating label
-# would change the build host without a review. The Linux and Flatpak jobs
-# run inside their own containers, so their artifacts are unaffected by
-# the host version.
+# would change the build host without a review. The Linux, Flatpak and Arch
+# jobs run inside their own containers, so their artifacts are unaffected
+# by the host version.
 name: Releases
 
 on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      arch_full_build:
+        description: Run the full Arch source build (slow)
+        type: boolean
+        default: false
 
 # One run per ref at a time; a re-run is queued instead of being cancelled,
 # so a tag push never races with itself. The group name is explicit (not
@@ -53,7 +60,7 @@ jobs:
           echo "Tag matches project version $VERSION"
 
   linux:
-    name: Linux packages (.deb + AppImage)
+    name: Linux packages (.deb + .tar.xz + AppImage)
     needs: [check-version]
     if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: ubuntu-24.04
@@ -90,11 +97,11 @@ jobs:
           cmake --preset release
           cmake --build --preset release --parallel
 
-      - name: Build the .deb
+      - name: Build the .deb and the .tar.xz
         run: |
           set -euo pipefail
           cpack --preset release
-          ls -lh dist/*.deb
+          ls -lh dist/*.deb dist/*.tar.xz
 
       - name: Build the AppImage
         run: |
@@ -108,6 +115,7 @@ jobs:
           name: linux-packages
           path: |
             dist/*.deb
+            dist/*.tar.xz
             dist/*.AppImage
 
   windows:
@@ -162,7 +170,7 @@ jobs:
           path: dist/*.zip
 
   macos:
-    name: macOS ZIP
+    name: macOS ZIP + DMG
     needs: [check-version]
     if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: macos-latest
@@ -195,11 +203,48 @@ jobs:
           cpack --preset release
           ls -lh dist/*.zip
 
-      - name: Upload the package
+      - name: Build the DMG (Ducktor.app + /Applications link)
+        run: |
+          set -euo pipefail
+          bash packaging/macos/build-dmg.sh
+          ls -lh dist/*.dmg
+
+      - name: Smoke test the DMG
+        run: |
+          set -euo pipefail
+          DMG="$(ls dist/*.dmg)"
+          MOUNT="$(hdiutil attach "$DMG" -nobrowse -readonly -noverify -noautoopen \
+              | awk -F'\t' '/\/Volumes\// {print $NF; exit}')"
+          test -n "$MOUNT"
+          ls -l "$MOUNT"
+          test -d "$MOUNT/Ducktor.app"
+          test -L "$MOUNT/Applications"
+          test -x "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
+          # The DMG is built from the ZIP; make sure both carry the same app.
+          ZIP="$(ls dist/*.zip)"
+          UNZIP="$(mktemp -d)"
+          ditto -x -k "$ZIP" "$UNZIP"
+          APP_ZIP="$(find "$UNZIP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
+          diff -r "$APP_ZIP" "$MOUNT/Ducktor.app"
+          rm -rf "$UNZIP"
+          # Check the ad hoc signature without a full verification walk:
+          # `codesign --verify` (even pointed at the main executable) walks the
+          # whole bundle and treats every file in Contents/MacOS as a code
+          # object, so it flags the plain-data espeak-ng dictionaries shipped
+          # there next to the engines as unsigned. The ZIP ships the identical
+          # bundle and runs fine, so checking the bundle seal and the
+          # executable's signature is enough.
+          test -f "$MOUNT/Ducktor.app/Contents/_CodeSignature/CodeResources"
+          codesign -dv "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
+          hdiutil detach "$MOUNT"
+
+      - name: Upload the packages
         uses: actions/upload-artifact@v6
         with:
           name: macos-package
-          path: dist/*.zip
+          path: |
+            dist/*.zip
+            dist/*.dmg
 
   flatpak:
     name: Flatpak
@@ -236,10 +281,71 @@ jobs:
           name: flatpak-package
           path: Ducktor-*.flatpak
 
+  arch-pkgbuild:
+    name: Arch PKGBUILD
+    needs: [check-version]
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
+    runs-on: ubuntu-24.04
+    container:
+      image: archlinux/archlinux:latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install the build tools
+        run: |
+          set -euo pipefail
+          pacman -Syu --noconfirm base-devel
+
+      # makepkg refuses to run as root (the container's default user), so a
+      # regular user is created and handed the repository.
+      - name: Create the build user
+        run: |
+          set -euo pipefail
+          useradd -m -s /bin/bash builder
+          chown -R builder:builder "$GITHUB_WORKSPACE"
+
+      # Install the makedepends declared in the PKGBUILD: makepkg cannot read
+      # them as root (it refuses to run at all), and the build user has no
+      # sudo, so the list is read by the build user and installed by root.
+      # The srcinfo lists each array item on its own indented line, like
+      # "\tmakedepends = cmake".
+      - name: Install the makedepends from the PKGBUILD
+        run: |
+          set -euo pipefail
+          MAKEDEPS="$(su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --printsrcinfo" \
+              | sed -n 's/^[[:space:]]*makedepends[[:space:]]*=[[:space:]]*//p' | tr -d "'")"
+          if [ -z "$MAKEDEPS" ]; then
+              echo "No makedepends found in the PKGBUILD srcinfo" >&2
+              exit 1
+          fi
+          pacman -S --noconfirm $MAKEDEPS
+
+      # Validates the PKGBUILD syntax and metadata without downloading or
+      # building the sources (fast). The full build is opt-in through the
+      # workflow_dispatch input, because it compiles the three engines.
+      - name: Validate the PKGBUILD
+        run: |
+          set -euo pipefail
+          su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --printsrcinfo"
+
+      - name: Full source build (optional)
+        if: ${{ inputs.arch_full_build }}
+        run: |
+          set -euo pipefail
+          su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --syncdeps --noconfirm"
+
+      - name: Upload the package
+        if: ${{ inputs.arch_full_build }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: arch-package
+          path: packaging/arch/ducktor-*.pkg.tar.zst
+
   release:
     name: GitHub release
     if: github.event_name == 'push'
-    needs: [linux, windows, macos, flatpak]
+    needs: [linux, windows, macos, flatpak, arch-pkgbuild]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     # Creating a release needs write access; the default token only gets it
@@ -258,6 +364,8 @@ jobs:
         with:
           name: Ducktor ${{ github.ref_name }}
           body: |
-            Automated release. Packages: .deb, AppImage and Flatpak for Linux,
-            portable ZIPs for Windows and macOS.
+            Automated release. Packages: .deb, .tar.xz, AppImage and Flatpak
+            for Linux, a portable ZIP for Windows, and a ZIP and a DMG for
+            macOS. For Arch Linux, the PKGBUILD in packaging/arch is
+            validated by the workflow; the AUR package builds from it.
           files: artifacts/**/*
