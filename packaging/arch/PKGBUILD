@@ -43,5 +43,6 @@ build() {
 
 package() {
     cd "Ducktor-${pkgver}"
-    cmake --install build/release --prefix /usr --destdir "${pkgdir}"
+    # cmake --install has no --destdir; the staging directory goes in DESTDIR.
+    DESTDIR="${pkgdir}" cmake --install build/release --prefix /usr
 }
