@@ -128,12 +128,22 @@ jobs:
           test -d "$MOUNT/Ducktor.app"
           test -L "$MOUNT/Applications"
           test -x "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
-          # Verify the main executable carries the ad hoc signature applied at
-          # install time. A whole-bundle `codesign --verify` is not used: it
-          # walks every file and flags the plain-data espeak-ng dictionaries as
-          # unsigned subcomponents, which does not affect running the app (the
-          # ZIP ships the identical bundle and is known to run).
-          codesign --verify "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
+          # The DMG is built from the ZIP; make sure both carry the same app.
+          ZIP="$(ls dist/*.zip)"
+          UNZIP="$(mktemp -d)"
+          ditto -x -k "$ZIP" "$UNZIP"
+          APP_ZIP="$(find "$UNZIP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
+          diff -r "$APP_ZIP" "$MOUNT/Ducktor.app"
+          rm -rf "$UNZIP"
+          # Check the ad hoc signature without a full verification walk:
+          # `codesign --verify` (even pointed at the main executable) walks the
+          # whole bundle and treats every file in Contents/MacOS as a code
+          # object, so it flags the plain-data espeak-ng dictionaries shipped
+          # there next to the engines as unsigned. The ZIP ships the identical
+          # bundle and runs fine, so checking the bundle seal and the
+          # executable's signature is enough.
+          test -f "$MOUNT/Ducktor.app/Contents/_CodeSignature/CodeResources"
+          codesign -dv "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
           hdiutil detach "$MOUNT"
 
       - name: Upload the packages
