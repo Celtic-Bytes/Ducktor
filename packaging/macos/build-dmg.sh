@@ -23,7 +23,14 @@ rm -rf "$STAGING"
 mkdir -p "$STAGING"
 # ditto preserves the ad hoc signature that the ZIP already carries.
 ditto -x -k "$ZIP" "$TMP"
-ditto "$TMP/Ducktor.app" "$STAGING/Ducktor.app"
+# CPack nests the payload under a top-level folder named after the ZIP, so
+# locate Ducktor.app instead of assuming a fixed path.
+APP="$(find "$TMP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
+if [[ -z "$APP" ]]; then
+    echo "Ducktor.app not found inside $ZIP" >&2
+    exit 1
+fi
+ditto "$APP" "$STAGING/Ducktor.app"
 ln -s /Applications "$STAGING/Applications"
 
 hdiutil create -volname "Ducktor" -srcfolder "$STAGING" -ov -format UDZO "$DMG"
