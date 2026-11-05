@@ -182,7 +182,9 @@ jobs:
       - name: Install the makedepends from the PKGBUILD
         run: |
           set -euo pipefail
-          MAKEDEPS="$(su -s /bin/bash builder -c "makepkg --printsrcinfo $GITHUB_WORKSPACE/packaging/arch/PKGBUILD" \
+          # makepkg only reads the PKGBUILD of the current directory, so the
+          # command changes into it first, like the validation step below.
+          MAKEDEPS="$(su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --printsrcinfo" \
               | sed -n 's/^makedepends=//p' | tr -d "'")"
           pacman -S --noconfirm $MAKEDEPS
 
