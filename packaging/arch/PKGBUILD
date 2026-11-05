@@ -32,13 +32,16 @@ makedepends=(
 source=("https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${pkgver}.tar.gz")
 sha256sums=('f2a78db82cf93e736baa82a2f8dcf2ac8b03e6c6a78cb53b9e8aa6fbd2ad84ae')
 
+# The GitHub archive unpacks to a folder named after the repository, not the
+# pkgname: Ducktor-<version>, not ducktor-<version>.
+
 build() {
-    cd "${pkgname}-${pkgver}"
+    cd "Ducktor-${pkgver}"
     cmake --preset release
     cmake --build --preset release --parallel
 }
 
 package() {
-    cd "${pkgname}-${pkgver}"
+    cd "Ducktor-${pkgver}"
     cmake --install build/release --prefix /usr --destdir "${pkgdir}"
 }
