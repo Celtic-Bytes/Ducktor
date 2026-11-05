@@ -384,7 +384,7 @@ private slots:
         QLocale::setDefault(QLocale("en"));
         Announcement announcement(&settings, json);
         QVERIFY2(announcement.available(), qPrintable(json));
-        QCOMPARE(announcement.id(), QStringLiteral("welcome-window-3"));
+        QCOMPARE(announcement.id(), QStringLiteral("welcome-window-4"));
         QCOMPARE(announcement.title(), QStringLiteral("Ducktor"));
         QVERIFY(!announcement.body().isEmpty());
         QCOMPARE(announcement.image(), QStringLiteral("icons/ducktor.svg"));

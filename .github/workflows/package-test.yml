@@ -167,11 +167,6 @@ jobs:
         run: |
           set -euo pipefail
           pacman -Syu --noconfirm base-devel
-          # Install the makedepends declared in the PKGBUILD as root: the build
-          # user has no sudo, so makepkg --syncdeps cannot install them itself.
-          MAKEDEPS="$(makepkg --printsrcinfo packaging/arch/PKGBUILD \
-              | sed -n 's/^makedepends=//p' | tr -d "'")"
-          pacman -Sy --noconfirm $MAKEDEPS
 
       # makepkg refuses to run as root (the container's default user), so a
       # regular user is created and handed the repository.
@@ -180,6 +175,16 @@ jobs:
           set -euo pipefail
           useradd -m -s /bin/bash builder
           chown -R builder:builder "$GITHUB_WORKSPACE"
+
+      # Install the makedepends declared in the PKGBUILD: makepkg cannot read
+      # them as root (it refuses to run at all), and the build user has no
+      # sudo, so the list is read by the build user and installed by root.
+      - name: Install the makedepends from the PKGBUILD
+        run: |
+          set -euo pipefail
+          MAKEDEPS="$(su -s /bin/bash builder -c "makepkg --printsrcinfo $GITHUB_WORKSPACE/packaging/arch/PKGBUILD" \
+              | sed -n 's/^makedepends=//p' | tr -d "'")"
+          pacman -S --noconfirm $MAKEDEPS
 
       # Validates the PKGBUILD syntax and metadata without downloading or
       # building the sources (fast). The full build is opt-in below.
