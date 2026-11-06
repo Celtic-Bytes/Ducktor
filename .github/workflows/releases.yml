@@ -1,21 +1,23 @@
-# Builds all platform packages (.deb, .tar.xz, AppImage, Flatpak, Windows
-# ZIP, macOS ZIP, DMG and pkg), validates the Arch PKGBUILD (full source
-# build only on request), and publishes the packages to a GitHub release.
-# Triggers only on version tags (v1.0.0); a manual run (workflow_dispatch)
-# builds everything but never touches the release, so it is a way to test
-# the pipeline without a tag.
+# Builds all platform packages (.deb, .tar.xz, RPM, AppImage, Flatpak,
+# Windows ZIP, macOS ZIP, DMG and pkg), validates the Arch PKGBUILD (full
+# source build only on request), and publishes the packages to a GitHub
+# release. Triggers only on version tags (v1.0.0); a manual run
+# (workflow_dispatch) builds everything but never touches the release, so
+# it is a way to test the pipeline without a tag.
 #
 # The Linux job builds inside an Ubuntu 26.04 container with the
 # distribution's Qt 6.10 packages, so the .deb dependencies are derived from
-# standard qt6-* packages (cmake/DebianQtDepends.cmake). The Windows and
-# macOS jobs install Qt with jurplel/install-qt-action (aqt) from the qt.io
-# online installer; the community edition needs no account or token.
+# standard qt6-* packages (cmake/DebianQtDepends.cmake); the Fedora job does
+# the same in a Fedora 44 container for the RPM (cmake/FedoraQtDepends.cmake).
+# The Windows and macOS jobs install Qt with jurplel/install-qt-action (aqt)
+# from the qt.io online installer; the community edition needs no account
+# or token.
 #
 # Host runners are pinned to ubuntu-24.04 instead of ubuntu-latest: the
 # label migrates to Ubuntu 26.04 in November 2026, and a floating label
-# would change the build host without a review. The Linux, Flatpak and Arch
-# jobs run inside their own containers, so their artifacts are unaffected
-# by the host version.
+# would change the build host without a review. The Linux, Fedora, Flatpak
+# and Arch jobs run inside their own containers, so their artifacts are
+# unaffected by the host version.
 name: Releases
 
 on:
@@ -117,6 +119,97 @@ jobs:
             dist/*.deb
             dist/*.tar.xz
             dist/*.AppImage
+
+  fedora-rpm:
+    name: Fedora RPM
+    needs: [check-version]
+    if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
+    runs-on: ubuntu-24.04
+    container:
+      image: fedora:44
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      # Fedora 44's Qt 6.10 packages satisfy the Qt >= 6.9 requirement, and
+      # building against the distribution's packages is what lets
+      # cmake/FedoraQtDepends.cmake derive the RPM requires from standard
+      # qt6-* packages. The QtBase headers all live in qt6-qtbase-devel
+      # (there is no qt6-qtbase-gui-devel); the runtime qt6-* packages carry
+      # the plugins and QML modules that FedoraQtDepends.cmake queries.
+      # qt6-qttools-devel provides the Qt6LinguistTools CMake package, so the
+      # translations are compiled into the app.
+      - name: Install the toolchain
+        run: |
+          set -euo pipefail
+          dnf install -y --setopt=install_weak_deps=False \
+            cmake ninja-build gcc-c++ make git \
+            qt6-qtbase qt6-qtbase-gui qt6-qtdeclarative qt6-qtmultimedia qt6-qtsvg \
+            qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
+            qt6-qttools-devel \
+            rpm-build
+          dnf clean all
+
+      - name: Configure and build
+        run: |
+          set -euo pipefail
+          cmake --preset release-rpm 2>&1 | tee /tmp/configure.log
+          if grep -q 'LinguistTools not found' /tmp/configure.log; then
+              echo "Qt LinguistTools missing: the RPM would ship without translations" >&2
+              exit 1
+          fi
+          cmake --build --preset release-rpm --parallel
+
+      - name: Build the RPM
+        run: |
+          set -euo pipefail
+          cpack --preset release-rpm
+          ls -lh dist/*.rpm
+
+      - name: Check the RPM requires
+        run: |
+          set -euo pipefail
+          RPM="$(ls dist/*.rpm)"
+          rpm -qp --requires "$RPM" | sort
+          REQUIRES="$(rpm -qp --requires "$RPM")"
+          # The QML modules are loaded at runtime, so the requires must list
+          # them explicitly (cmake/FedoraQtDepends.cmake).
+          # Quoted: bash would treat the unquoted parentheses as syntax.
+          for cap in "qt6qml(QtQuick)" "qt6qml(QtQuick.Controls.Fusion)" "qt6qml(Qt.labs.folderlistmodel)"; do
+              grep -qF "$cap" <<< "$REQUIRES" || { echo "missing requires: $cap" >&2; exit 1; }
+          done
+          # The engines' own libraries are private to libexec/ducktor and must
+          # not become dependencies of the package.
+          if grep -qE 'onnxruntime|libpiper|espeak-ng' <<< "$REQUIRES"; then
+              echo "bundled engine libraries leaked into the requires" >&2
+              exit 1
+          fi
+
+      - name: Install the RPM and check the layout
+        run: |
+          set -euo pipefail
+          RPM="$(ls dist/*.rpm)"
+          # Installing without --nodeps fails if any require is unsatisfied,
+          # which catches a misspelled qt6qml() capability.
+          rpm -i "$RPM"
+          rpm -ql ducktor
+          test -x /usr/bin/ducktor
+          test -x /usr/libexec/ducktor/ducktor-translate
+          test -x /usr/libexec/ducktor/ducktor-transcribe
+          test -x /usr/libexec/ducktor/ducktor-speak
+          # The speak helper's own libraries must be inside the package:
+          # libpiper installs to lib64 on RPM-based systems, so a glob that
+          # only looks at lib would ship the helper without them.
+          test -e /usr/libexec/ducktor/libpiper.so
+          ls /usr/libexec/ducktor/libonnxruntime.so*
+          test -d /usr/libexec/ducktor/espeak-ng-data
+          test -f /usr/share/applications/com.celticbytes.Ducktor.desktop
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v6
+        with:
+          name: fedora-rpm
+          path: dist/*.rpm
 
   windows:
     name: Windows ZIP
@@ -379,7 +472,7 @@ jobs:
   release:
     name: GitHub release
     if: github.event_name == 'push'
-    needs: [linux, windows, macos, flatpak, arch-pkgbuild]
+    needs: [linux, fedora-rpm, windows, macos, flatpak, arch-pkgbuild]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     # Creating a release needs write access; the default token only gets it
@@ -398,8 +491,9 @@ jobs:
         with:
           name: Ducktor ${{ github.ref_name }}
           body: |
-            Automated release. Packages: .deb, .tar.xz, AppImage and Flatpak
-            for Linux, a portable ZIP for Windows, and a ZIP, a DMG and a
-            .pkg for macOS. For Arch Linux, the PKGBUILD in packaging/arch
-            is validated by the workflow; the AUR package builds from it.
+            Automated release. Packages: .deb, .tar.xz, RPM, AppImage and
+            Flatpak for Linux, a portable ZIP for Windows, and a ZIP, a DMG
+            and a .pkg for macOS. For Arch Linux, the PKGBUILD in
+            packaging/arch is validated by the workflow; the AUR package
+            builds from it.
           files: artifacts/**/*

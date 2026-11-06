@@ -26,6 +26,10 @@ else()
         # out of the automatic requires.
         set(CPACK_GENERATOR RPM)
         set(CPACK_RPM_PACKAGE_LICENSE GPL-3.0-or-later)
+        # Standard RPM file name; the default would reuse CPACK_PACKAGE_FILE_NAME,
+        # which does not carry the release number or the architecture.
+        set(CPACK_RPM_PACKAGE_RELEASE 1)
+        set(CPACK_RPM_FILE_NAME ducktor-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.x86_64)
         set(CPACK_RPM_REQUIRES_EXCLUDE_FROM
             ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBEXECDIR}/ducktor/.* )
         include(${CMAKE_CURRENT_LIST_DIR}/FedoraQtDepends.cmake)

@@ -70,6 +70,15 @@
         { "type": "build", "name": "release" },
         { "type": "package", "name": "release" }
       ]
+    },
+    {
+      "name": "package-rpm",
+      "displayName": "Configure, build and package a Fedora RPM",
+      "steps": [
+        { "type": "configure", "name": "release-rpm" },
+        { "type": "build", "name": "release-rpm" },
+        { "type": "package", "name": "release-rpm" }
+      ]
     }
   ]
 }
