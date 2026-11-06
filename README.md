@@ -200,7 +200,7 @@ Needs your distribution's Qt (see [What to install](#linux-debian-ubuntu-pikaos)
 ```bash
 sudo apt install dpkg-dev
 cmake --workflow --preset package
-sudo apt install ./dist/ducktor_0.1.0_amd64.deb
+sudo apt install ./dist/ducktor_0.1.1_amd64.deb
 ```
 
 The package installs Ducktor in `/usr/bin`, its engines in `/usr/libexec/ducktor` and adds it to the applications menu. Its dependencies are calculated automatically from the Qt packages installed on the build machine. To uninstall it: `sudo apt remove ducktor`.
@@ -211,7 +211,7 @@ The same FHS layout as the `.deb` as a plain tarball, for distributions without 
 
 ```bash
 cmake --workflow --preset package
-sudo tar -xJf dist/ducktor-0.1.0-linux-x86_64.tar.xz -C /
+sudo tar -xJf dist/ducktor-0.1.1-linux-x86_64.tar.xz -C /
 ```
 
 It needs the same Qt libraries as the `.deb` (see [What to install](#linux-debian-ubuntu-pikaos)). Nothing is installed through the package manager, so to remove it delete the files it placed under `/usr` (the same list the `.deb` contains).
@@ -226,7 +226,7 @@ sudo dnf install cmake ninja-build gcc-c++ make git rpm-build \
     qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
     qt6-qttools-devel
 cmake --workflow --preset package-rpm
-sudo dnf install ./dist/ducktor-0.1.0-1.x86_64.rpm
+sudo dnf install ./dist/ducktor-0.1.1-1.x86_64.rpm
 ```
 
 It installs the same layout as the `.deb`, and its dependencies are derived from the standard `qt6-*` packages, including the QML modules that Ducktor loads at runtime (see [cmake/FedoraQtDepends.cmake](cmake/FedoraQtDepends.cmake)). To uninstall it: `sudo dnf remove ducktor`.
@@ -237,8 +237,8 @@ A single file that runs without installing anything and carries its own copy of 
 
 ```bash
 bash packaging/linux/build-appimage.sh
-chmod +x dist/Ducktor-0.1.0-x86_64.AppImage
-./dist/Ducktor-0.1.0-x86_64.AppImage
+chmod +x dist/Ducktor-0.1.1-x86_64.AppImage
+./dist/Ducktor-0.1.1-x86_64.AppImage
 ```
 
 - The script downloads two pinned versions of [linuxdeploy](https://github.com/linuxdeploy/linuxdeploy) and its [Qt plugin](https://github.com/linuxdeploy/linuxdeploy-plugin-qt) into `build/appimage-tools`, and checks their SHA-256 before running them.
@@ -260,8 +260,8 @@ Then build, export a single file and install it:
 
 ```bash
 flatpak-builder --user --force-clean --repo=build/flatpak-repo build/flatpak packaging/flatpak/com.celticbytes.Ducktor.yml
-flatpak build-bundle build/flatpak-repo dist/Ducktor-0.1.0.flatpak com.celticbytes.Ducktor
-flatpak install --user dist/Ducktor-0.1.0.flatpak
+flatpak build-bundle build/flatpak-repo dist/Ducktor-0.1.1.flatpak com.celticbytes.Ducktor
+flatpak install --user dist/Ducktor-0.1.1.flatpak
 flatpak run com.celticbytes.Ducktor
 ```
 
@@ -306,7 +306,7 @@ For a DMG instead, run [packaging/macos/build-dmg.sh](packaging/macos/build-dmg.
 
 ```bash
 bash packaging/macos/build-dmg.sh
-hdiutil attach dist/Ducktor-0.1.0-macos-arm64.dmg
+hdiutil attach dist/Ducktor-0.1.1-macos-arm64.dmg
 ```
 
 The DMG contains `Ducktor.app` and a link to `/Applications` for drag-and-drop installation.
@@ -315,7 +315,7 @@ For a classic installer, run [packaging/macos/build-pkg.sh](packaging/macos/buil
 
 ```bash
 bash packaging/macos/build-pkg.sh
-sudo installer -pkg dist/Ducktor-0.1.0-macos-arm64.pkg -target /
+sudo installer -pkg dist/Ducktor-0.1.1-macos-arm64.pkg -target /
 ```
 
 The `.pkg` installs `Ducktor.app` into `/Applications`.
