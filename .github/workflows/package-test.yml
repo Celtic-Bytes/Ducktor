@@ -27,21 +27,30 @@ jobs:
       # Fedora 44's Qt 6.10 packages satisfy the Qt >= 6.9 requirement, and
       # building against the distribution's packages is what lets
       # cmake/FedoraQtDepends.cmake derive the RPM requires from standard
-      # qt6-* packages.
+      # qt6-* packages. The QtBase headers all live in qt6-qtbase-devel
+      # (there is no qt6-qtbase-gui-devel); the runtime qt6-* packages carry
+      # the plugins and QML modules that FedoraQtDepends.cmake queries.
+      # qt6-qttools-devel provides the Qt6LinguistTools CMake package, so the
+      # translations are compiled into the app.
       - name: Install the toolchain
         run: |
           set -euo pipefail
           dnf install -y --setopt=install_weak_deps=False \
             cmake ninja-build gcc-c++ make git \
-            qt6-qtbase-devel qt6-qtbase-gui-devel \
-            qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
+            qt6-qtbase qt6-qtbase-gui qt6-qtdeclarative qt6-qtmultimedia qt6-qtsvg \
+            qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
+            qt6-qttools-devel \
             rpm-build
           dnf clean all
 
       - name: Configure and build
         run: |
           set -euo pipefail
-          cmake --preset release-rpm
+          cmake --preset release-rpm 2>&1 | tee /tmp/configure.log
+          if grep -q 'LinguistTools not found' /tmp/configure.log; then
+              echo "Qt LinguistTools missing: the RPM would ship without translations" >&2
+              exit 1
+          fi
           cmake --build --preset release-rpm --parallel
 
       - name: Build the RPM
