@@ -490,10 +490,13 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           name: Ducktor ${{ github.ref_name }}
+          # The notes link to the changelog pinned to this tag, so nothing
+          # has to be written on the release page by hand.
           body: |
-            Automated release. Packages: .deb, .tar.xz, RPM, AppImage and
-            Flatpak for Linux, a portable ZIP for Windows, and a ZIP, a DMG
-            and a .pkg for macOS. For Arch Linux, the PKGBUILD in
-            packaging/arch is validated by the workflow; the AUR package
-            builds from it.
+            Ducktor is an offline translator for text and voice: it
+            translates, transcribes and reads aloud on your own computer
+            with local AI models. No account, no telemetry, no history.
+
+            What's new in this version: see the
+            [changelog](https://github.com/Celtic-Bytes/Ducktor/blob/${{ github.ref_name }}/CHANGELOG.md).
           files: artifacts/**/*

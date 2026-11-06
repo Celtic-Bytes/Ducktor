@@ -360,11 +360,13 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 
 Qt is installed with [jurplel/install-qt-action](https://github.com/jurplel/install-qt-action) (aqt) from the qt.io online installer; the community edition needs no account or token. The engine sources and the Flathub runtime download from the internet during the build.
 
+The release notes are written automatically and link to [CHANGELOG.md](CHANGELOG.md) pinned to the released tag, so the changelog is the single place to write what's new.
+
 A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on every push and pull request to `main`: it builds the interface with the `ui-only` preset (no engines, so it is fast) and runs the test suite with `ctest --preset ui-only`. Its status is the `CI` badge in the header.
 
 The release procedure — the tag must match the version:
 
-1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt) and commit.
+1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt), add the new version's entry to [CHANGELOG.md](CHANGELOG.md), and commit.
 2. Bump `pkgver` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD) and commit.
 3. `git tag v<version> && git push origin v<version>`.
 4. Recalculate the PKGBUILD `sha256sums` from the tarball of the new tag and commit (the tarball contains the PKGBUILD itself, so its hash is only known once the tag exists), and push the updated PKGBUILD to the AUR.
