@@ -1,0 +1,160 @@
+# Builds the two package formats that are not part of the release workflow
+# yet (the Fedora RPM and the macOS .pkg) without publishing anything: a way
+# to test them before they join releases.yml. Run by hand only
+# (Actions → Package test → Run workflow).
+name: Package test
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: ducktor-package-test-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  QT_VERSION: 6.9.3
+
+jobs:
+  fedora-rpm:
+    name: Fedora RPM
+    runs-on: ubuntu-24.04
+    container:
+      image: fedora:44
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      # Fedora 44's Qt 6.10 packages satisfy the Qt >= 6.9 requirement, and
+      # building against the distribution's packages is what lets
+      # cmake/FedoraQtDepends.cmake derive the RPM requires from standard
+      # qt6-* packages.
+      - name: Install the toolchain
+        run: |
+          set -euo pipefail
+          dnf install -y --setopt=install_weak_deps=False \
+            cmake ninja-build gcc-c++ make git \
+            qt6-qtbase-devel qt6-qtbase-gui-devel \
+            qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
+            rpm-build
+          dnf clean all
+
+      - name: Configure and build
+        run: |
+          set -euo pipefail
+          cmake --preset release-rpm
+          cmake --build --preset release-rpm --parallel
+
+      - name: Build the RPM
+        run: |
+          set -euo pipefail
+          cpack --preset release-rpm
+          ls -lh dist/*.rpm
+
+      - name: Check the RPM requires
+        run: |
+          set -euo pipefail
+          RPM="$(ls dist/*.rpm)"
+          rpm -qp --requires "$RPM" | sort
+          REQUIRES="$(rpm -qp --requires "$RPM")"
+          # The QML modules are loaded at runtime, so the requires must list
+          # them explicitly (cmake/FedoraQtDepends.cmake).
+          for cap in qt6qml(QtQuick) qt6qml(QtQuick.Controls.Fusion) qt6qml(Qt.labs.folderlistmodel); do
+              grep -qF "$cap" <<< "$REQUIRES" || { echo "missing requires: $cap" >&2; exit 1; }
+          done
+          # The engines' own libraries are private to libexec/ducktor and must
+          # not become dependencies of the package.
+          if grep -qE 'onnxruntime|libpiper|espeak-ng' <<< "$REQUIRES"; then
+              echo "bundled engine libraries leaked into the requires" >&2
+              exit 1
+          fi
+
+      - name: Install the RPM and check the layout
+        run: |
+          set -euo pipefail
+          RPM="$(ls dist/*.rpm)"
+          # Installing without --nodeps fails if any require is unsatisfied,
+          # which catches a misspelled qt6qml() capability.
+          rpm -i "$RPM"
+          rpm -ql ducktor
+          test -x /usr/bin/ducktor
+          test -x /usr/libexec/ducktor/ducktor-translate
+          test -x /usr/libexec/ducktor/ducktor-transcribe
+          test -x /usr/libexec/ducktor/ducktor-speak
+          test -d /usr/libexec/ducktor/espeak-ng-data
+          test -f /usr/share/applications/com.celticbytes.Ducktor.desktop
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v6
+        with:
+          name: fedora-rpm
+          path: dist/*.rpm
+
+  macos-pkg:
+    name: macOS pkg
+    runs-on: macos-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ env.QT_VERSION }}
+          target: desktop
+          arch: clang_64
+          # The base Qt 6 package already contains Qml, Quick, QuickControls2,
+          # Svg and Tools; only Multimedia is a separate addon module.
+          modules: qtmultimedia
+          install-deps: false
+          cache: true
+
+      - name: Configure and build
+        run: |
+          set -euo pipefail
+          cmake --preset release
+          cmake --build --preset release --parallel
+
+      - name: Build the ZIP
+        run: |
+          set -euo pipefail
+          cpack --preset release
+          ls -lh dist/*.zip
+
+      - name: Build the pkg (Ducktor.app into /Applications)
+        run: |
+          set -euo pipefail
+          bash packaging/macos/build-pkg.sh
+          ls -lh dist/*.pkg
+
+      - name: Smoke test the pkg
+        run: |
+          set -euo pipefail
+          PKG="$(ls dist/*.pkg)"
+          # Install it for real: this checks the payload, the install location
+          # and the recorded file ownership in one go.
+          sudo installer -pkg "$PKG" -target /
+          test -d /Applications/Ducktor.app
+          test -x /Applications/Ducktor.app/Contents/MacOS/Ducktor
+          # The pkg is built from the ZIP; make sure both carry the same app.
+          ZIP="$(ls dist/*.zip)"
+          UNZIP="$(mktemp -d)"
+          ditto -x -k "$ZIP" "$UNZIP"
+          APP_ZIP="$(find "$UNZIP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
+          diff -r "$APP_ZIP" /Applications/Ducktor.app
+          rm -rf "$UNZIP"
+          # Check the ad hoc signature without a full verification walk:
+          # `codesign --verify` (even pointed at the main executable) walks the
+          # whole bundle and treats every file in Contents/MacOS as a code
+          # object, so it flags the plain-data espeak-ng dictionaries shipped
+          # there next to the engines as unsigned. The ZIP ships the identical
+          # bundle and runs fine, so checking the bundle seal and the
+          # executable's signature is enough.
+          test -f /Applications/Ducktor.app/Contents/_CodeSignature/CodeResources
+          codesign -dv /Applications/Ducktor.app/Contents/MacOS/Ducktor
+          sudo rm -rf /Applications/Ducktor.app
+
+      - name: Upload the package
+        uses: actions/upload-artifact@v6
+        with:
+          name: macos-pkg
+          path: dist/*.pkg

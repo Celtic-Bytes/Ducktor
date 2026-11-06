@@ -29,11 +29,20 @@
       "cacheVariables": {
         "DUCKTOR_BUILD_ENGINES": "OFF"
       }
+    },
+    {
+      "name": "release-rpm",
+      "displayName": "Distributable release (Fedora RPM)",
+      "inherits": "release",
+      "cacheVariables": {
+        "DUCKTOR_PACKAGE_RPM": "ON"
+      }
     }
   ],
   "buildPresets": [
     { "name": "dev", "configurePreset": "dev" },
     { "name": "release", "configurePreset": "release" },
+    { "name": "release-rpm", "configurePreset": "release-rpm" },
     { "name": "ui-only", "configurePreset": "ui-only" }
   ],
   "testPresets": [
@@ -48,7 +57,10 @@
       "output": { "outputOnFailure": true }
     }
   ],
-  "packagePresets": [{ "name": "release", "configurePreset": "release" }],
+  "packagePresets": [
+    { "name": "release", "configurePreset": "release" },
+    { "name": "release-rpm", "configurePreset": "release-rpm" }
+  ],
   "workflowPresets": [
     {
       "name": "package",

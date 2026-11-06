@@ -12,6 +12,7 @@ option(DUCKTOR_ENGINE_TRANSCRIBE "Build the whisper.cpp speech recognition engin
 option(DUCKTOR_ENGINE_SPEAK "Build the Piper speech synthesis engine" ON)
 option(DUCKTOR_NATIVE_CPU "Optimize engines for this machine only (disable for distributable builds)" ON)
 option(DUCKTOR_BUILD_TESTS "Build the test suite" ON)
+option(DUCKTOR_PACKAGE_RPM "Generate an RPM package instead of the .deb and the .tar.xz (Linux)" OFF)
 
 set(DUCKTOR_RUNTIME_DIR ${CMAKE_BINARY_DIR}/bin)
 set(DUCKTOR_LICENSE_DIR ${CMAKE_BINARY_DIR}/licenses)
