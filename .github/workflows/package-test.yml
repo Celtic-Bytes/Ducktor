@@ -1,6 +1,6 @@
-# Builds the two package formats that are not part of the release workflow
-# yet (the Fedora RPM and the macOS .pkg) without publishing anything: a way
-# to test them before they join releases.yml. Run by hand only
+# Builds the package format that is not part of the release workflow yet
+# (the Fedora RPM) without publishing anything: a way to test it before it
+# joins releases.yml. Run by hand only
 # (Actions → Package test → Run workflow).
 name: Package test
 
@@ -10,9 +10,6 @@ on:
 concurrency:
   group: ducktor-package-test-${{ github.ref }}
   cancel-in-progress: false
-
-env:
-  QT_VERSION: 6.9.3
 
 jobs:
   fedora-rpm:
@@ -89,6 +86,11 @@ jobs:
           test -x /usr/libexec/ducktor/ducktor-translate
           test -x /usr/libexec/ducktor/ducktor-transcribe
           test -x /usr/libexec/ducktor/ducktor-speak
+          # The speak helper's own libraries must be inside the package:
+          # libpiper installs to lib64 on RPM-based systems, so a glob that
+          # only looks at lib would ship the helper without them.
+          test -e /usr/libexec/ducktor/libpiper.so
+          ls /usr/libexec/ducktor/libonnxruntime.so*
           test -d /usr/libexec/ducktor/espeak-ng-data
           test -f /usr/share/applications/com.celticbytes.Ducktor.desktop
 
@@ -97,73 +99,3 @@ jobs:
         with:
           name: fedora-rpm
           path: dist/*.rpm
-
-  macos-pkg:
-    name: macOS pkg
-    runs-on: macos-latest
-    timeout-minutes: 180
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v4
-        with:
-          version: ${{ env.QT_VERSION }}
-          target: desktop
-          arch: clang_64
-          # The base Qt 6 package already contains Qml, Quick, QuickControls2,
-          # Svg and Tools; only Multimedia is a separate addon module.
-          modules: qtmultimedia
-          install-deps: false
-          cache: true
-
-      - name: Configure and build
-        run: |
-          set -euo pipefail
-          cmake --preset release
-          cmake --build --preset release --parallel
-
-      - name: Build the ZIP
-        run: |
-          set -euo pipefail
-          cpack --preset release
-          ls -lh dist/*.zip
-
-      - name: Build the pkg (Ducktor.app into /Applications)
-        run: |
-          set -euo pipefail
-          bash packaging/macos/build-pkg.sh
-          ls -lh dist/*.pkg
-
-      - name: Smoke test the pkg
-        run: |
-          set -euo pipefail
-          PKG="$(ls dist/*.pkg)"
-          # Install it for real: this checks the payload, the install location
-          # and the recorded file ownership in one go.
-          sudo installer -pkg "$PKG" -target /
-          test -d /Applications/Ducktor.app
-          test -x /Applications/Ducktor.app/Contents/MacOS/Ducktor
-          # The pkg is built from the ZIP; make sure both carry the same app.
-          ZIP="$(ls dist/*.zip)"
-          UNZIP="$(mktemp -d)"
-          ditto -x -k "$ZIP" "$UNZIP"
-          APP_ZIP="$(find "$UNZIP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
-          diff -r "$APP_ZIP" /Applications/Ducktor.app
-          rm -rf "$UNZIP"
-          # Check the ad hoc signature without a full verification walk:
-          # `codesign --verify` (even pointed at the main executable) walks the
-          # whole bundle and treats every file in Contents/MacOS as a code
-          # object, so it flags the plain-data espeak-ng dictionaries shipped
-          # there next to the engines as unsigned. The ZIP ships the identical
-          # bundle and runs fine, so checking the bundle seal and the
-          # executable's signature is enough.
-          test -f /Applications/Ducktor.app/Contents/_CodeSignature/CodeResources
-          codesign -dv /Applications/Ducktor.app/Contents/MacOS/Ducktor
-          sudo rm -rf /Applications/Ducktor.app
-
-      - name: Upload the package
-        uses: actions/upload-artifact@v6
-        with:
-          name: macos-pkg
-          path: dist/*.pkg

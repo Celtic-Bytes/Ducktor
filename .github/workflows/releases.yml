@@ -1,9 +1,9 @@
 # Builds all platform packages (.deb, .tar.xz, AppImage, Flatpak, Windows
-# ZIP, macOS ZIP and DMG), validates the Arch PKGBUILD (full source build
-# only on request), and publishes the packages to a GitHub release. Triggers
-# only on version tags (v1.0.0); a manual run (workflow_dispatch) builds
-# everything but never touches the release, so it is a way to test the
-# pipeline without a tag.
+# ZIP, macOS ZIP, DMG and pkg), validates the Arch PKGBUILD (full source
+# build only on request), and publishes the packages to a GitHub release.
+# Triggers only on version tags (v1.0.0); a manual run (workflow_dispatch)
+# builds everything but never touches the release, so it is a way to test
+# the pipeline without a tag.
 #
 # The Linux job builds inside an Ubuntu 26.04 container with the
 # distribution's Qt 6.10 packages, so the .deb dependencies are derived from
@@ -170,7 +170,7 @@ jobs:
           path: dist/*.zip
 
   macos:
-    name: macOS ZIP + DMG
+    name: macOS ZIP + DMG + pkg
     needs: [check-version]
     if: ${{ always() && (needs.check-version.result == 'success' || needs.check-version.result == 'skipped') }}
     runs-on: macos-latest
@@ -238,6 +238,39 @@ jobs:
           codesign -dv "$MOUNT/Ducktor.app/Contents/MacOS/Ducktor"
           hdiutil detach "$MOUNT"
 
+      - name: Build the pkg (Ducktor.app into /Applications)
+        run: |
+          set -euo pipefail
+          bash packaging/macos/build-pkg.sh
+          ls -lh dist/*.pkg
+
+      - name: Smoke test the pkg
+        run: |
+          set -euo pipefail
+          PKG="$(ls dist/*.pkg)"
+          # Install it for real: this checks the payload, the install location
+          # and the recorded file ownership in one go.
+          sudo installer -pkg "$PKG" -target /
+          test -d /Applications/Ducktor.app
+          test -x /Applications/Ducktor.app/Contents/MacOS/Ducktor
+          # The pkg is built from the ZIP; make sure both carry the same app.
+          ZIP="$(ls dist/*.zip)"
+          UNZIP="$(mktemp -d)"
+          ditto -x -k "$ZIP" "$UNZIP"
+          APP_ZIP="$(find "$UNZIP" -maxdepth 3 -type d -name 'Ducktor.app' | head -n1)"
+          diff -r "$APP_ZIP" /Applications/Ducktor.app
+          rm -rf "$UNZIP"
+          # Check the ad hoc signature without a full verification walk:
+          # `codesign --verify` (even pointed at the main executable) walks the
+          # whole bundle and treats every file in Contents/MacOS as a code
+          # object, so it flags the plain-data espeak-ng dictionaries shipped
+          # there next to the engines as unsigned. The ZIP ships the identical
+          # bundle and runs fine, so checking the bundle seal and the
+          # executable's signature is enough.
+          test -f /Applications/Ducktor.app/Contents/_CodeSignature/CodeResources
+          codesign -dv /Applications/Ducktor.app/Contents/MacOS/Ducktor
+          sudo rm -rf /Applications/Ducktor.app
+
       - name: Upload the packages
         uses: actions/upload-artifact@v6
         with:
@@ -245,6 +278,7 @@ jobs:
           path: |
             dist/*.zip
             dist/*.dmg
+            dist/*.pkg
 
   flatpak:
     name: Flatpak
@@ -365,7 +399,7 @@ jobs:
           name: Ducktor ${{ github.ref_name }}
           body: |
             Automated release. Packages: .deb, .tar.xz, AppImage and Flatpak
-            for Linux, a portable ZIP for Windows, and a ZIP and a DMG for
-            macOS. For Arch Linux, the PKGBUILD in packaging/arch is
-            validated by the workflow; the AUR package builds from it.
+            for Linux, a portable ZIP for Windows, and a ZIP, a DMG and a
+            .pkg for macOS. For Arch Linux, the PKGBUILD in packaging/arch
+            is validated by the workflow; the AUR package builds from it.
           files: artifacts/**/*

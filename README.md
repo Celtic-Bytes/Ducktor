@@ -329,10 +329,13 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 | Windows ZIP | `windows-latest` | `cmake --preset release` + `cpack --preset release` (portable, `windeployqt`) |
 | macOS ZIP | `macos-latest` | `cmake --preset release` + `cpack --preset release` (`Ducktor.app`, ad hoc signature) |
 | macOS DMG | `macos-latest` | [packaging/macos/build-dmg.sh](packaging/macos/build-dmg.sh) from the ZIP (`hdiutil`) |
+| macOS pkg | `macos-latest` | [packaging/macos/build-pkg.sh](packaging/macos/build-pkg.sh) from the ZIP (`pkgbuild`, installs to /Applications) |
 
 Qt is installed with [jurplel/install-qt-action](https://github.com/jurplel/install-qt-action) (aqt) from the qt.io online installer; the community edition needs no account or token. The engine sources and the Flathub runtime download from the internet during the build.
 
 A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on every push and pull request to `main`: it builds the interface with the `ui-only` preset (no engines, so it is fast) and runs the test suite with `ctest --preset ui-only`. Its status is the `CI` badge in the header.
+
+A third workflow, [.github/workflows/package-test.yml](.github/workflows/package-test.yml), is run by hand only (_Actions → Package test → Run workflow_): it builds the Fedora RPM without publishing anything, a way to test the format before it joins the release workflow.
 
 The release procedure — the tag must match the version:
 

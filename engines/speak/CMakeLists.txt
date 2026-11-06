@@ -15,16 +15,27 @@ set_target_properties(ducktor-speak PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${DUCKTO
 if(APPLE)
     set_target_properties(ducktor-speak PROPERTIES BUILD_RPATH "@loader_path")
 elseif(UNIX)
-    set_target_properties(ducktor-speak PROPERTIES BUILD_RPATH "$ORIGIN")
+    set_target_properties(ducktor-speak PROPERTIES
+        BUILD_RPATH "$ORIGIN"
+        # CMake would also add libpiper's absolute build directory to the build
+        # tree's rpath, and the install is a plain copy, so that path would
+        # ship inside every package (Fedora's check-rpaths rejects it). Using
+        # the install rpath in the build tree keeps it exactly $ORIGIN, which
+        # is all the helper needs: its libraries are copied next to it.
+        INSTALL_RPATH "$ORIGIN"
+        BUILD_WITH_INSTALL_RPATH TRUE)
     # DT_RPATH (unlike RUNPATH) also lets libpiper find ONNX Runtime next to the helper.
     target_link_options(ducktor-speak PRIVATE "LINKER:--disable-new-dtags")
 endif()
 
 # libpiper, ONNX Runtime and the espeak-ng data must sit next to the helper at runtime.
+# libpiper installs to lib on most systems and lib64 on RPM-based ones, so take
+# the directory of the library that was actually found.
+get_filename_component(_piper_libdir ${PIPER_LIBRARY} DIRECTORY)
 file(GLOB PIPER_RUNTIME_LIBS
     ${PIPER_ROOT}/bin/*.dll
-    ${PIPER_ROOT}/lib/*.so*
-    ${PIPER_ROOT}/lib/*.dylib)
+    ${_piper_libdir}/*.so*
+    ${_piper_libdir}/*.dylib)
 foreach(lib IN LISTS PIPER_RUNTIME_LIBS)
     add_custom_command(TARGET ducktor-speak POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${lib} ${DUCKTOR_ENGINE_OUTPUT_DIR})
