@@ -171,7 +171,7 @@ On Windows, start VS Code from the _x64 Native Tools Command Prompt for VS 2022_
 
 ### Packages
 
-Packages are created with the `release` preset, which builds engines that run on any CPU of the same architecture. All finished packages are written to the `dist` folder in the repository. None of them include AI models: users download them from _Settings_.
+Packages are created with the `release` preset (or `release-rpm` for the RPM), which builds engines that run on any CPU of the same architecture. All finished packages are written to the `dist` folder in the repository. None of them include AI models: users download them from _Settings_.
 
 | System  | Format                          | Command                                                                              | Result                                    |
 | ------- | ------------------------------- | ------------------------------------------------------------------------------------ | ----------------------------------------- |
