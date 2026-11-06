@@ -64,7 +64,8 @@ jobs:
           REQUIRES="$(rpm -qp --requires "$RPM")"
           # The QML modules are loaded at runtime, so the requires must list
           # them explicitly (cmake/FedoraQtDepends.cmake).
-          for cap in qt6qml(QtQuick) qt6qml(QtQuick.Controls.Fusion) qt6qml(Qt.labs.folderlistmodel); do
+          # Quoted: bash would treat the unquoted parentheses as syntax.
+          for cap in "qt6qml(QtQuick)" "qt6qml(QtQuick.Controls.Fusion)" "qt6qml(Qt.labs.folderlistmodel)"; do
               grep -qF "$cap" <<< "$REQUIRES" || { echo "missing requires: $cap" >&2; exit 1; }
           done
           # The engines' own libraries are private to libexec/ducktor and must
