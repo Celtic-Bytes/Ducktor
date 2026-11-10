@@ -14,6 +14,9 @@ ApplicationWindow {
     title: "Ducktor"
     color: Theme.window
 
+    // "translate" or "spell"; both tab pages stay alive inside the home StackLayout.
+    property string currentTab: "translate"
+
     palette.window: Theme.window
     palette.windowText: Theme.text
     palette.base: Theme.surface
@@ -29,12 +32,21 @@ ApplicationWindow {
     palette.toolTipBase: Theme.surface
     palette.toolTipText: Theme.text
 
-    // Settings and About always open on top of the translator, never on top of each other.
+    // Settings and About always open on top of the home view, never on top of each other.
     function openPage(component, name, properties) {
         if (stack.currentItem && stack.currentItem.objectName === name)
             return
         stack.pop(null, StackView.Immediate)
         stack.push(component, properties || {})
+    }
+
+    // Switches tabs; if Settings or About is on top, it goes back home first.
+    function switchTab(tab) {
+        if (currentTab === tab && stack.depth === 1)
+            return
+        if (stack.depth > 1)
+            stack.pop(null, StackView.Immediate)
+        currentTab = tab
     }
 
     // Centers and shows the announcement window on top of the main one. Window positions are
@@ -129,6 +141,59 @@ ApplicationWindow {
                 ToolTip.text: text
                 onClicked: stack.pop()
             }
+            TabBar {
+                id: tabBar
+                Layout.fillHeight: true
+                Layout.maximumWidth: parent.width
+                spacing: 0
+                currentIndex: window.currentTab === "spell" ? 1 : 0
+                onCurrentIndexChanged: window.switchTab(currentIndex === 1 ? "spell" : "translate")
+                background: null
+
+                component Tab: TabButton {
+                    property string tabId: ""
+                    text: tabId === "spell" ? qsTr("Spelling") : qsTr("Translator")
+                    font.pixelSize: Theme.textSize
+                    leftPadding: 16
+                    rightPadding: 16
+                    Accessible.role: Accessible.PageTab
+                    onClicked: window.switchTab(tabId)
+
+                    // Qt 6's TabBar lays its buttons out in a horizontal ListView, top-aligned, and
+                    // each button takes its width from the contentItem's implicit width, so both
+                    // implicit sizes are set here; the label and the underline are then positioned
+                    // against the full-height bar.
+                    contentItem: Item {
+                        implicitHeight: 48
+                        implicitWidth: tabLabel.implicitWidth
+                        Label {
+                            id: tabLabel
+                            text: parent.parent.text
+                            font.pixelSize: Theme.textSize
+                            color: parent.parent.checked ? Theme.text : Theme.mutedText
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            y: (tabBar.height - height) / 2 - parent.y
+                        }
+                    }
+                    background: Rectangle {
+                        color: "transparent"
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: 10
+                            anchors.rightMargin: 10
+                            y: tabBar.height - height
+                            height: 2
+                            radius: 1
+                            color: Theme.accent
+                            visible: parent.parent.checked
+                        }
+                    }
+                }
+
+                Tab { tabId: "translate" }
+                Tab { tabId: "spell" }
+            }
             Item {
                 Layout.fillWidth: true
             }
@@ -155,7 +220,23 @@ ApplicationWindow {
     StackView {
         id: stack
         anchors.fill: parent
-        initialItem: TranslatorPage {}
+        initialItem: homeComponent
+    }
+
+    // Both tab pages are mounted at once so each one keeps its content when switching tabs.
+    Component {
+        id: homeComponent
+        Page {
+            objectName: "home"
+            background: null
+
+            StackLayout {
+                anchors.fill: parent
+                currentIndex: window.currentTab === "spell" ? 1 : 0
+                TranslatorPage {}
+                SpellCheckPage {}
+            }
+        }
     }
 
     Component {

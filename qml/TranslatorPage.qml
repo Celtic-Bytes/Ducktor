@@ -71,9 +71,10 @@ Page {
         }
     }
 
+    // Only active while the tab is visible: both tab pages stay mounted in the StackLayout.
     Shortcut {
         sequences: ["Ctrl+Return", "Ctrl+Enter"]
-        enabled: !App.busy
+        enabled: page.visible && !App.busy
         onActivated: page.translateNow()
     }
 

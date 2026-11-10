@@ -19,13 +19,16 @@ install(TARGETS ducktor
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 if(DUCKTOR_BUILD_ENGINES)
-    foreach(engine IN ITEMS TRANSLATE TRANSCRIBE SPEAK)
+    foreach(engine IN ITEMS TRANSLATE TRANSCRIBE SPEAK SPELLCHECK)
         if(DUCKTOR_ENGINE_${engine})
             string(TOLOWER ${engine} name)
             install(PROGRAMS ${DUCKTOR_RUNTIME_DIR}/ducktor-${name}${CMAKE_EXECUTABLE_SUFFIX}
                 DESTINATION ${DUCKTOR_INSTALL_ENGINES})
         endif()
     endforeach()
+    if(DUCKTOR_ENGINE_SPELLCHECK)
+        install(DIRECTORY resources/spell/ DESTINATION ${DUCKTOR_INSTALL_ENGINES}/spell)
+    endif()
     if(DUCKTOR_ENGINE_SPEAK)
         # libpiper and ONNX Runtime, found by ducktor-speak through its $ORIGIN / @loader_path rpath.
         install(DIRECTORY ${DUCKTOR_RUNTIME_DIR}/

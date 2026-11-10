@@ -12,6 +12,7 @@ Ducktor is a free, open-source translator that works on your computer. It is des
 ## How your content is processed
 
 - **Text** is translated on youre computer by a local helper program. It stays in memory while the window is open and is discarded when you clear it or close Ducktor.
+- **Spell checking** runs locally with the bundled dictionaries; the text never leaves your computer and is not saved.
 - **Voice** is recorded only while you press _Dictate_, up to the limit shown on screen. The recording is kept in memory, transcribed locally and then discarded; it is never written to disk.
 - **Speech output** is generated locally and played directly; no audio file is saved.
 - **Clipboard**: Ducktor reads the clipboard only when you paste, and writes to it only when you press _Copy_.

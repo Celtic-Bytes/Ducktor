@@ -109,4 +109,18 @@ QString espeakDataDir()
     return {};
 }
 
+QString spellDataDir()
+{
+    QStringList candidates;
+    for (const QString& dir : engineDirs())
+        candidates << QDir(dir).filePath(QStringLiteral("spell"));
+    candidates << QDir::cleanPath(appDir() + QStringLiteral("/../share/ducktor/spell"))
+               << QDir::cleanPath(appDir() + QStringLiteral("/../Resources/spell"));
+    for (const QString& candidate : candidates) {
+        if (QFileInfo(candidate).isDir())
+            return candidate;
+    }
+    return {};
+}
+
 } // namespace Paths

@@ -39,6 +39,12 @@
     <message><source>The model failed while processing the input.</source><translation>Le modèle a échoué en traitant l'entrée.</translation></message>
     <message><source>Speech synthesis failed.</source><translation>La synthèse vocale a échoué.</translation></message>
     <message><source>Unexpected engine error (%1).</source><translation>Erreur inattendue du moteur (%1).</translation></message>
+    <message><source>Write or paste some text to check.</source><translation>Écris ou colle le texte à vérifier.</translation></message>
+    <message><source>The text has %1 characters and the limit is %2. Shorten it before checking.</source><translation>Le texte contient %1 caractères et la limite est de %2. Raccourcis-le avant de le vérifier.</translation></message>
+    <message><source>The spell-check dictionaries are missing from this installation.</source><translation>Les dictionnaires de vérification orthographique manquent dans cette installation.</translation></message>
+    <message><source>The selected language has no spell dictionary.</source><translation>Aucun dictionnaire orthographique pour la langue sélectionnée.</translation></message>
+    <message><source>The spell dictionary for the selected language could not be loaded.</source><translation>Le dictionnaire orthographique de la langue sélectionnée n'a pas pu être chargé.</translation></message>
+    <message><source>Checking spelling…</source><translation>Vérification orthographique…</translation></message>
 </context>
 <context>
     <name>ModelManager</name>
@@ -65,6 +71,27 @@
     <message><source>Back</source><translation>Retour</translation></message>
     <message><source>Settings</source><translation>Paramètres</translation></message>
     <message><source>About</source><translation>À propos</translation></message>
+    <message><source>Translator</source><translation>Traducteur</translation></message>
+    <message><source>Spelling</source><translation>Orthographe</translation></message>
+</context>
+<context>
+    <name>SpellCheckPage</name>
+    <message><source>Text language</source><translation>Langue du texte</translation></message>
+    <message><source>Check</source><translation>Vérifier</translation></message>
+    <message><source>Cancel</source><translation>Annuler</translation></message>
+    <message><source>1 error found</source><translation>1 erreur trouvée</translation></message>
+    <message><source>%1 errors found</source><translation>%1 erreurs trouvées</translation></message>
+    <message><source>No spelling errors found</source><translation>Aucune erreur orthographique trouvée</translation></message>
+    <message><source>Write or paste the text to check</source><translation>Écris ou colle le texte à vérifier</translation></message>
+    <message><source>The text cannot exceed %1 characters.</source><translation>Le texte ne peut pas dépasser %1 caractères.</translation></message>
+    <message><source>Copy</source><translation>Copier</translation></message>
+    <message><source>Clear</source><translation>Effacer</translation></message>
+    <message><source>%1 / %2</source><translation>%1 / %2</translation></message>
+    <message><source>%1 of %2 characters</source><translation>%1 sur %2 caractères</translation></message>
+    <message><source>Errors</source><translation>Erreurs</translation></message>
+    <message><source>Paste some text and press Check to see the misspelled words here.</source><translation>Colle un texte puis clique sur Vérifier pour voir les mots mal orthographiés ici.</translation></message>
+    <message><source>Suggestions</source><translation>Suggestions</translation></message>
+    <message><source>Keep</source><translation>Garder</translation></message>
 </context>
 <context>
     <name>LanguageMenu</name>

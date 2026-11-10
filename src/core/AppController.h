@@ -25,6 +25,8 @@ class AppController : public QObject
     Q_PROPERTY(bool playing READ playing NOTIFY playingChanged)
     Q_PROPERTY(QVariantList targetLanguages READ targetLanguages NOTIFY languagesChanged)
     Q_PROPERTY(QVariantList sourceLanguages READ sourceLanguages NOTIFY languagesChanged)
+    Q_PROPERTY(QVariantList spellLanguages READ spellLanguages CONSTANT)
+    Q_PROPERTY(QVariantList spellingIssues READ spellingIssues NOTIFY spellingIssuesChanged)
 
 public:
     AppController(AppSettings* settings, ModelManager* models, QObject* parent = nullptr);
@@ -40,8 +42,11 @@ public:
     bool playing() const;
     QVariantList targetLanguages() const;
     QVariantList sourceLanguages() const;
+    QVariantList spellLanguages() const;
+    QVariantList spellingIssues() const { return m_spellingIssues; }
 
     Q_INVOKABLE void translate(const QString& text, const QString& source, const QString& target);
+    Q_INVOKABLE void checkSpelling(const QString& text, const QString& language);
     Q_INVOKABLE void startRecording(const QString& source);
     Q_INVOKABLE void stopRecording();
     Q_INVOKABLE void cancel();
@@ -55,6 +60,7 @@ public:
     Q_INVOKABLE QString document(const QString& name) const;
     Q_INVOKABLE void setVoiceInput(bool voiceInput) { m_voiceInput = voiceInput; }
     Q_INVOKABLE void clearTranslation();
+    Q_INVOKABLE void clearSpelling();
     // Length checks use UTF-16 code units, the same unit as QML's text.length.
     Q_INVOKABLE bool fitsLimit(int currentLength, int selectedLength, int insertedLength, int maxLength) const;
 
@@ -67,6 +73,7 @@ signals:
     void playingChanged();
     void languagesChanged();
     void transcriptReady(const QString& text, const QString& language);
+    void spellingIssuesChanged();
     void notice(const QString& message);
 
 private:
@@ -77,6 +84,7 @@ private:
     void onTranslateFrame(const EngineFrame& frame);
     void onTranscribeFrame(const EngineFrame& frame);
     void onSpeakFrame(const EngineFrame& frame);
+    void onSpellFrame(const EngineFrame& frame);
     void onEngineFailed(const QString& task);
     void onWatchdog();
     void onModelRemoval(const QString& id);
@@ -92,12 +100,14 @@ private:
     EngineProcess* m_translateEngine;
     EngineProcess* m_transcribeEngine;
     EngineProcess* m_speakEngine;
+    EngineProcess* m_spellEngine;
     QTimer m_watchdog;
 
     QString m_state = QStringLiteral("idle");
     QString m_statusText;
     QString m_translatedText;
     bool m_translationComplete = true;
+    QVariantList m_spellingIssues;
     QString m_detectedLanguage;
     QString m_recordSource;
     QString m_translationTarget;

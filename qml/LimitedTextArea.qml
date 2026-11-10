@@ -12,6 +12,10 @@ ScrollView {
     property alias length: area.length
     property alias placeholderText: area.placeholderText
     property alias readOnly: area.readOnly
+    // The text item itself: Qt 6's TextInput-based controls expose positionToRectangle/
+    // positionAt on the item, and there is no contentItem to annotate (spell check).
+    property var textInput: area
+    property alias cursorPosition: area.cursorPosition
     readonly property bool overLimit: area.length > maxLength
 
     signal limitRejected()

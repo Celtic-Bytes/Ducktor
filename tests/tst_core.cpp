@@ -6,9 +6,12 @@
 #include "models/ModelCatalog.h"
 #include "models/ModelManager.h"
 #include "segmenter.hpp"
+#include "spellcheck.hpp"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QLocale>
 #include <QSignalSpy>
 #include <QTemporaryDir>
@@ -104,6 +107,85 @@ private slots:
         QCOMPARE(total, text.size());
     }
 
+    void spellTokenizerSplitsWords()
+    {
+        const auto tokens = ducktor::spell::tokenize("Hello world");
+        QCOMPARE(tokens.size(), std::size_t(2));
+        QCOMPARE(tokens[0].utf8Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf8End, std::size_t(5));
+        QCOMPARE(tokens[0].utf16Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf16End, std::size_t(5));
+        QCOMPARE(tokens[1].utf8Start, std::size_t(6));
+        QCOMPARE(tokens[1].utf8End, std::size_t(11));
+        QCOMPARE(tokens[1].utf16Start, std::size_t(6));
+        QCOMPARE(tokens[1].utf16End, std::size_t(11));
+    }
+
+    void spellTokenizerKeepsApostrophesAndHyphens()
+    {
+        // "l'ortografía" keeps its apostrophe, "co-autor" its hyphen, and the trailing
+        // hyphen of "test-" is not part of a word. á makes the UTF-8 and UTF-16 offsets diverge.
+        const auto tokens = ducktor::spell::tokenize("l'ortografía co-autor test-");
+        QCOMPARE(tokens.size(), std::size_t(3));
+        QCOMPARE(tokens[0].utf8Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf8End, std::size_t(13)); // 12 code points, one of them two bytes
+        QCOMPARE(tokens[0].utf16Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf16End, std::size_t(12));
+        QCOMPARE(tokens[1].utf8Start, std::size_t(14)); // "l'ortografía" is 13 bytes
+        QCOMPARE(tokens[1].utf8End, std::size_t(22));
+        QCOMPARE(tokens[1].utf16Start, std::size_t(13));
+        QCOMPARE(tokens[1].utf16End, std::size_t(21));
+        QCOMPARE(tokens[2].utf8Start, std::size_t(23));
+        QCOMPARE(tokens[2].utf8End, std::size_t(27));
+        QCOMPARE(tokens[2].utf16Start, std::size_t(22));
+        QCOMPARE(tokens[2].utf16End, std::size_t(26));
+
+        const auto leading = ducktor::spell::tokenize("'hello");
+        QCOMPARE(leading.size(), std::size_t(1));
+        QCOMPARE(leading[0].utf8Start, std::size_t(1)); // a leading apostrophe is not a word character
+    }
+
+    void spellTokenizerCountsUtf16Units()
+    {
+        // é is two bytes in UTF-8 but one UTF-16 unit; the emoji is one code point but two units.
+        QCOMPARE(ducktor::spell::utf16Length("héllo"), std::size_t(5));
+        QCOMPARE(ducktor::spell::utf16Length("a\U0001F600b"), std::size_t(4));
+
+        const auto tokens = ducktor::spell::tokenize("a\U0001F600b");
+        QCOMPARE(tokens.size(), std::size_t(2));
+        QCOMPARE(tokens[0].utf8Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf8End, std::size_t(1));
+        QCOMPARE(tokens[0].utf16Start, std::size_t(0));
+        QCOMPARE(tokens[0].utf16End, std::size_t(1));
+        QCOMPARE(tokens[1].utf8Start, std::size_t(5)); // "a" + the four-byte emoji
+        QCOMPARE(tokens[1].utf8End, std::size_t(6));
+        QCOMPARE(tokens[1].utf16Start, std::size_t(3));
+        QCOMPARE(tokens[1].utf16End, std::size_t(4));
+    }
+
+    void spellTokenizerHandlesScriptsAndPunctuation()
+    {
+        const auto greek = ducktor::spell::tokenize("\xCE\xB3\xCE\xB5\xCE\xB9\xCE\xB1"); // γεια
+        QCOMPARE(greek.size(), std::size_t(1));
+        QCOMPARE(greek[0].utf8Length(), std::size_t(8)); // four code points, two bytes each
+        QCOMPARE(greek[0].utf16Length(), std::size_t(4));
+
+        const auto cjk = ducktor::spell::tokenize("hola \xE4\xBD\xA0\xE5\xA5\xBD world"); // hola 你好 world
+        QCOMPARE(cjk.size(), std::size_t(3));
+        QCOMPARE(cjk[1].utf8Start, std::size_t(5));
+        QCOMPARE(cjk[1].utf8End, std::size_t(11));
+        QCOMPARE(cjk[1].utf16Start, std::size_t(5));
+        QCOMPARE(cjk[1].utf16End, std::size_t(7));
+
+        const auto numbers = ducktor::spell::tokenize("abc123def");
+        QCOMPARE(numbers.size(), std::size_t(2));
+        QCOMPARE(numbers[0].utf8End, std::size_t(3));
+        QCOMPARE(numbers[1].utf8Start, std::size_t(6));
+
+        QVERIFY(ducktor::spell::tokenize("").empty());
+        QVERIFY(ducktor::spell::tokenize("123 !!!").empty());
+    }
+
     void frameParserHandlesFragments()
     {
         const QByteArray data = encodeFrame({"RESULT", "7", "1"}, "hola") + encodeFrame({"READY", "0"}, {});
@@ -186,6 +268,33 @@ private slots:
         controller.translate(QStringLiteral("hola"), QStringLiteral("auto"), QStringLiteral("en"));
         QCOMPARE(notices.size(), 2);
         QVERIFY(!controller.busy());
+    }
+
+    void controllerChecksSpellingEndToEnd()
+    {
+        // Full path through the helper process, the protocol and Hunspell; it only runs when
+        // the spell-check engine is part of this build (ui-only skips it).
+        const QString helper = QCoreApplication::applicationDirPath() + QStringLiteral("/ducktor-spellcheck");
+        if (!QFileInfo(helper).isExecutable())
+            QSKIP("the spell-check engine is not built into this tree");
+
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        ModelManager models(&settings, dir.path(), dir.filePath(QStringLiteral("models")), {});
+        AppController controller(&settings, &models);
+
+        controller.checkSpelling(QStringLiteral("Hola mun do. La ortografia es im portante."), QStringLiteral("es"));
+        QTRY_VERIFY_WITH_TIMEOUT(!controller.busy(), 20000);
+
+        const QVariantList issues = controller.spellingIssues();
+        QCOMPARE(issues.size(), 3);
+        const QVariantMap first = issues.at(0).toMap();
+        QCOMPARE(first.value("word").toString(), QStringLiteral("mun"));
+        QCOMPARE(first.value("start").toInt(), 5);
+        QCOMPARE(first.value("end").toInt(), 8);
+        const QVariantMap second = issues.at(1).toMap();
+        QCOMPARE(second.value("word").toString(), QStringLiteral("ortografia"));
+        QVERIFY(second.value("suggestions").toStringList().contains(QStringLiteral("ortografía")));
     }
 
     void managerTracksInstalledModels()

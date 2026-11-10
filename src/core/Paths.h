@@ -14,5 +14,6 @@ QString userModelsDir();
 QStringList bundledModelDirs();
 QString engineExecutable(const QString& name);
 QString espeakDataDir();
+QString spellDataDir();
 
 } // namespace Paths

@@ -34,6 +34,19 @@ if(DUCKTOR_ENGINE_TRANSCRIBE)
         INSTALL_COMMAND "")
 endif()
 
+if(DUCKTOR_ENGINE_SPELLCHECK)
+    ExternalProject_Add(ducktor_engine_spellcheck
+        SOURCE_DIR ${CMAKE_SOURCE_DIR}/engines/spellcheck
+        BINARY_DIR ${CMAKE_BINARY_DIR}/engines/spellcheck
+        CMAKE_ARGS ${_engine_args}
+        BUILD_ALWAYS ON
+        INSTALL_COMMAND "")
+    # The bundled dictionaries sit next to the helper at runtime, in the dev tree and in packages.
+    add_custom_command(TARGET ducktor_engine_spellcheck POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_SOURCE_DIR}/resources/spell ${DUCKTOR_RUNTIME_DIR}/spell)
+endif()
+
 if(DUCKTOR_ENGINE_SPEAK)
     # Short paths: eSpeak NG truncates long file paths while compiling its phoneme data.
     ExternalProject_Add(ducktor_libpiper

@@ -55,6 +55,7 @@ If you just want to download the app and use it, go to the [Release page](https:
   - `ducktor-translate`: [llama.cpp](https://github.com/ggml-org/llama.cpp) `v0.7.0` with GGUF models.
   - `ducktor-transcribe`: [whisper.cpp](https://github.com/ggml-org/whisper.cpp) `v1.9.5`.
   - `ducktor-speak`: [libpiper](https://github.com/OHF-Voice/piper1-gpl/tree/main/libpiper) `v1.8.0`.
+  - `ducktor-spellcheck`: [Hunspell](https://github.com/hunspell/hunspell) `v1.7.6` with the bundled dictionaries in [resources/spell](resources/spell).
 - If a model runs out of memory or crashes, its process is closed and the interface keeps responding.
 - Models are downloaded from Settings, with resumable downloads and SHA-256 verification, or imported from a local file.
 

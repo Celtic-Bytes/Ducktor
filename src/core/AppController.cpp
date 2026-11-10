@@ -13,6 +13,10 @@
 #include <QFile>
 #include <QGuiApplication>
 #include <QHash>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 #include <QThread>
 #include <QtEndian>
 
@@ -28,6 +32,7 @@ namespace {
 constexpr int kTranslateTimeoutMs = 20 * 60 * 1000;
 constexpr int kTranscribeTimeoutMs = 5 * 60 * 1000;
 constexpr int kSpeakTimeoutMs = 5 * 60 * 1000;
+constexpr int kSpellCheckTimeoutMs = 60 * 1000;
 constexpr int kMaxSpeakChars = 20000;
 constexpr int kMaxSpeechSeconds = 600;
 
@@ -36,13 +41,41 @@ const QString kRecording = QStringLiteral("recording");
 const QString kTranscribing = QStringLiteral("transcribing");
 const QString kTranslating = QStringLiteral("translating");
 const QString kSynthesizing = QStringLiteral("synthesizing");
+const QString kCheckingSpelling = QStringLiteral("checking-spelling");
 const QString kAuto = QStringLiteral("auto");
+
+// The bundled dictionaries, in the order offered by the spell-check page.
+const QStringList kSpellLanguageCodes{QStringLiteral("es"), QStringLiteral("en"), QStringLiteral("fr"),
+                                      QStringLiteral("de"), QStringLiteral("it")};
+
+// {"tokens":[[start,end],...],"issues":[{"word","start","end","suggestions"}]} from the helper.
+QVariantList parseSpellingIssues(const QByteArray& payload)
+{
+    QVariantList issues;
+    const QJsonDocument document = QJsonDocument::fromJson(payload);
+    if (!document.isObject())
+        return issues;
+    for (const QJsonValue& value : document.object().value(QStringLiteral("issues")).toArray()) {
+        const QJsonObject object = value.toObject();
+        QStringList suggestions;
+        for (const QJsonValue& suggestion : object.value(QStringLiteral("suggestions")).toArray())
+            suggestions << suggestion.toString();
+        QVariantMap issue;
+        issue.insert(QStringLiteral("word"), object.value(QStringLiteral("word")).toString());
+        issue.insert(QStringLiteral("start"), object.value(QStringLiteral("start")).toVariant());
+        issue.insert(QStringLiteral("end"), object.value(QStringLiteral("end")).toVariant());
+        issue.insert(QStringLiteral("suggestions"), suggestions);
+        issues << issue;
+    }
+    return issues;
+}
 } // namespace
 
 AppController::AppController(AppSettings* settings, ModelManager* models, QObject* parent)
     : QObject(parent), m_settings(settings), m_models(models), m_recorder(new AudioRecorder(this)),
       m_player(new AudioPlayer(this)), m_translateEngine(new EngineProcess(this)),
-      m_transcribeEngine(new EngineProcess(this)), m_speakEngine(new EngineProcess(this))
+      m_transcribeEngine(new EngineProcess(this)), m_speakEngine(new EngineProcess(this)),
+      m_spellEngine(new EngineProcess(this))
 {
     m_watchdog.setSingleShot(true);
     connect(&m_watchdog, &QTimer::timeout, this, &AppController::onWatchdog);
@@ -57,9 +90,11 @@ AppController::AppController(AppSettings* settings, ModelManager* models, QObjec
     connect(m_translateEngine, &EngineProcess::frameReceived, this, &AppController::onTranslateFrame);
     connect(m_transcribeEngine, &EngineProcess::frameReceived, this, &AppController::onTranscribeFrame);
     connect(m_speakEngine, &EngineProcess::frameReceived, this, &AppController::onSpeakFrame);
+    connect(m_spellEngine, &EngineProcess::frameReceived, this, &AppController::onSpellFrame);
     connect(m_translateEngine, &EngineProcess::failed, this, [this]() { onEngineFailed(kTranslating); });
     connect(m_transcribeEngine, &EngineProcess::failed, this, [this]() { onEngineFailed(kTranscribing); });
     connect(m_speakEngine, &EngineProcess::failed, this, [this]() { onEngineFailed(kSynthesizing); });
+    connect(m_spellEngine, &EngineProcess::failed, this, [this]() { onEngineFailed(kCheckingSpelling); });
 
     connect(m_models, &ModelManager::activeModelChanged, this, [this](const QString& capability) {
         if (capability == Capability::Translation)
@@ -131,6 +166,17 @@ void AppController::clearTranslation()
     emit translatedTextChanged();
 }
 
+void AppController::clearSpelling()
+{
+    m_spellingIssues.clear();
+    emit spellingIssuesChanged();
+}
+
+QVariantList AppController::spellLanguages() const
+{
+    return Languages::options(kSpellLanguageCodes);
+}
+
 bool AppController::canSpeak(const QString& language) const
 {
     return !m_models->voiceFor(language).isEmpty();
@@ -194,6 +240,38 @@ void AppController::translate(const QString& text, const QString& source, const 
     setState(kTranslating);
     setStatus(tr("Translating…"));
     m_watchdog.start(kTranslateTimeoutMs);
+}
+
+void AppController::checkSpelling(const QString& text, const QString& language)
+{
+    if (busy())
+        return;
+    if (text.trimmed().isEmpty()) {
+        emit notice(tr("Write or paste some text to check."));
+        return;
+    }
+    const int limit = m_settings->maxInputChars();
+    if (text.size() > limit) {
+        emit notice(tr("The text has %1 characters and the limit is %2. Shorten it before checking.")
+                        .arg(text.size())
+                        .arg(limit));
+        return;
+    }
+    const QString dataDir = Paths::spellDataDir();
+    if (dataDir.isEmpty()) {
+        emit notice(tr("The spell-check dictionaries are missing from this installation."));
+        return;
+    }
+    const QStringList arguments{QStringLiteral("--data"), dataDir};
+    if (!startEngine(m_spellEngine, QStringLiteral("ducktor-spellcheck"), arguments))
+        return;
+
+    m_activeRequest = QByteArray::number(++m_nextRequest);
+    clearSpelling();
+    m_spellEngine->send({QByteArrayLiteral("SPELLCHECK"), m_activeRequest, language.toLatin1()}, text.toUtf8());
+    setState(kCheckingSpelling);
+    setStatus(tr("Checking spelling…"));
+    m_watchdog.start(kSpellCheckTimeoutMs);
 }
 
 void AppController::startRecording(const QString& source)
@@ -348,6 +426,8 @@ void AppController::cancel()
     } else if (m_state == kSynthesizing) {
         stopAudio();
         return;
+    } else if (m_state == kCheckingSpelling) {
+        m_spellEngine->stop();
     } else {
         return;
     }
@@ -454,6 +534,30 @@ void AppController::onSpeakFrame(const EngineFrame& frame)
     }
 }
 
+void AppController::onSpellFrame(const EngineFrame& frame)
+{
+    const QByteArray command = frame.command();
+    if (m_state != kCheckingSpelling)
+        return;
+    if (command == "ERROR" && frame.field(1) == "0") {
+        m_spellEngine->stop();
+        finishTask();
+        emit notice(engineErrorMessage(frame.field(2)));
+        return;
+    }
+    if (frame.field(1) != m_activeRequest)
+        return;
+
+    if (command == "RESULT") {
+        m_spellingIssues = parseSpellingIssues(frame.payload);
+        emit spellingIssuesChanged();
+        finishTask();
+    } else if (command == "ERROR") {
+        finishTask();
+        emit notice(engineErrorMessage(frame.field(2)));
+    }
+}
+
 void AppController::onEngineFailed(const QString& task)
 {
     if (task == kSynthesizing)
@@ -473,6 +577,8 @@ void AppController::onWatchdog()
         m_transcribeEngine->stop();
     else if (m_state == kSynthesizing)
         stopAudio();
+    else if (m_state == kCheckingSpelling)
+        m_spellEngine->stop();
     else
         return;
     finishTask(tr("The operation took too long and was stopped."));
@@ -536,6 +642,12 @@ QString AppController::engineErrorMessage(const QByteArray& code) const
         return tr("The model failed while processing the input.");
     if (code == "synth_failed")
         return tr("Speech synthesis failed.");
+    if (code == "missing_data")
+        return tr("The spell-check dictionaries are missing from this installation.");
+    if (code == "bad_language")
+        return tr("The selected language has no spell dictionary.");
+    if (code == "dict_load_failed")
+        return tr("The spell dictionary for the selected language could not be loaded.");
     return tr("Unexpected engine error (%1).").arg(QString::fromLatin1(code));
 }
 

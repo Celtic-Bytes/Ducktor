@@ -10,6 +10,7 @@ option(DUCKTOR_BUILD_ENGINES "Build the local inference helper programs" ON)
 option(DUCKTOR_ENGINE_TRANSLATE "Build the llama.cpp translation engine" ON)
 option(DUCKTOR_ENGINE_TRANSCRIBE "Build the whisper.cpp speech recognition engine" ON)
 option(DUCKTOR_ENGINE_SPEAK "Build the Piper speech synthesis engine" ON)
+option(DUCKTOR_ENGINE_SPELLCHECK "Build the Hunspell spell-check engine" ON)
 option(DUCKTOR_NATIVE_CPU "Optimize engines for this machine only (disable for distributable builds)" ON)
 option(DUCKTOR_BUILD_TESTS "Build the test suite" ON)
 option(DUCKTOR_PACKAGE_RPM "Generate an RPM package instead of the .deb and the .tar.xz (Linux)" OFF)
@@ -57,6 +58,8 @@ qt_add_qml_module(ducktor
         qml/Card.qml
         qml/LanguageMenu.qml
         qml/TranslatorPage.qml
+        qml/SpellCheckPage.qml
+        qml/SpellUnderlines.qml
         qml/LimitedTextArea.qml
         qml/SettingsPage.qml
         qml/ImportRow.qml
