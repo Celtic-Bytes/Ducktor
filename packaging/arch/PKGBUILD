@@ -30,7 +30,7 @@ makedepends=(
     qt6-tools
 )
 source=("https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${pkgver}.tar.gz")
-sha256sums=('32701fa2c6112085d739cc71f21f747e83a1d2be3cd941ff99e737b6e8574ad2')
+sha256sums=('422b94613061770e9c8af0a8255f780c4947d5cb0cba5c75d0ea0443e55752e8')
 
 # The GitHub archive unpacks to a folder named after the repository, not the
 # pkgname: Ducktor-<version>, not ducktor-<version>.
