@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The spell-check tab defaults to English instead of following the interface language, and the language chosen for a check is remembered across restarts
 
+### Fixed
+
+- The suggestion popup jumped to a neighboring misspelled word while the cursor travelled from the hovered (or clicked) word to its suggestions, so the wrong word's suggestions could be applied
+
 ## [0.2.0](https://github.com/Celtic-Bytes/Ducktor/compare/v0.1.1...v0.2.0) - 2026-11-10
 
 ### Added

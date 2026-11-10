@@ -153,12 +153,22 @@ Page {
 
     // Grace period between the cursor leaving a flagged word (or the popup itself) and the
     // popup closing, so the cursor can travel from the word to a suggestion without the
-    // popup vanishing. Entering the popup cancels the pending close.
+    // popup vanishing. Entering the popup cancels the pending close. When it expires with
+    // the cursor on a flagged word, that word's suggestions are shown instead of the popup
+    // closing: moving over a neighbor while travelling to the popup must not steal it.
     Timer {
         id: popupCloseDelay
         interval: 300
         repeat: false
-        onTriggered: page.closeSuggestions(false)
+        onTriggered: {
+            if (page.hoveredIssue >= 0) {
+                if (suggestionsPopup.visible && suggestionsPopup.issueIndex === page.hoveredIssue)
+                    return
+                page.showSuggestions(page.hoveredIssue, false)
+            } else {
+                page.closeSuggestions(false)
+            }
+        }
     }
 
     // Keeps the popup next to the word while the text scrolls under it.
@@ -536,9 +546,12 @@ Page {
             const index = page.issues.length > 0 ? page.issueAt(input.textInput.positionAt(mouseX, mouseY)) : -1
             if (index !== page.hoveredIssue) {
                 page.hoveredIssue = index
-                if (index >= 0)
+                // A pinned popup is not re-targeted by hovering, and while the grace timer
+                // runs the cursor is travelling toward the open popup: the path between
+                // adjacent flagged words crosses a neighbor, which must not steal the popup.
+                if (index >= 0 && !suggestionsPopup.pinned && !popupCloseDelay.running)
                     page.showSuggestions(index, false)
-                else
+                else if (index < 0)
                     page.wordHoverLost()
             }
         }
