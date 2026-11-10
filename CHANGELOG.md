@@ -4,7 +4,15 @@ All notable changes to Ducktor are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.1.1...main)
+## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.2.0...main)
+
+## [0.2.0](https://github.com/Celtic-Bytes/Ducktor/compare/v0.1.1...v0.2.0) - 2026-11-10
+
+### Added
+
+- Spelling tab: offline spell-check built on Hunspell for Spanish, English, French, German and Italian, with the dictionaries bundled in the packages
+- The error list shows each misspelled word with its context and up to eight suggestion chips; clicking a suggestion replaces the word and re-checks the text
+- Copy and clear buttons for the text to check
 
 ## [0.1.1](https://github.com/Celtic-Bytes/Ducktor/compare/v0.1.0...v0.1.1) - 2026-11-06
 

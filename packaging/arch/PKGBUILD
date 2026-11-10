@@ -7,7 +7,7 @@
 # https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v<pkgver>.tar.gz
 
 pkgname=ducktor
-pkgver=0.1.1
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Offline desktop translator for text and voice"
 arch=(x86_64)
