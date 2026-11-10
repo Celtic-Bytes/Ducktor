@@ -249,6 +249,31 @@ private slots:
         QCOMPARE(settings.maxRecordingSeconds(), AppSettings::kHardMaxRecordingSeconds);
     }
 
+    void settingsPersistSpellLanguage()
+    {
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        // English is the default spell-check language, independent of the interface language.
+        QCOMPARE(settings.spellLanguage(), QStringLiteral("en"));
+
+        settings.setSpellLanguage(QStringLiteral("es"));
+        QCOMPARE(settings.spellLanguage(), QStringLiteral("es"));
+        settings.sync();
+        const QByteArray raw = readRawIni(dir.filePath(QStringLiteral("s.ini")));
+        QVERIFY(raw.contains("[spell]"));
+        QVERIFY(raw.contains("language=es"));
+
+        // A new instance over the same settings file keeps the choice.
+        AppSettings reloaded(dir.filePath(QStringLiteral("s.ini")));
+        QCOMPARE(reloaded.spellLanguage(), QStringLiteral("es"));
+
+        // Unknown codes are ignored; the previous value is kept.
+        reloaded.setSpellLanguage(QStringLiteral("xx"));
+        QCOMPARE(reloaded.spellLanguage(), QStringLiteral("es"));
+        reloaded.setSpellLanguage(QStringLiteral("it"));
+        QCOMPARE(reloaded.spellLanguage(), QStringLiteral("it"));
+    }
+
     void controllerEnforcesTextLimit()
     {
         QTemporaryDir dir;

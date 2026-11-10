@@ -13,6 +13,7 @@ class AppSettings : public QObject
     Q_PROPERTY(QString uiLanguage READ uiLanguage WRITE setUiLanguage NOTIFY uiLanguageChanged)
     // [{code, name}] for the interface language menu; names are native.
     Q_PROPERTY(QVariantList uiLanguageOptions READ uiLanguageOptions CONSTANT)
+    Q_PROPERTY(QString spellLanguage READ spellLanguage WRITE setSpellLanguage NOTIFY spellLanguageChanged)
     Q_PROPERTY(int minInputChars READ minInputChars CONSTANT)
     Q_PROPERTY(int hardMaxInputChars READ hardMaxInputChars CONSTANT)
     Q_PROPERTY(int minRecordingSeconds READ minRecordingSeconds CONSTANT)
@@ -36,6 +37,8 @@ public:
     QString uiLanguage() const;
     void setUiLanguage(const QString& code);
     QVariantList uiLanguageOptions() const;
+    QString spellLanguage() const;
+    void setSpellLanguage(const QString& code);
 
     int minInputChars() const { return kMinInputChars; }
     int hardMaxInputChars() const { return kHardMaxInputChars; }
@@ -54,6 +57,7 @@ signals:
     void maxRecordingSecondsChanged();
     void autoPlayVoiceResultsChanged();
     void uiLanguageChanged();
+    void spellLanguageChanged();
 
 private:
     mutable QSettings m_settings;

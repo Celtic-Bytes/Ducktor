@@ -47,6 +47,12 @@ const QStringList& uiLanguages()
     return codes;
 }
 
+const QStringList& spellLanguages()
+{
+    static const QStringList codes{u"en"_s, u"es"_s, u"fr"_s, u"de"_s, u"it"_s};
+    return codes;
+}
+
 QString uiLanguageName(const QString& code)
 {
     static const QHash<QString, QString> names{{u"en"_s, u"English"_s},

@@ -11,6 +11,7 @@ const QString kMaxInputChars = QStringLiteral("limits/maxInputChars");
 const QString kMaxRecordingSeconds = QStringLiteral("limits/maxRecordingSeconds");
 const QString kAutoPlay = QStringLiteral("voice/autoPlayResults");
 const QString kUiLanguage = QStringLiteral("ui/language");
+const QString kSpellLanguage = QStringLiteral("spell/language");
 } // namespace
 
 AppSettings::AppSettings(const QString& fileName, QObject* parent)
@@ -66,12 +67,26 @@ QString AppSettings::uiLanguage() const
     return Languages::uiLanguages().contains(code) ? code : Languages::uiLanguages().first();
 }
 
+QString AppSettings::spellLanguage() const
+{
+    const QString code = m_settings.value(kSpellLanguage).toString();
+    return Languages::spellLanguages().contains(code) ? code : Languages::spellLanguages().first();
+}
+
 void AppSettings::setUiLanguage(const QString& code)
 {
     if (!Languages::uiLanguages().contains(code) || code == uiLanguage())
         return;
     m_settings.setValue(kUiLanguage, code);
     emit uiLanguageChanged();
+}
+
+void AppSettings::setSpellLanguage(const QString& code)
+{
+    if (!Languages::spellLanguages().contains(code) || code == spellLanguage())
+        return;
+    m_settings.setValue(kSpellLanguage, code);
+    emit spellLanguageChanged();
 }
 
 QVariantList AppSettings::uiLanguageOptions() const

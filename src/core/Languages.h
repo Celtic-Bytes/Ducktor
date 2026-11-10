@@ -21,6 +21,8 @@ const QList<LanguageInfo>& all();
 const LanguageInfo* find(const QString& code);
 // Interface languages, in menu order; the first one is the default.
 const QStringList& uiLanguages();
+// Languages with a bundled spell-check dictionary; the first one is the default.
+const QStringList& spellLanguages();
 // Native name shown in the interface language menu.
 QString uiLanguageName(const QString& code);
 // Current interface language, taken from QLocale's default locale.

@@ -10,7 +10,7 @@ import Ducktor.Core
 Page {
     id: page
 
-    // Language of the current check; defaults to the interface language.
+    // Language of the current check; defaults to English and is persisted by the user's choice.
     property string language: ""
     // True once a check has finished; the status line only reports results then.
     property bool hasChecked: false
@@ -137,7 +137,7 @@ Page {
     background: null
 
     Component.onCompleted: Qt.callLater(function () {
-        page.language = page.syncCombo(langBox, Settings.uiLanguage)
+        page.language = page.syncCombo(langBox, Settings.spellLanguage)
         // Attach the annotation items to the text content so they scroll with it.
         underlines.textInput = input.textInput
         underlines.parent = input.textInput
@@ -217,6 +217,7 @@ Page {
                 onModelChanged: Qt.callLater(function () { page.language = page.syncCombo(langBox, page.language) })
                 onActivated: {
                     page.language = currentValue
+                    Settings.spellLanguage = currentValue
                     // The previous results were for another language; re-check with the new one.
                     if (input.text.trim().length > 0)
                         page.checkNow()

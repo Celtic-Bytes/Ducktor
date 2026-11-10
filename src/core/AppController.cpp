@@ -44,10 +44,6 @@ const QString kSynthesizing = QStringLiteral("synthesizing");
 const QString kCheckingSpelling = QStringLiteral("checking-spelling");
 const QString kAuto = QStringLiteral("auto");
 
-// The bundled dictionaries, in the order offered by the spell-check page.
-const QStringList kSpellLanguageCodes{QStringLiteral("es"), QStringLiteral("en"), QStringLiteral("fr"),
-                                      QStringLiteral("de"), QStringLiteral("it")};
-
 // {"tokens":[[start,end],...],"issues":[{"word","start","end","suggestions"}]} from the helper.
 QVariantList parseSpellingIssues(const QByteArray& payload)
 {
@@ -174,7 +170,7 @@ void AppController::clearSpelling()
 
 QVariantList AppController::spellLanguages() const
 {
-    return Languages::options(kSpellLanguageCodes);
+    return Languages::options(Languages::spellLanguages());
 }
 
 bool AppController::canSpeak(const QString& language) const
