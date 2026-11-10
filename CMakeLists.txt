@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(Ducktor VERSION 0.2.0 DESCRIPTION "Offline desktop translator" LANGUAGES C CXX)
+project(Ducktor VERSION 0.2.1 DESCRIPTION "Offline desktop translator" LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
