@@ -14,8 +14,8 @@
 </p>
 
 <p align="center">
-  <strong>Ducktor is an offline, free, open source, privacy-first desktop translator</strong><br>
-  Text or voice input, translation with local AI models and read-aloud output.  
+  <strong>Ducktor is an offline, free, open source, privacy-first desktop translator and spell checker</strong><br>
+  Text or voice input, translation with local AI models, offline spell checking and read-aloud output.  
 </p>
 
 <div align="center">
@@ -25,7 +25,11 @@
 > [!WARNING]
 > Translation quality depends on the models you download. Larger models generally produce better translations, but they need more RAM and CPU.
 
-If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate things without any internet access, Ducktor is for you.
+<div align="center">
+  <img src="docs/resources/spellcheck.png" alt="Ducktor interface: misspelled words underlined in the Spelling tab, with the error list and their suggestions" width="900">
+</div>
+
+If you want to stop using Google or any other big company's translation product, have full privacy, or need to translate or spell-check things without any internet access, Ducktor is for you.
 
 An initial internet connection is needed to download the models locally. After that, the app works 100% offline.
 
