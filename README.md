@@ -19,7 +19,7 @@
 </p>
 
 <div align="center">
-  <img src="docs/resources/screenshot.png" alt="Ducktor interface: text translated from English to Italian" width="900">
+  <img src="docs/resources/translate.png" alt="Ducktor interface: text translated from English to Spanish in the Translator tab" width="900">
 </div>
 
 > [!WARNING]
