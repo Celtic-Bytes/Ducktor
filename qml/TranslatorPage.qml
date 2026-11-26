@@ -85,11 +85,11 @@ Page {
         columnSpacing: 16
         rowSpacing: 12
 
-        ComboBox {
+        FavoriteLanguageBox {
             id: sourceBox
             Layout.fillWidth: true
             Layout.preferredWidth: 1
-            model: App.sourceLanguages
+            sourceModel: App.sourceLanguages
             textRole: "name"
             valueRole: "code"
             enabled: !App.busy
@@ -108,11 +108,11 @@ Page {
             Accessible.name: qsTr("Swap languages")
             onClicked: page.swapLanguages()
         }
-        ComboBox {
+        FavoriteLanguageBox {
             id: targetBox
             Layout.fillWidth: true
             Layout.preferredWidth: 1
-            model: App.targetLanguages
+            sourceModel: App.targetLanguages
             textRole: "name"
             valueRole: "code"
             enabled: !App.busy

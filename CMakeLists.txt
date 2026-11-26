@@ -57,6 +57,7 @@ qt_add_qml_module(ducktor
         qml/Theme.qml
         qml/Card.qml
         qml/LanguageMenu.qml
+        qml/FavoriteLanguageBox.qml
         qml/TranslatorPage.qml
         qml/SpellCheckPage.qml
         qml/SpellUnderlines.qml

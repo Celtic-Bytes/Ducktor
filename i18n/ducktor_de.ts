@@ -220,4 +220,9 @@
     <name>AnnouncementWindow</name>
     <message><source>OK</source><translation>OK</translation></message>
 </context>
+<context>
+    <name>FavoriteLanguageBox</name>
+    <message><source>Add %1 to favorites</source><translation>%1 zu Favoriten hinzufügen</translation></message>
+    <message><source>Remove %1 from favorites</source><translation>%1 aus Favoriten entfernen</translation></message>
+</context>
 </TS>

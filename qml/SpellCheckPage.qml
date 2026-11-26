@@ -216,10 +216,10 @@ Page {
             Layout.fillWidth: true
             spacing: 8
 
-            ComboBox {
+            FavoriteLanguageBox {
                 id: langBox
                 Layout.preferredWidth: 220
-                model: App.spellLanguages
+                sourceModel: App.spellLanguages
                 textRole: "name"
                 valueRole: "code"
                 enabled: !App.busy

@@ -274,6 +274,38 @@ private slots:
         QCOMPARE(reloaded.spellLanguage(), QStringLiteral("it"));
     }
 
+    void settingsPersistFavoriteLanguages()
+    {
+        QTemporaryDir dir;
+        AppSettings settings(dir.filePath(QStringLiteral("s.ini")));
+        const QStringList none;
+        QCOMPARE(settings.favoriteLanguages(), none);
+
+        settings.toggleFavoriteLanguage(QStringLiteral("es"));
+        const QStringList esOnly{QStringLiteral("es")};
+        QCOMPARE(settings.favoriteLanguages(), esOnly);
+        settings.toggleFavoriteLanguage(QStringLiteral("fr"));
+        const QStringList esFr{QStringLiteral("es"), QStringLiteral("fr")};
+        QCOMPARE(settings.favoriteLanguages(), esFr);
+
+        // Toggling an existing favorite removes it, preserving the order of the rest.
+        settings.toggleFavoriteLanguage(QStringLiteral("es"));
+        const QStringList frOnly{QStringLiteral("fr")};
+        QCOMPARE(settings.favoriteLanguages(), frOnly);
+
+        settings.sync();
+        const QByteArray raw = readRawIni(dir.filePath(QStringLiteral("s.ini")));
+        QVERIFY(raw.contains("favorites"));
+
+        AppSettings reloaded(dir.filePath(QStringLiteral("s.ini")));
+        QCOMPARE(reloaded.favoriteLanguages(), frOnly);
+
+        // Duplicate-free replacement and toggling are reflected by a new instance.
+        reloaded.setFavoriteLanguages({QStringLiteral("de"), QStringLiteral("de"), QStringLiteral("it")});
+        const QStringList deIt{QStringLiteral("de"), QStringLiteral("it")};
+        QCOMPARE(reloaded.favoriteLanguages(), deIt);
+    }
+
     void controllerEnforcesTextLimit()
     {
         QTemporaryDir dir;

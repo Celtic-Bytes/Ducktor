@@ -12,6 +12,7 @@ const QString kMaxRecordingSeconds = QStringLiteral("limits/maxRecordingSeconds"
 const QString kAutoPlay = QStringLiteral("voice/autoPlayResults");
 const QString kUiLanguage = QStringLiteral("ui/language");
 const QString kSpellLanguage = QStringLiteral("spell/language");
+const QString kFavoriteLanguages = QStringLiteral("languages/favorites");
 } // namespace
 
 AppSettings::AppSettings(const QString& fileName, QObject* parent)
@@ -87,6 +88,42 @@ void AppSettings::setSpellLanguage(const QString& code)
         return;
     m_settings.setValue(kSpellLanguage, code);
     emit spellLanguageChanged();
+}
+
+QStringList AppSettings::favoriteLanguages() const
+{
+    const QStringList stored = m_settings.value(kFavoriteLanguages).toStringList();
+    QStringList result;
+    for (const QString& code : stored) {
+        if (!code.isEmpty() && !result.contains(code))
+            result << code;
+    }
+    return result;
+}
+
+void AppSettings::setFavoriteLanguages(const QStringList& codes)
+{
+    QStringList result;
+    for (const QString& code : codes) {
+        if (!code.isEmpty() && !result.contains(code))
+            result << code;
+    }
+    if (result == favoriteLanguages())
+        return;
+    m_settings.setValue(kFavoriteLanguages, result);
+    emit favoriteLanguagesChanged();
+}
+
+void AppSettings::toggleFavoriteLanguage(const QString& code)
+{
+    if (code.isEmpty())
+        return;
+    QStringList favorites = favoriteLanguages();
+    if (favorites.contains(code))
+        favorites.removeAll(code);
+    else
+        favorites << code;
+    setFavoriteLanguages(favorites);
 }
 
 QVariantList AppSettings::uiLanguageOptions() const
