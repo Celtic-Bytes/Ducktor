@@ -4,7 +4,14 @@ All notable changes to Ducktor are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.2.1...main)
+## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.3.0...main)
+
+## [0.3.0](https://github.com/Celtic-Bytes/Ducktor/compare/v0.2.1...v0.3.0) - 2026-11-26
+
+### Added
+
+- Language favorites in the translation and spell-check language menus: click the star beside a language to keep it pinned at the top of the list; the choice is shared and remembered across restarts
+- The currently selected language is highlighted in the open menu with a soft yellow background and yellow border, and the menu opens scrolled to the top
 
 ## [0.2.1](https://github.com/Celtic-Bytes/Ducktor/compare/v0.2.0...v0.2.1) - 2026-11-10
 
