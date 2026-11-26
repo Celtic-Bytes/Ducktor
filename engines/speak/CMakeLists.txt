@@ -34,8 +34,12 @@ endif()
 get_filename_component(_piper_libdir ${PIPER_LIBRARY} DIRECTORY)
 file(GLOB PIPER_RUNTIME_LIBS
     ${PIPER_ROOT}/bin/*.dll
+    ${_piper_libdir}/*.dll
     ${_piper_libdir}/*.so*
     ${_piper_libdir}/*.dylib)
+# ONNX Runtime is shipped under the versioned name its SONAME/install name requires;
+# the plain name only serves the linker and would duplicate the same large library.
+list(FILTER PIPER_RUNTIME_LIBS EXCLUDE REGEX "/libonnxruntime\\.(so|dylib)$")
 foreach(lib IN LISTS PIPER_RUNTIME_LIBS)
     add_custom_command(TARGET ducktor-speak POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different ${lib} ${DUCKTOR_ENGINE_OUTPUT_DIR})
@@ -49,12 +53,19 @@ if(DUCKTOR_LICENSE_OUTPUT_DIR)
     set(_licenses
         "${PIPER_SOURCE_DIR}/COPYING|piper-COPYING"
         "${PIPER_BINARY_DIR}/espeak_ng/src/espeak_ng_external/COPYING|espeak-ng-COPYING")
-    file(GLOB _onnxruntime_dirs LIST_DIRECTORIES true ${PIPER_SOURCE_DIR}/libpiper/lib/onnxruntime-*)
-    foreach(dir IN LISTS _onnxruntime_dirs)
+    if(ONNXRUNTIME_DIR)
         list(APPEND _licenses
-            "${dir}/LICENSE|onnxruntime-LICENSE"
-            "${dir}/ThirdPartyNotices.txt|onnxruntime-ThirdPartyNotices.txt")
-    endforeach()
+            "${ONNXRUNTIME_DIR}/LICENSE|onnxruntime-LICENSE"
+            "${ONNXRUNTIME_DIR}/ThirdPartyNotices.txt|onnxruntime-ThirdPartyNotices.txt")
+    else()
+        # Fallback for builds where libpiper still downloads ONNX Runtime itself.
+        file(GLOB _onnxruntime_dirs LIST_DIRECTORIES true ${PIPER_SOURCE_DIR}/libpiper/lib/onnxruntime-*)
+        foreach(dir IN LISTS _onnxruntime_dirs)
+            list(APPEND _licenses
+                "${dir}/LICENSE|onnxruntime-LICENSE"
+                "${dir}/ThirdPartyNotices.txt|onnxruntime-ThirdPartyNotices.txt")
+        endforeach()
+    endif()
     foreach(entry IN LISTS _licenses)
         string(REPLACE "|" ";" pair "${entry}")
         list(GET pair 0 source)
