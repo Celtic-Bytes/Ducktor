@@ -141,6 +141,13 @@ if(DUCKTOR_ENGINE_SPEAK)
         UPDATE_COMMAND "")
 
     # Short paths: eSpeak NG truncates long file paths while compiling its phoneme data.
+    # piper v1.8.0 pins an espeak-ng commit whose compat shims probe
+    # __has_include_next without a defined() guard; MSVC 14.52 (Visual Studio
+    # 2026) rejects that construct (C7780/C1017). Patch piper's build to pass
+    # the nested espeak-ng project a CMAKE_PROJECT_INCLUDE_BEFORE file that
+    # gives MSVC the fallback upstream espeak-ng added later. The pin itself
+    # is kept: espeak-ng's build system changed a lot after the pinned commit
+    # and piper v1.8.0 is written for the old one (see EspeakNgCompat.cmake).
     ExternalProject_Add(ducktor_libpiper
         GIT_REPOSITORY https://github.com/OHF-Voice/piper1-gpl.git
         GIT_TAG v1.8.0
@@ -151,6 +158,10 @@ if(DUCKTOR_ENGINE_SPEAK)
         SOURCE_DIR ${CMAKE_BINARY_DIR}/pp/s
         BINARY_DIR ${CMAKE_BINARY_DIR}/pp/b
         DEPENDS ducktor_onnxruntime
+        PATCH_COMMAND ${CMAKE_COMMAND}
+            -DPATCH_FILE=${CMAKE_SOURCE_DIR}/cmake/piper-espeak-ng-compat.patch
+            -DPIPER_SOURCE_DIR=${CMAKE_BINARY_DIR}/pp/s
+            -P ${CMAKE_SOURCE_DIR}/cmake/ApplyPiperEspeakNgCompat.cmake
         CMAKE_ARGS
             -DCMAKE_BUILD_TYPE=Release
             -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
@@ -158,7 +169,8 @@ if(DUCKTOR_ENGINE_SPEAK)
             -DCMAKE_INSTALL_PREFIX=${DUCKTOR_ENGINE_PREFIX}/piper
             -DCMAKE_DISABLE_FIND_PACKAGE_onnxruntime=TRUE
             -DONNXRUNTIME_DIR=${DUCKTOR_ONNXRUNTIME_DIR}
-            -DONNXRUNTIME_LIB=${_onnxruntime_library})
+            -DONNXRUNTIME_LIB=${_onnxruntime_library}
+            -DDUCKTOR_ESPEAKNG_COMPAT_INCLUDE=${CMAKE_SOURCE_DIR}/cmake/EspeakNgCompat.cmake)
 
     ExternalProject_Add(ducktor_engine_speak
         SOURCE_DIR ${CMAKE_SOURCE_DIR}/engines/speak
