@@ -450,9 +450,13 @@ jobs:
 
       # Validates the PKGBUILD syntax, metadata and consistency with the
       # trigger; on a tag push also that the tag's tarball exists and carries
-      # the same project version. The full build (which verifies the tarball
-      # checksum) is opt-in through the workflow_dispatch input, because it
-      # compiles the three engines.
+      # the same project version. The tarball checksum is deliberately NOT
+      # checked here — the tagged PKGBUILD carries the stale own-tarball
+      # checksum by design. The checksum is verified by "Verify the Arch
+      # sources (post-tag)", which runs only on a manual dispatch with a
+      # full build requested, before the build. The full build itself
+      # (compiles the three engines) is opt-in through the workflow_dispatch
+      # input.
       - name: Validate the PKGBUILD
         run: |
           set -euo pipefail
@@ -461,8 +465,9 @@ jobs:
           # The tarball contains the PKGBUILD itself, so the checksum recorded
           # in the tag's PKGBUILD can never match that tag's tarball: the
           # tag's own checksum is stale by design and is only verifiable once
-          # the tag exists (in the full source build). This check therefore
-          # validates the PKGBUILD metadata against the trigger — the pushed
+          # the tag exists (in the post-tag source validation, which runs only
+          # on a manual dispatch with a full build requested). This check
+          # therefore validates the PKGBUILD metadata against the trigger — the pushed
           # tag on a push, or the version in CMakeLists.txt on a manual
           # dispatch (the same value the check-version job compares on a
           # push, which is skipped for manual runs) — and, on a tag push,
@@ -502,6 +507,27 @@ jobs:
             fi
             rm -rf "$TMPDIR_CHECK"
           fi
+
+      # Source validation before the full build (post-tag use). The tagged
+      # PKGBUILD necessarily carries the stale own-tarball checksum by design
+      # — the tarball contains the PKGBUILD itself — so makepkg --verifysource
+      # is run ONLY here, never on a tag push. It is the genuine checksum
+      # verification, and it only works on the branch with the corrected
+      # checksum committed (the release procedure's step 4): running a manual
+      # full build from a tag ref is refused outright. Runs only when a full
+      # build is requested, before it starts. See packaging/arch/check-sources.sh.
+      - name: Verify the Arch sources (post-tag)
+        if: ${{ inputs.arch_full_build }}
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_REF#refs/tags/}" != "${GITHUB_REF}" ]; then
+            echo "Refusing a manual full build from a tag ref ('${GITHUB_REF}'):" >&2
+            echo "the tag's PKGBUILD carries the stale tag-time checksum by design (the tarball" >&2
+            echo "contains the PKGBUILD itself) and cannot pass makepkg --verifysource." >&2
+            echo "Use the branch with the corrected checksum committed (release procedure step 4)." >&2
+            exit 1
+          fi
+          su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && bash ./check-sources.sh"
 
       - name: Full source build (optional)
         if: ${{ inputs.arch_full_build }}

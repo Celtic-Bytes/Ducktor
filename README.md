@@ -281,7 +281,19 @@ cd packaging/arch
 makepkg -si
 ```
 
-To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD there. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag. For setup, diagnostics and the verified failure modes (including the checksum mismatch after a bump), see [PACKAGING.md](PACKAGING.md).
+To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD and the backport patch from the `packaging/arch/` directory there — the PKGBUILD references the local patch file, so both must ship together. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag (the v0.3.0 backport patch is not part of the tarball; its checksum never changes). For setup, diagnostics and the verified failure modes (including the checksum mismatch after a bump), see [PACKAGING.md](PACKAGING.md).
+
+The v0.3.0 tag predates the ONNX Runtime NuGet fix: its tarball cannot build
+(libpiper downloads ONNX Runtime from a removed release). The PKGBUILD
+backports the reviewed fix to that tag only through a pinned local patch
+(`packaging/arch/v0.3.0-onnxruntime-nuget.patch`, applied by `prepare()` when
+`pkgver` is `0.3.0`) — the tag is never moved and the checksum is never
+bypassed. The check `packaging/arch/check-sources.sh` verifies the source
+array and that the backport still applies to the v0.3.0 tarball; it runs in
+the release workflow before an optional manual full build from the post-tag
+branch. When the next release is cut from a main that carries the fix
+upstream, the backport patch is removed together with the bump (see
+[PACKAGING.md](PACKAGING.md)).
 
 #### Windows ZIP
 
@@ -357,7 +369,7 @@ The public repository is [github.com/Celtic-Bytes/Ducktor](https://github.com/Ce
 | RPM (Fedora) | `ubuntu-24.04` (Fedora 44 container) | `cmake --preset release-rpm` + `cpack --preset release-rpm`; the requires are checked and the package is installed in the container |
 | AppImage | `ubuntu-24.04` | [packaging/linux/build-appimage.sh](packaging/linux/build-appimage.sh) (linuxdeploy with pinned SHA-256) |
 | Flatpak | `ubuntu-24.04` | `flatpak-builder` with the Flathub KDE 6.10 runtime ([.github/workflows/releases.yml](.github/workflows/releases.yml), flatpak job) |
-| Arch PKGBUILD | `ubuntu-24.04` (Arch container) | `makepkg --printsrcinfo` validation; the full source build is opt-in through the checkbox |
+| Arch PKGBUILD | `ubuntu-24.04` (Arch container) | `makepkg --printsrcinfo` validation; source integrity and full source build are opt-in on a manual dispatch from the post-tag branch |
 | Windows ZIP | `windows-latest` | `cmake --preset release` + `cpack --preset release` (portable, `windeployqt`) |
 | macOS ZIP | `macos-latest` | `cmake --preset release` + `cpack --preset release` (`Ducktor.app`, ad hoc signature) |
 | macOS DMG | `macos-latest` | [packaging/macos/build-dmg.sh](packaging/macos/build-dmg.sh) from the ZIP (`hdiutil`) |
@@ -372,7 +384,7 @@ A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on
 The release procedure — the tag must match the version:
 
 1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt), add the new version's entry to [CHANGELOG.md](CHANGELOG.md), and commit.
-2. Bump `pkgver` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD) and commit.
+2. Bump `pkgver` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD) and commit. If the new release is the first cut from a main that carries the ONNX Runtime NuGet fix upstream, also remove the v0.3.0 backport patch: the local patch file, its `sha256sums` entry, the `prepare()` guard and `patch` in `makedepends` (see [PACKAGING.md](PACKAGING.md)).
 3. `git tag v<version> && git push origin v<version>`.
 4. Recalculate the PKGBUILD `sha256sums` from the tarball of the new tag and commit (the tarball contains the PKGBUILD itself, so its hash is only known once the tag exists), and push the updated PKGBUILD to the AUR.
 

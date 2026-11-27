@@ -9,3 +9,9 @@ CMakeUserPresets.json
 *.part
 .vs/
 .qtcreator/
+
+# Arch packaging artifacts (makepkg output next to the PKGBUILD)
+packaging/arch/src/
+packaging/arch/pkg/
+packaging/arch/v*.tar.gz
+packaging/arch/ducktor-*.pkg.tar.zst
