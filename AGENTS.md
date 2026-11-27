@@ -19,6 +19,7 @@ The public repository is <https://github.com/Celtic-Bytes/Ducktor>, mirrored fro
 
 ## Packaging
 
+- Before changing packaging files or diagnosing a packaging failure, read [PACKAGING.md](PACKAGING.md) — it documents the install layout, pinned sources, verified failure modes and the release procedure. Keep it in sync with this section when packaging changes.
 - All code must build and run on Linux, Windows and macOS and stay correct inside every configured package (`.deb`, Windows/macOS ZIPs, AppImage, Flatpak). Use the Qt/CMake abstractions and the paths in [Paths.cpp](src/core/Paths.cpp); never assume POSIX-only APIs, path separators or shell behavior.
 - Install layout lives in [cmake/Install.cmake](cmake/Install.cmake) and must match the search paths in [Paths.cpp](src/core/Paths.cpp) (Linux engines in `libexec/ducktor`, Windows next to `ducktor.exe`, macOS in `Ducktor.app/Contents/MacOS`).
 - CPack ([cmake/Packaging.cmake](cmake/Packaging.cmake)) makes the `.deb` and the Windows/macOS ZIPs; AppImage and Flatpak live in [packaging/](packaging). Output always goes to `dist/`.

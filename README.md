@@ -281,7 +281,7 @@ cd packaging/arch
 makepkg -si
 ```
 
-To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD there. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag.
+To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD there. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag. For setup, diagnostics and the verified failure modes (including the checksum mismatch after a bump), see [PACKAGING.md](PACKAGING.md).
 
 #### Windows ZIP
 

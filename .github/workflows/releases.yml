@@ -448,13 +448,60 @@ jobs:
           fi
           pacman -S --noconfirm $MAKEDEPS
 
-      # Validates the PKGBUILD syntax and metadata without downloading or
-      # building the sources (fast). The full build is opt-in through the
-      # workflow_dispatch input, because it compiles the three engines.
+      # Validates the PKGBUILD syntax, metadata and consistency with the
+      # trigger; on a tag push also that the tag's tarball exists and carries
+      # the same project version. The full build (which verifies the tarball
+      # checksum) is opt-in through the workflow_dispatch input, because it
+      # compiles the three engines.
       - name: Validate the PKGBUILD
         run: |
           set -euo pipefail
           su -s /bin/bash builder -c "cd $GITHUB_WORKSPACE/packaging/arch && makepkg --printsrcinfo"
+
+          # The tarball contains the PKGBUILD itself, so the checksum recorded
+          # in the tag's PKGBUILD can never match that tag's tarball: the
+          # tag's own checksum is stale by design and is only verifiable once
+          # the tag exists (in the full source build). This check therefore
+          # validates the PKGBUILD metadata against the trigger — the pushed
+          # tag on a push, or the version in CMakeLists.txt on a manual
+          # dispatch (the same value the check-version job compares on a
+          # push, which is skipped for manual runs) — and, on a tag push,
+          # that the source URL resolves to a tarball with the same version.
+          PKGVER="$(sed -n 's/^pkgver=//p' $GITHUB_WORKSPACE/packaging/arch/PKGBUILD)"
+          if [ -z "$PKGVER" ]; then
+            echo "Could not read pkgver from the PKGBUILD" >&2
+            exit 1
+          fi
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            EXPECTED="${GITHUB_REF_NAME#v}"
+          else
+            EXPECTED="$(sed -n 's/^project(Ducktor VERSION \([0-9][0-9.]*\).*/\1/p' $GITHUB_WORKSPACE/CMakeLists.txt)"
+          fi
+          if [ -z "$EXPECTED" ]; then
+            echo "Could not read the expected version" >&2
+            exit 1
+          fi
+          if [ "$PKGVER" != "$EXPECTED" ]; then
+            echo "PKGBUILD pkgver '$PKGVER' does not match '$EXPECTED' ($GITHUB_EVENT_NAME)" >&2
+            exit 1
+          fi
+          # On a tag push, also verify that the tag's tarball exists and
+          # carries the same project version. On a manual dispatch the tag
+          # does not exist yet (or may not exist at all), so only the local
+          # metadata above is validated.
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            TMPDIR_CHECK="$(mktemp -d)"
+            TARBALL="$TMPDIR_CHECK/ducktor-src.tar.gz"
+            curl -fsSL --retry 3 -o "$TARBALL" \
+              "https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${PKGVER}.tar.gz"
+            VERSION_IN_TARBALL="$(tar -xzOf "$TARBALL" "Ducktor-${PKGVER}/CMakeLists.txt" \
+                | sed -n 's/^project(Ducktor VERSION \([0-9][0-9.]*\).*/\1/p')"
+            if [ "$VERSION_IN_TARBALL" != "$PKGVER" ]; then
+              echo "Source tarball v${PKGVER} declares project version '$VERSION_IN_TARBALL'" >&2
+              exit 1
+            fi
+            rm -rf "$TMPDIR_CHECK"
+          fi
 
       - name: Full source build (optional)
         if: ${{ inputs.arch_full_build }}
