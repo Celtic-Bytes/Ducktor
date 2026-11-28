@@ -4,7 +4,15 @@ All notable changes to Ducktor are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.3.0...main)
+## [Unreleased](https://github.com/Celtic-Bytes/Ducktor/compare/v0.3.1...main)
+
+## [0.3.1](https://github.com/Celtic-Bytes/Ducktor/compare/v0.3.0...v0.3.1) - 2026-11-28
+
+### Fixed
+
+- The ONNX Runtime download now comes from the pinned NuGet package (`Microsoft.ML.OnnxRuntime` 1.22.0, SHA-256 verified) instead of the removed `microsoft/onnxruntime` GitHub release, fixing every package build that failed while configuring Piper
+- The Piper build on MSVC 14.52 (Visual Studio 2026) now applies a build-time patch adding the missing `__has_include_next` fallback for its nested espeak-ng, fixing the `C7780`/`C1017` errors
+- The Arch PKGBUILD is updated for v0.3.1: the v0.3.0 backport patch (local file, its `sha256sums` entry, the `prepare()` guard and `patch` from `makedepends`) is removed from the Arch packaging — the v0.3.1 sources carry the fixes upstream — and the release procedure is documented; the final tarball checksum is corrected once the tag exists
 
 ## [0.3.0](https://github.com/Celtic-Bytes/Ducktor/compare/v0.2.1...v0.3.0) - 2026-11-26
 

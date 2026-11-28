@@ -86,7 +86,7 @@ hash-verified:
 | ONNX Runtime | `1.22.0` (NuGet `Microsoft.ML.OnnxRuntime`) | `URL_HASH SHA256=d571e63a2329baacb713f441e65ad75284de354db6e1ac435fe4bebbb417986a` (`cmake/Engines.cmake`) |
 | linuxdeploy / linuxdeploy-plugin-qt (AppImage) | `1-alpha-20251107-1` / `1-alpha-20250213-1` | SHA-256 in `packaging/linux/build-appimage.sh` |
 | Arch PKGBUILD source | tag tarball `v<pkgver>.tar.gz` | `sha256sums` in the PKGBUILD (see below) |
-| Arch v0.3.0 backport patch | exact reviewed diff `b446eae..b1d24eb` (NuGet fix), checked in as a local file in `packaging/arch/` | `sha256sums` in the PKGBUILD; applied at build time only to the v0.3.0 tag (see [v0.3.0 backport](#v030-backport-arch-package)) |
+| Arch v0.3.0 backport patch (historical — removed with the release that followed the v0.3.0 backport) | exact reviewed diff `b446eae..b1d24eb` (NuGet fix) — the file is gone; preserved in the git history (`git show 511a147:packaging/arch/v0.3.0-onnxruntime-nuget.patch`) | not part of the current tree; see [v0.3.0 backport](#v030-backport-arch-package) |
 
 The engines (and piper's nested espeak-ng) are built as separate CMake projects
 via `ExternalProject` in [cmake/Engines.cmake](cmake/Engines.cmake); llama.cpp
@@ -96,6 +96,14 @@ expected.
 
 ## v0.3.0 backport (Arch package)
 
+> **Historical record — removed with the release that followed the v0.3.0
+> backport.** This section documents the v0.3.0 backport repair, which is
+> **past**: the release whose sources carry the reviewed fix upstream removed
+> the patch file, its `sha256sums` entry and the `prepare()` guard, and
+> `check-sources.sh` no longer looks for the patch. It is kept for the record
+> — the v0.3.0 tag is still a broken release whose sources come from a tree
+> that predates the fix.
+
 The v0.3.0 tag (`b446eae`) predates the reviewed NuGet fix (`b1d24eb`): its
 `cmake/Engines.cmake` still downloads ONNX Runtime from the removed
 `microsoft/onnxruntime` GitHub release, so `makepkg` fails while configuring
@@ -103,51 +111,56 @@ libpiper (see [Troubleshooting](#onnx-runtime-download-fails-every-package-build
 The v0.3.0 tag itself is left untouched — moving a release tag to fix a
 build is off the table.
 
-The Arch package is repaired by backporting the reviewed fix to the tag via a
-build-time patch:
+The v0.3.0 Arch package was repaired by backporting the reviewed fix to the
+tag via a build-time patch (removed from the release whose sources carry the
+fix upstream):
 
-- [packaging/arch/v0.3.0-onnxruntime-nuget.patch](packaging/arch/v0.3.0-onnxruntime-nuget.patch)
-  is the exact reviewed diff
-  (`git diff b446eae b1d24eb -- cmake/Engines.cmake engines/speak/CMakeLists.txt`).
-- It is a pinned source: listed in `source` and hashed in `sha256sums`
+- The patch was the exact reviewed diff
+  (`git diff b446eae b1d24eb -- cmake/Engines.cmake engines/speak/CMakeLists.txt`),
+  checked in as `packaging/arch/v0.3.0-onnxruntime-nuget.patch` while the
+  backport was live. The file no longer exists in this tree; the exact
+  reviewed diff is preserved in the git history at
+  `git show 511a147:packaging/arch/v0.3.0-onnxruntime-nuget.patch`.
+- It was a pinned source: listed in `source` and hashed in `sha256sums`
   (`30db300dc0087832fa111a2eec0ded270fe654f0a9e9dad8526f614481ddf341`), so a
-  tampered or truncated patch fails `makepkg --verifysource` before the
+  tampered or truncated patch failed `makepkg --verifysource` before the
   build starts.
-- The PKGBUILD's `prepare()` applies it with `patch -p1 --forward`, guarded
-  on `pkgver == "0.3.0"`: later tags carry the fix upstream and must not get
-  the patch (the tarball already has it; applying it would fail or be a no-op).
+- The v0.3.0 PKGBUILD's `prepare()` applied it with `patch -p1 --forward`,
+  guarded on `pkgver == "0.3.0"`: later tags carry the fix upstream and must
+  not get the patch (the tarball already has it; applying it would fail or be a
+  no-op).
 - The patch must be distributed alongside the PKGBUILD (e.g. in the AUR git
   repository) — it is not part of the tarball.
 
-Repeatable regression check: [packaging/arch/check-sources.sh](packaging/arch/check-sources.sh)
-verifies the full source array (tarball + patch) with `makepkg --verifysource`
-and dry-runs the backport patch against the exact v0.3.0 tarball, failing if
-the tag already carries the fix upstream. On a later tag it requires the
-NuGet URL to be present in the tag's sources **and** the backport to be gone
-(the patch file absent and no patch reference in the PKGBUILD) — i.e. the
-patch must have been removed together with the bump.
-
-The check is **post-tag use**: the tagged PKGBUILD carries the stale
-own-tarball checksum by design (the tarball contains the PKGBUILD itself),
-so `--verifysource` fails on the tag ref by design. The release workflow runs
+Repeatable regression check: [packaging/arch/check-sources.sh](packaging/arch/check-sources.sh).
+It is **post-tag use**: the tagged PKGBUILD carries the stale own-tarball
+checksum by design (the tarball contains the PKGBUILD itself), so
+`--verifysource` fails on the tag ref by design. The release workflow runs
 the check as the build user **only on a manual dispatch with a full build
 requested**, before the build, and refuses the dispatch from a tag ref (see
 `.github/workflows/releases.yml`, "Verify the Arch sources (post-tag)"). On a
 tag push only the metadata/consistency validation runs — never the checksum.
-Run the script locally after bumping `pkgver`, after changing the patch, or
-after the corrected checksum is committed (release procedure step 4).
+The script checks the tag: it resolves the `source` list with
+`makepkg --printsrcinfo`, stages any relative local sources it can support
+(inside `packaging/arch/`, staged by basename) next to the PKGBUILD in the
+temp directory, verifies the tarball checksum with `makepkg --verifysource`,
+requires the NuGet URL in the tag's `cmake/Engines.cmake`, and fails if the
+obsolete v0.3.0 backport patch reappears — no file, no PKGBUILD reference.
+Local source patches of other vintages are **legitimate sources** of a release
+(e.g. a future pinned backport): they are staged and hash-verified against the
+recorded `sha256sums` — never banned. The v0.3.0 backport itself was never
+re-introduced: the release carrying the fix upstream removed the local patch
+entirely.
 
-Maintenance: when a new release is cut from a main that carries the fix
-upstream (which is the plan for the next release), remove the patch file,
-its `sha256sums` entry, the `prepare()` guard and `patch` from `makedepends`
-(together with the `prepare()` function itself). After the new tag and
-checksum are available, `check-sources.sh` fails if references to the
-backport remain. Do not keep the v0.3.0 backport around for a release
-whose tarball already carries the fix. (A later tag cannot be checked with the
-v0.3.0 `--verifysource` checksum anyway — see the structural constraint below;
-the check requires the corrected checksum at post-tag time.)
+Maintenance: the first release prepared from a tree that carries the fix
+upstream removed the patch file, its `sha256sums` entry, the `prepare()` guard
+and `patch` from `makedepends` (together with the `prepare()` function itself).
+If the v0.3.0 backport patch reappears, `check-sources.sh` fails — the obsolete
+backport is never a legitimate source of a release whose tree carries the fix
+upstream. A local patch of another vintage (e.g. a future pinned backport) is a
+legitimate source; it is staged and hash-verified by `makepkg --verifysource`.
 
-The packaged v0.3.0 is also re-packaged as **0.3.0-2** (`pkgrel=2`) by this
+The packaged v0.3.0 was also re-packaged as **0.3.0-2** (`pkgrel=2`) by this
 backport: same source tag, fixed build — bumping `pkgrel` is the Arch
 convention for a re-packaged build of the same version, so downstream can tell
 the fixed package apart from the broken 0.3.0-1.
@@ -183,17 +196,26 @@ matching the workflow's Arch job; the build was capped at four cores via
 
 ## Release procedure (tagged releases)
 
-**Pre-tag checks** (steps 1–2): no tarball exists yet, so all that can be
-checked is metadata and consistency. The `sha256sums` recorded in the PKGBUILD
-is stale by design (the tarball contains the PKGBUILD itself, so its hash can
-never match the commit that created it).
+**Pre-tag checks** (steps 1–2): no tarball exists yet for the new tag, so
+all that can be checked is metadata and consistency. The `sha256sums` recorded
+in the PKGBUILD is stale by design (the tarball contains the PKGBUILD itself,
+so its hash can never match the commit that creates it). A pre-tag tree carries
+the **provisional** hash of the previous tag's tarball, recorded so that step 4
+has a value to replace; it is wrong on purpose, it is never a reason to skip or
+bypass the check, and it must be replaced with the real v<version> tarball's
+hash in step 4.
 
 1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt) and
    add the new entry to [CHANGELOG.md](CHANGELOG.md) (and to the `releases`
    block of the metainfo file). Commit.
-2. Bump `pkgver` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD). Commit.
+2. Bump `pkgver` (and `pkgrel=1`) in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD). Commit.
    Do **not** try to make `sha256sums` correct at this step — the checksum of
-   the tag's tarball is only knowable once the tag exists.
+   the tag's tarball is only knowable once the tag exists. The `sha256sums`
+   array has a single entry (the tarball) plus any local source files — the
+   first release prepared from a tree carrying the fix upstream removed the
+   v0.3.0 backport patch; a future release that adds one backs itself up the
+   same way (see [v0.3.0 backport](#v030-backport-arch-package) for the
+   historical example).
 
    ```bash
    (cd packaging/arch && makepkg --printsrcinfo)   # valid metadata
@@ -213,10 +235,8 @@ moment to verify it and recalculate it:
 
 4. Download the tag's tarball and recalculate the checksum. Do this from the
    post-tag state of the tree (the tag itself stays where it is — the tag
-   never moves). When the PKGBUILD carries the v0.3.0 backport patch, the
-   `sha256sums` array has two entries — the tarball first, the local patch
-   second — and only the tarball entry is replaced here (the patch's hash is
-   unchanged):
+   never moves). The `sha256sums` array has one entry — the tarball — so
+   replacing the first hex string in it replaces the tarball's hash:
 
    ```bash
    PKGVER="$(sed -n 's/^pkgver=//p' packaging/arch/PKGBUILD)"   # run from the repo root
@@ -225,9 +245,10 @@ moment to verify it and recalculate it:
    TARBALL_HASH="$(sha256sum /tmp/ducktor-src.tar.gz | cut -d' ' -f1)"
    git rev-parse "v${PKGVER}^{commit}"       # sanity: verify the tag did not move
    sed -i "s|^sha256sums=('[0-9a-f]\{64\}'|sha256sums=('${TARBALL_HASH}'|" packaging/arch/PKGBUILD
-   # Verify the two-entry layout: first entry = tarball, second = patch.
+   # Verify the one-entry layout: the single entry is the tarball's hash.
    sed -n '/^sha256sums=(/,/)/p' packaging/arch/PKGBUILD
-   (cd packaging/arch && makepkg --verifysource)   # must print "Passed" for BOTH files
+   grep -F "sha256sums=('${TARBALL_HASH}')" packaging/arch/PKGBUILD
+   (cd packaging/arch && makepkg --verifysource)   # must print "Passed"
    (cd packaging/arch && makepkg --printsrcinfo > .SRCINFO)  # the .SRCINFO the AUR expects
    ```
 
@@ -276,16 +297,22 @@ Quick checks after any packaging change:
 
 - Pre-tag, per the procedure: `makepkg --printsrcinfo` prints valid metadata
   whose `source` points at the expected `v<pkgver>.tar.gz`. There is no
-  checksum check yet — no tarball exists.
+  checksum check yet — no tarball exists for the new tag, so `sha256sums`
+  carries the provisional previous-tag hash (recorded so step 4 has a value to
+  replace; it is wrong on purpose and never a reason to skip or bypass) until
+  step 4.
 - Post-tag, per the procedure: `makepkg --verifysource` downloads the tag's
   tarball and must print `Passed` (the checksum committed in step 4). This
   check only exists once the tag is on the remote.
-- For the Arch v0.3.0 backport specifically: `packaging/arch/check-sources.sh`
-  (as the build user) runs `makepkg --verifysource` on the tarball **and** the
-  pinned patch, then dry-runs the backport patch against the exact v0.3.0
-  tarball, and fails if a later `pkgver` ships without the NuGet fix upstream.
-  The release workflow runs it before a requested manual full build from the
-  post-tag branch, not on a tag push.
+- Arch source integrity: `packaging/arch/check-sources.sh` (as the build user)
+  runs `makepkg --verifysource` on the tag tarball (it requires the corrected
+  checksum committed in step 4), requires the NuGet fix in the tag's
+  `cmake/Engines.cmake`, and fails only if the obsolete v0.3.0 backport patch
+  reappears — no file, no PKGBUILD reference. Local source files of other
+  vintages (e.g. a future pinned backport) are legitimate sources: the script
+  stages them next to the PKGBUILD and lets `makepkg --verifysource` check
+  them against the recorded `sha256sums`. The release workflow runs it before
+  a requested manual full build from the post-tag branch, not on a tag push.
 - The release workflow's Arch job runs the metadata/`pkgver`-consistency
   validation (and, on a tag push, the tarball-version check) on every
   trigger. It runs `makepkg --verifysource` only on a manual full build
@@ -382,12 +409,12 @@ the verified-result block there. The full build on `main` itself and the
 Windows/macOS full builds are still **not** verified.
 
 Safe resolution (do not do either of the forbidden things: move the v0.3.0 tag
-or bypass the checksum):
+or bypass the checksum) — the procedure to follow for a release broken in the
+sources:
 
-1. Cut a **new version and tag** (e.g. `v0.3.1`) from the current `main`,
-   which contains both fixes. The tag's tarball then carries fixed sources —
-   this is verified only once the full build actually runs; it is not implied
-   by the fixes alone.
+1. Cut a **new version and tag** from a main that carries both fixes — the
+   tag's tarball then carries fixed sources. This is verified only once the
+   full build actually runs; it is not implied by the fixes alone.
 2. Recalculate `sha256sums` from that new tag's tarball and commit the result
    after tagging (the structural constraint above); push to the AUR.
 3. Only then run the full Arch build (`makepkg --syncdeps --noconfirm`), and
@@ -396,14 +423,15 @@ or bypass the checksum):
 The v0.3.0 tag may be left as is: it is honest about being a metadata/release
 tag, and the release procedure for the next tag does not require moving it.
 
-A fourth option — used for this repair — is to package the v0.3.0 tag with the
-local backport patch described in [v0.3.0 backport](#v030-backport-arch-package):
-the tag is not moved, the `sha256sums` check is not bypassed and the patch is
-a pinned, hash-verified source like the tarball. The upstream fix `b1d24eb` is
-backported exactly as reviewed; the MSVC espeak-ng fix `a3958ed` is deliberately
-**not** backported (Windows-only, touches files the tag does not carry, and not
-needed by the Linux package). The backport is guarded on `pkgver == "0.3.0"`
-and must be removed together with the next release cut from a fixed main.
+A fourth option — used for this repair and now **historical** — was to package
+the v0.3.0 tag with the local backport patch described in
+[v0.3.0 backport](#v030-backport-arch-package): the tag is not moved, the
+`sha256sums` check is not bypassed and the patch is a pinned, hash-verified
+source like the tarball. The upstream fix `b1d24eb` is backported exactly as
+reviewed; the MSVC espeak-ng fix `a3958ed` is deliberately **not** backported
+(Windows-only, touches files the tag does not carry, and not needed by the
+Linux package). The backport was guarded on `pkgver == "0.3.0"` and was removed together
+with the release that followed it, from a tree that carries the fix upstream.
 
 ### Windows: Piper's nested espeak-ng build fails on MSVC 14.52
 

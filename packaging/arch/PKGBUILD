@@ -7,12 +7,12 @@
 # https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v<pkgver>.tar.gz
 
 pkgname=ducktor
-pkgver=0.3.0
-# pkgrel=2: the packaged v0.3.0 changed (build-time backport of the ONNX
-# Runtime NuGet fix) — same source tag, a fixed package. Bump pkgrel whenever
-# the build or packaged contents change without a new source release (Arch
-# convention), so downstream can detect the re-packaged build.
-pkgrel=2
+pkgver=0.3.1
+# pkgrel=1: a fresh tag means a fresh build (no re-package of an existing
+# version). Bump pkgrel whenever the build or packaged contents change without
+# a new source release (Arch convention), so downstream can detect the
+# re-packaged build.
+pkgrel=1
 pkgdesc="Offline desktop translator for text and voice"
 arch=(x86_64)
 url="https://github.com/Celtic-Bytes/Ducktor"
@@ -27,39 +27,24 @@ makedepends=(
     cmake
     git
     ninja
-    patch
     qt6-base
     qt6-declarative
     qt6-multimedia
     qt6-svg
     qt6-tools
 )
-# The local patch backports the ONNX Runtime NuGet fix to the v0.3.0 tag, which
-# predates it (see prepare()). It lives next to this PKGBUILD so the file is
-# verifiable and self-contained in the packaging/arch/ directory; it must be
-# distributed alongside the PKGBUILD (e.g. the AUR checkout). New releases cut
-# from a fixed main keep the fix upstream — remove the patch and the sha256sums
-# entry together with the prepare() guard at the next release.
-source=("https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${pkgver}.tar.gz"
-        "v0.3.0-onnxruntime-nuget.patch")
-sha256sums=('60b41c8e8e8f6e623674c858802ab0ebd920d6516dd7829bf76aae5e3c5e9636'
-            '30db300dc0087832fa111a2eec0ded270fe654f0a9e9dad8526f614481ddf341')
+# The only (current) source is the tag tarball; a local pinned source
+# (e.g. a backport of a specific vintage) is added here and hashed below.
+source=("https://github.com/Celtic-Bytes/Ducktor/archive/refs/tags/v${pkgver}.tar.gz")
+# The tarball contains the PKGBUILD itself, so this checksum is only knowable
+# once the tag exists: after pushing the tag, download the tarball, compute
+# its SHA-256 and replace the sha256sums entry (release procedure step 4 in
+# PACKAGING.md). Never bypass the check with --skipchecksums/--skipinteg or
+# drop sha256sums.
+sha256sums=('60b41c8e8e8f6e623674c858802ab0ebd920d6516dd7829bf76aae5e3c5e9636')
 
 # The GitHub archive unpacks to a folder named after the repository, not the
 # pkgname: Ducktor-<version>, not ducktor-<version>.
-
-prepare() {
-    cd "Ducktor-${pkgver}"
-    if [[ "$pkgver" == "0.3.0" ]]; then
-        # v0.3.0 (b446eae) predates the reviewed NuGet fix (b1d24eb): the tag's
-        # cmake/Engines.cmake still downloads ONNX Runtime from the removed
-        # microsoft/onnxruntime GitHub release, and every package build fails
-        # while configuring libpiper. Backport exactly that reviewed diff to
-        # this tag only. The patch is a pinned source (sha256sums above) and
-        # is not applied to later versions — their tags carry the fix already.
-        patch -p1 --forward < "../v0.3.0-onnxruntime-nuget.patch"
-    fi
-}
 
 build() {
     cd "Ducktor-${pkgver}"

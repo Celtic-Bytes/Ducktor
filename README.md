@@ -205,7 +205,7 @@ Needs your distribution's Qt (see [What to install](#linux-debian-ubuntu-pikaos)
 ```bash
 sudo apt install dpkg-dev
 cmake --workflow --preset package
-sudo apt install ./dist/ducktor_0.3.0_amd64.deb
+sudo apt install ./dist/ducktor_0.3.1_amd64.deb
 ```
 
 The package installs Ducktor in `/usr/bin`, its engines in `/usr/libexec/ducktor` and adds it to the applications menu. Its dependencies are calculated automatically from the Qt packages installed on the build machine. To uninstall it: `sudo apt remove ducktor`.
@@ -216,7 +216,7 @@ The same FHS layout as the `.deb` as a plain tarball, for distributions without 
 
 ```bash
 cmake --workflow --preset package
-sudo tar -xJf dist/ducktor-0.3.0-linux-x86_64.tar.xz -C /
+sudo tar -xJf dist/ducktor-0.3.1-linux-x86_64.tar.xz -C /
 ```
 
 It needs the same Qt libraries as the `.deb` (see [What to install](#linux-debian-ubuntu-pikaos)). Nothing is installed through the package manager, so to remove it delete the files it placed under `/usr` (the same list the `.deb` contains).
@@ -231,7 +231,7 @@ sudo dnf install cmake ninja-build gcc-c++ make git rpm-build \
     qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtmultimedia-devel qt6-qtsvg-devel \
     qt6-qttools-devel
 cmake --workflow --preset package-rpm
-sudo dnf install ./dist/ducktor-0.3.0-1.x86_64.rpm
+sudo dnf install ./dist/ducktor-0.3.1-1.x86_64.rpm
 ```
 
 It installs the same layout as the `.deb`, and its dependencies are derived from the standard `qt6-*` packages, including the QML modules that Ducktor loads at runtime (see [cmake/FedoraQtDepends.cmake](cmake/FedoraQtDepends.cmake)). To uninstall it: `sudo dnf remove ducktor`.
@@ -242,8 +242,8 @@ A single file that runs without installing anything and carries its own copy of 
 
 ```bash
 bash packaging/linux/build-appimage.sh
-chmod +x dist/Ducktor-0.3.0-x86_64.AppImage
-./dist/Ducktor-0.3.0-x86_64.AppImage
+chmod +x dist/Ducktor-0.3.1-x86_64.AppImage
+./dist/Ducktor-0.3.1-x86_64.AppImage
 ```
 
 - The script downloads two pinned versions of [linuxdeploy](https://github.com/linuxdeploy/linuxdeploy) and its [Qt plugin](https://github.com/linuxdeploy/linuxdeploy-plugin-qt) into `build/appimage-tools`, and checks their SHA-256 before running them.
@@ -265,8 +265,8 @@ Then build, export a single file and install it:
 
 ```bash
 flatpak-builder --user --force-clean --repo=build/flatpak-repo build/flatpak packaging/flatpak/com.celticbytes.Ducktor.yml
-flatpak build-bundle build/flatpak-repo dist/Ducktor-0.3.0.flatpak com.celticbytes.Ducktor
-flatpak install --user dist/Ducktor-0.3.0.flatpak
+flatpak build-bundle build/flatpak-repo dist/Ducktor-0.3.1.flatpak com.celticbytes.Ducktor
+flatpak install --user dist/Ducktor-0.3.1.flatpak
 flatpak run com.celticbytes.Ducktor
 ```
 
@@ -281,19 +281,9 @@ cd packaging/arch
 makepkg -si
 ```
 
-To publish it to the AUR, create a package named `ducktor` in the user repository and copy the PKGBUILD and the backport patch from the `packaging/arch/` directory there — the PKGBUILD references the local patch file, so both must ship together. When a new release tag is cut, bump `pkgver` and recalculate `sha256sums` from the tarball of that tag (the v0.3.0 backport patch is not part of the tarball; its checksum never changes). For setup, diagnostics and the verified failure modes (including the checksum mismatch after a bump), see [PACKAGING.md](PACKAGING.md).
+To publish it to the AUR, create a package named `ducktor` in the user repository and copy the [PKGBUILD](packaging/arch/PKGBUILD) there — it is self-contained (the only source is the tag tarball). When a new release tag is cut, bump `pkgver` and `pkgrel=1`, and recalculate `sha256sums` from the tarball of that tag (the checksum is only known once the tag exists; see [PACKAGING.md](PACKAGING.md#release-procedure-tagged-releases)). For setup, diagnostics and the verified failure modes (including the checksum mismatch after a bump), see [PACKAGING.md](PACKAGING.md).
 
-The v0.3.0 tag predates the ONNX Runtime NuGet fix: its tarball cannot build
-(libpiper downloads ONNX Runtime from a removed release). The PKGBUILD
-backports the reviewed fix to that tag only through a pinned local patch
-(`packaging/arch/v0.3.0-onnxruntime-nuget.patch`, applied by `prepare()` when
-`pkgver` is `0.3.0`) — the tag is never moved and the checksum is never
-bypassed. The check `packaging/arch/check-sources.sh` verifies the source
-array and that the backport still applies to the v0.3.0 tarball; it runs in
-the release workflow before an optional manual full build from the post-tag
-branch. When the next release is cut from a main that carries the fix
-upstream, the backport patch is removed together with the bump (see
-[PACKAGING.md](PACKAGING.md)).
+Historical note (v0.3.0, not the current release): the v0.3.0 tag predates the ONNX Runtime NuGet fix, so its tarball could not build (libpiper downloads ONNX Runtime from a removed release). Its Arch package was repaired — without moving the tag or bypassing the checksum — by a build-time backport patch carrying the reviewed fix, hashed in `sha256sums` and applied only when `pkgver` is `0.3.0`. The patch file no longer exists in this tree: the release that followed the repair carries the fix upstream, so the patch, its `sha256sums` entry and the `prepare()` guard were removed together with the bump. The exact reviewed diff is preserved in the git history (`git show 511a147:packaging/arch/v0.3.0-onnxruntime-nuget.patch`); the full record — including the verified build result — is in [PACKAGING.md](PACKAGING.md#v030-backport-arch-package). The check `packaging/arch/check-sources.sh` runs the source verification for the current tag (tarball checksum, NuGet fix present in the tag's sources, and the obsolete v0.3.0 backport gone) in the release workflow before an optional manual full build from the post-tag branch.
 
 #### Windows ZIP
 
@@ -323,7 +313,7 @@ For a DMG instead, run [packaging/macos/build-dmg.sh](packaging/macos/build-dmg.
 
 ```bash
 bash packaging/macos/build-dmg.sh
-hdiutil attach dist/Ducktor-0.3.0-macos-arm64.dmg
+hdiutil attach dist/Ducktor-0.3.1-macos-arm64.dmg
 ```
 
 The DMG contains `Ducktor.app` and a link to `/Applications` for drag-and-drop installation.
@@ -332,7 +322,7 @@ For a classic installer, run [packaging/macos/build-pkg.sh](packaging/macos/buil
 
 ```bash
 bash packaging/macos/build-pkg.sh
-sudo installer -pkg dist/Ducktor-0.3.0-macos-arm64.pkg -target /
+sudo installer -pkg dist/Ducktor-0.3.1-macos-arm64.pkg -target /
 ```
 
 The `.pkg` installs `Ducktor.app` into `/Applications`.
@@ -384,9 +374,9 @@ A second workflow, [.github/workflows/ci.yml](.github/workflows/ci.yml), runs on
 The release procedure — the tag must match the version:
 
 1. Bump `project(Ducktor VERSION ...)` in [CMakeLists.txt](CMakeLists.txt), add the new version's entry to [CHANGELOG.md](CHANGELOG.md), and commit.
-2. Bump `pkgver` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD) and commit. If the new release is the first cut from a main that carries the ONNX Runtime NuGet fix upstream, also remove the v0.3.0 backport patch: the local patch file, its `sha256sums` entry, the `prepare()` guard and `patch` in `makedepends` (see [PACKAGING.md](PACKAGING.md)).
+2. Bump `pkgver` and `pkgrel=1` in [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD) and commit. Do not try to make `sha256sums` correct yet — the tarball of the tag is not known until the tag exists. (The v0.3.0 backport patch was removed together with the bump; the current tree carries no local patch — see the historical note in the Arch section above and [PACKAGING.md](PACKAGING.md).)
 3. `git tag v<version> && git push origin v<version>`.
-4. Recalculate the PKGBUILD `sha256sums` from the tarball of the new tag and commit (the tarball contains the PKGBUILD itself, so its hash is only known once the tag exists), and push the updated PKGBUILD to the AUR.
+4. Recalculate the PKGBUILD `sha256sums` from the tarball of the new tag (download it, compute its SHA-256, replace the single entry, and run `makepkg --verifysource` — must print `Passed`), commit the updated PKGBUILD and push it to the AUR.
 
 The workflow fails before compiling if the pushed tag does not match the project version, and it fails in the Arch job if the PKGBUILD does not validate.
 
